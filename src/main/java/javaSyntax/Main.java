@@ -14,6 +14,13 @@ public class Main {
         doWhileExample();
         forEachExample();
         arraysExample();
+        textFromBytes();
+    }
+
+    private static void textFromBytes() {
+        byte[] textInBytes = {33, 33, 33};
+        String stringFromBytes = new String(textInBytes);
+        System.out.println(stringFromBytes);
     }
 
     private static void arraysExample() {
