@@ -80,4 +80,32 @@
 
 [**1.6 Изменяемые строки (StringBuilder)**](/conspect/1.md/#16-изменяемые-строки-stringbuilder)
 
+[_1.6.1 append()_](/conspect/1.md/#161-append)
+
+[_1.6.2 toString()_](/conspect/1.md/#162-tostring)
+
+## [**1.7 Класс Scanner**](/conspect/1.md/#17-класс-scanner)
+
+[_1.7.1 nextLine()_](/conspect/1.md/#171-nextline)
+
+[_1.7.2 nextInt()_](/conspect/1.md/#172-nextint)
+
+[_1.7.3 hasNext()_](/conspect/1.md/#173-hasnext)
+
+[_1.7.4 hasNextInt()_](/conspect/1.md/#174-hasnextint)
+
+[_1.7.5 hasNextLine()_](/conspect/1.md/#175-hasnextline)
+
+[_1.7.6 hasNextByte()_](/conspect/1.md/#176-hasnextbyte)
+
+[_1.7.7 hasNextShort()_](/conspect/1.md/#177-hasnextshort)
+
+[_1.7.8 hasNextLong()_](/conspect/1.md/#178-hasnextlong)
+
+[_1.7.9 hasNextFloat()_](/conspect/1.md/#179-hasnextfloat)
+
+[_1.7.10 hasNextDouble()_](/conspect/1.md/#1710-hasnextdouble)
+
+[_1.7.11 useDelimiter()_](/conspect/1.md/#1711-usedelimiter)
+
 [**Перечень использованных определений**](/conspect/definitions.md/#перечень-использованных-определений)

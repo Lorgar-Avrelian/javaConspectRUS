@@ -3,6 +3,7 @@ package javaSyntax;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,6 +16,21 @@ public class Main {
         forEachExample();
         arraysExample();
         textFromBytes();
+        scannerExample();
+    }
+
+    private static void scannerExample() {
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Введите число: ");
+            if (scanner.hasNextInt()) {
+                int number = scanner.nextInt();
+                System.out.println("Спасибо! Вы ввели число: " + number);
+                break;
+            } else {
+                System.out.println("Извините! Введённое значение не является числом. Пожалуйста, попробуйте снова.");
+            }
+        }
     }
 
     private static void textFromBytes() {
