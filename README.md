@@ -107,6 +107,11 @@
 [_1.7.8 hasNextLong()_](/conspect/1.md/#178-hasnextlong)  
 [_1.7.9 hasNextFloat()_](/conspect/1.md/#179-hasnextfloat)  
 [_1.7.10 hasNextDouble()_](/conspect/1.md/#1710-hasnextdouble)  
-[_1.7.11 useDelimiter()_](/conspect/1.md/#1711-usedelimiter)
+[_1.7.11 useDelimiter()_](/conspect/1.md/#1711-usedelimiter)  
+[_1.7.12 close()_](/conspect/1.md/#1712-close)
+
+###### 1.8
+
+[**1.8 Методы**](/conspect/1.md/#18-методы)
 
 [**Перечень использованных определений**](/conspect/definitions.md/#перечень-использованных-определений)

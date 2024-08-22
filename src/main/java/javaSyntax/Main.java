@@ -17,6 +17,19 @@ public class Main {
         arraysExample();
         textFromBytes();
         scannerExample();
+        scannerUseDelimiterExample();
+    }
+
+    private static void scannerUseDelimiterExample() {
+        Scanner scanner = new Scanner("У лукоморья дуб зелёный;`" +
+                                              "Златая цепь на дубе том:`" +
+                                              "И днём и ночью кот учёный`" +
+                                              "Всё ходит по цепи кругом;`");
+        scanner.useDelimiter("`");
+        while (scanner.hasNext()) {
+            System.out.println(scanner.next());
+        }
+        scanner.close();
     }
 
     private static void scannerExample() {
