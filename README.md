@@ -84,7 +84,7 @@
 
 [_1.6.2 toString()_](/conspect/1.md/#162-tostring)
 
-## [**1.7 Класс Scanner**](/conspect/1.md/#17-класс-scanner)
+[**1.7 Класс Scanner**](/conspect/1.md/#17-класс-scanner)
 
 [_1.7.1 nextLine()_](/conspect/1.md/#171-nextline)
 
