@@ -18,6 +18,16 @@ public class Main {
         textFromBytes();
         scannerExample();
         scannerUseDelimiterExample();
+        returnInVoidMethodExample(8);
+    }
+
+    private static void returnInVoidMethodExample(int day) {
+        if (day < 1 || day > 7) {
+            System.out.println("Такого дня не существует!");
+            return;
+        } else {
+            dayOfWeek(day);
+        }
     }
 
     private static void scannerUseDelimiterExample() {
