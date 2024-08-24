@@ -1,5 +1,8 @@
 package javaSyntax;
 
+import javaSyntax.models.Human;
+import javaSyntax.models.HumanUtility;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +22,17 @@ public class Main {
         scannerExample();
         scannerUseDelimiterExample();
         returnInVoidMethodExample(8);
+        utilityClassUsingExample();
+    }
+
+    private static void utilityClassUsingExample() {
+//        HumanUtility humanUtility = new HumanUtility(); // при попытке создать экземпляр класса HumanUtility возникнет ошибка
+        Human ivan = new Human();
+        ivan.setName("Ivan");
+        ivan.setSurname("Ivanov");
+        ivan.setAge(17);
+        System.out.println(ivan);
+        System.out.println(HumanUtility.isHumanAdult(ivan));
     }
 
     private static void returnInVoidMethodExample(int day) {
