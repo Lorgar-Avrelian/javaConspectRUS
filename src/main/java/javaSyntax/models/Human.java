@@ -7,6 +7,10 @@ public class Human {
     private String surname;
     private int age;
 
+    public Human(String name, int age) {
+        this(name, null, age);
+    }
+
     public Human(String name, String surname, int age) {
         this.name = name;
         this.surname = surname;
