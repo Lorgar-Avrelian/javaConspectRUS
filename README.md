@@ -201,8 +201,20 @@
 
 [***2 Java Core***](/conspect/2.md/#2-java-core)
 
-###### 2.1
+###### 2.1 Память в Java
+
+<details>
+<summary></summary>
+
+[***2.1 Память в Java***](/conspect/2.md/#21-память-в-java)
+
+> [**2.1.1 Стек (Stack)**](/conspect/2.md/#211-стек-stack)
+
+> 
 
 
+
+
+</details>
 
 [**Перечень использованных определений**](/conspect/definitions.md/#перечень-использованных-определений)
