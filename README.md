@@ -3,8 +3,6 @@
 # ОГЛАВЛЕНИЕ
 
 ### 1 Синтаксис языка
-<details>
-<summary></summary>
 
 [***1 Синтаксис языка***](/conspect/1.md/#1-синтаксис-языка)
 
@@ -198,17 +196,13 @@
 > > [_1.9.7.4 hashCode()_](/conspect/1.md/#1974-hashcode)  
 > > [_1.9.7.5 Контракт между equals() и hashCode()_](/conspect/1.md/#1975-контракт-между-equals-и-hashcode)
 </details>
-</details>
 
 ### 2 Java Core
-<details>
-<summary></summary>
 
 [***2 Java Core***](/conspect/2.md/#2-java-core)
 
 ###### 2.1
 
 
-</details>
 
 [**Перечень использованных определений**](/conspect/definitions.md/#перечень-использованных-определений)
