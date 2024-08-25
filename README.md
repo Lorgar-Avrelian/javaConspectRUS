@@ -2,8 +2,7 @@
 
 # ОГЛАВЛЕНИЕ
 
-##### 1 Синтаксис языка
-
+### 1 Синтаксис языка
 <details>
 <summary></summary>
 
@@ -201,10 +200,15 @@
 </details>
 </details>
 
-##### 2 Java Core
+### 2 Java Core
+<details>
+<summary></summary>
 
 [***2 Java Core***](/conspect/2.md/#2-java-core)
 
 ###### 2.1
+
+
+</details>
 
 [**Перечень использованных определений**](/conspect/definitions.md/#перечень-использованных-определений)
