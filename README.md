@@ -210,11 +210,28 @@
 
 > [**2.1.1 Стек (Stack)**](/conspect/2.md/#211-стек-stack)
 
-> 
+> [**2.1.2 Куча (Heap)**](/conspect/2.md/#212-куча-heap)
 
+> [**2.1.3 Сборка мусора (Garbage Collection)**](/conspect/2.md/#213-сборка-мусора-garbage-collection)
+> > [_2.1.3.1 Serial GC_](/conspect/2.md/#2131-serial-gc)
+> > [_2.1.3.2 Parallel GC_](/conspect/2.md/#2132-parallel-gc)
+> > [_2.1.3.3 CMS (Concurrent Mark Sweep) GC_](/conspect/2.md/#2133-cms-concurrent-mark-sweep-gc)
+> > [_2.1.3.4 G1 (Garbage First) GC_](/conspect/2.md/#2134-g1-garbage-first-gc)
 
+> [**2.1.4 Жизненный цикл приложения**](/conspect/2.md/#214-жизненный-цикл-приложения)
+</details>
+
+###### 2.2 Объектно-ориентированное программирование (ООП)
+
+<details>
+<summary></summary>
+
+[***2.2 Объектно-ориентированное программирование (ООП)***](/conspect/2.md/#22-объектно-ориентированное-программирование-ооп)
+
+> [**2.2.1 Инкапсуляция**](/conspect/2.md/#221-инкапсуляция)
 
 
 </details>
+
 
 [**Перечень использованных определений**](/conspect/definitions.md/#перечень-использованных-определений)
