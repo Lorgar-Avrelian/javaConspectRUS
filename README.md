@@ -117,4 +117,10 @@
 >>> [_1.9.7.4 hashCode()_](/conspect/1.md/#1974-hashcode)  
 >>> [_1.9.7.5 Контракт между equals() и hashCode()_](/conspect/1.md/#1975-контракт-между-equals-и-hashcode)
 
+[***2 Java Core***](/conspect/2.md/#2-java-core)
+
+###### 2.1
+
+
+
 [**Перечень использованных определений**](/conspect/definitions.md/#перечень-использованных-определений)
