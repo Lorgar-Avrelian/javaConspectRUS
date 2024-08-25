@@ -7,12 +7,15 @@
 ###### 1.1
 
 [***1.1 Переменные***](/conspect/1.md/#11-переменные)
+<details>
+<summary></summary>
 
 > [**1.1.1 Виды переменных**](/conspect/1.md/#111-виды-переменных)  
 
 > [**1.1.2 Типизация переменных**](/conspect/1.md/#112-типизация-переменных)  
 
 > [**1.1.3 Значения переменных по умолчанию**](/conspect/1.md/#113-значения-переменных-по-умолчанию)
+</details>
 
 ###### 1.2
 
@@ -30,6 +33,8 @@
 ###### 1.3
 
 [***1.3 Циклы***](/conspect/1.md/#13-циклы)
+<details>
+<summary></summary>
 
 > [**1.3.1 Цикл _for_**](/conspect/1.md/#131-цикл-for)  
 
@@ -38,10 +43,13 @@
 > [**1.3.3 Цикл _do-while_**](/conspect/1.md/#133-цикл-do-while)  
 
 > [**1.3.4 Цикл _for each_**](/conspect/1.md/#134-цикл-for-each)
+</details>
 
 ###### 1.4
 
 [***1.4 Массивы***](/conspect/1.md/#14-массивы)
+<details>
+<summary></summary>
 
 > [**1.4.1 Виды массивов**](/conspect/1.md/#141-виды-массивов)  
 
@@ -59,10 +67,13 @@
 > > [_1.4.5.3 equals()_](/conspect/1.md/#1453-equals)  
 > > [_1.4.5.4 copyOf()_](/conspect/1.md/#1454-copyof)  
 > > [_1.4.5.5 sort()_](/conspect/1.md/#1455-sort)
+</details>
 
 ###### 1.5
 
 [***1.5 Строки (Класс String)***](/conspect/1.md/#15-строки-класс-string)
+<details>
+<summary></summary>
 
 > [**1.5.1 Пул строк (String pool)**](/conspect/1.md/#151-пул-строк-string-pool)  
 
@@ -90,18 +101,24 @@
 > [**1.5.4 Формирование строк из массивов**](/conspect/1.md/#154-формирование-строк-из-массивов)
 > > [_1.5.4.1 Символьный массив_](/conspect/1.md/#1541-символьный-массив)  
 > > [_1.5.4.2 Массив байтов_](/conspect/1.md/#1542-массив-байтов)
+</details>
 
 ###### 1.6
 
 [***1.6 Изменяемые строки (StringBuilder)***](/conspect/1.md/#16-изменяемые-строки-stringbuilder)
+<details>
+<summary></summary>
 
 > [**1.6.1 append()**](/conspect/1.md/#161-append)  
 
 > [**1.6.2 toString()**](/conspect/1.md/#162-tostring)
+</details>
 
 ###### 1.7
 
 [***1.7 Класс Scanner***](/conspect/1.md/#17-класс-scanner)
+<details>
+<summary></summary>
 
 > [**1.7.1 nextLine()**](/conspect/1.md/#171-nextline)  
 
@@ -126,10 +143,13 @@
 > [**1.7.11 useDelimiter()**](/conspect/1.md/#1711-usedelimiter)  
 
 > [**1.7.12 close()**](/conspect/1.md/#1712-close)
+</details>
 
 ###### 1.8
 
 [***1.8 Методы***](/conspect/1.md/#18-методы)
+<details>
+<summary></summary>
 
 > [**1.8.1 Модификаторы доступа**](/conspect/1.md/#181-модификаторы-доступа)  
 
@@ -138,10 +158,13 @@
 > [**1.8.3 Идентичность методов**](/conspect/1.md/#183-идентичность-методов)  
 
 > [**1.8.4 Возвращение значений из метода**](/conspect/1.md/#184-возвращение-значений-из-метода)
+</details>
 
 ###### 1.9
 
 [***1.9 Объекты и классы***](/conspect/1.md/#19-объекты-и-классы)
+<details>
+<summary></summary>
 
 > [**1.9.1 Объекты**](/conspect/1.md/#191-объекты)  
 
@@ -161,6 +184,7 @@
 > > [_1.9.7.3 equals()_](/conspect/1.md/#1973-equals)  
 > > [_1.9.7.4 hashCode()_](/conspect/1.md/#1974-hashcode)  
 > > [_1.9.7.5 Контракт между equals() и hashCode()_](/conspect/1.md/#1975-контракт-между-equals-и-hashcode)
+</details>
 
 [***2 Java Core***](/conspect/2.md/#2-java-core)
 
