@@ -213,9 +213,9 @@
 > [**2.1.2 Куча (Heap)**](/conspect/2.md/#212-куча-heap)
 
 > [**2.1.3 Сборка мусора (Garbage Collection)**](/conspect/2.md/#213-сборка-мусора-garbage-collection)
-> > [_2.1.3.1 Serial GC_](/conspect/2.md/#2131-serial-gc)
-> > [_2.1.3.2 Parallel GC_](/conspect/2.md/#2132-parallel-gc)
-> > [_2.1.3.3 CMS (Concurrent Mark Sweep) GC_](/conspect/2.md/#2133-cms-concurrent-mark-sweep-gc)
+> > [_2.1.3.1 Serial GC_](/conspect/2.md/#2131-serial-gc)  
+> > [_2.1.3.2 Parallel GC_](/conspect/2.md/#2132-parallel-gc)  
+> > [_2.1.3.3 CMS (Concurrent Mark Sweep) GC_](/conspect/2.md/#2133-cms-concurrent-mark-sweep-gc)  
 > > [_2.1.3.4 G1 (Garbage First) GC_](/conspect/2.md/#2134-g1-garbage-first-gc)
 
 > [**2.1.4 Жизненный цикл приложения**](/conspect/2.md/#214-жизненный-цикл-приложения)
@@ -226,12 +226,25 @@
 <details>
 <summary></summary>
 
-[***2.2 Объектно-ориентированное программирование (ООП)***](/conspect/2.md/#22-объектно-ориентированное-программирование-ооп)
+[***2.2 Объектно-ориентированное программирование (ООП)
+***](/conspect/2.md/#22-объектно-ориентированное-программирование-ооп)
 
 > [**2.2.1 Инкапсуляция**](/conspect/2.md/#221-инкапсуляция)
 
+> [**2.2.2 Наследование**](/conspect/2.md/#222-наследование)
 
 </details>
 
 
 [**Перечень использованных определений**](/conspect/definitions.md/#перечень-использованных-определений)
+
+## Полезные примеры:
+
+<details>
+<summary></summary>
+
+1. [**Наборный блок _case_ в конструкции _switch-case_**](/conspect/1.md/#1213-оператор-switch)
+1. [**Перегрузка конструктора**](/conspect/1.md/#193-конструктор)
+1. [**Счётчик (_counter_) в классе**](/conspect/2.md/#222-наследование)
+
+</details>
