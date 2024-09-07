@@ -248,7 +248,7 @@
 [***3.1 Основные технологии***](/conspect/3.md/#31-основные-технологии)
 
 > [**3.1.1 Inversion of Control**](/conspect/3.md/#311-inversion-of-control)  
-> > [_3.1.1.1 Интерфейс BeanFactory_](/conspect/3.md/#3111-интерфейс-beanfactory)
+> > [_3.1.1.1 Интерфейс BeanFactory_](/conspect/3.md/#3111-интерфейс-beanfactory)  
 > > [_3.1.1.2 Интерфейс ApplicationContext_](/conspect/3.md/#3112-интерфейс-applicationcontext)
 -----------------------------------------------------------------------------------------------------------------------
 
