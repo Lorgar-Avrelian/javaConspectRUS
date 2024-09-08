@@ -249,7 +249,16 @@
 
 > [**3.1.1 Inversion of Control**](/conspect/3.md/#311-inversion-of-control)  
 > > [_3.1.1.1 Интерфейс BeanFactory_](/conspect/3.md/#3111-интерфейс-beanfactory)  
-> > [_3.1.1.2 Интерфейс ApplicationContext_](/conspect/3.md/#3112-интерфейс-applicationcontext)
+> > [_3.1.1.2 Интерфейс ApplicationContext_](/conspect/3.md/#3112-интерфейс-applicationcontext)  
+> > > [3.1.1.2.1 Загрузка конфигурации из XML-файла](/conspect/3.md/#31121-загрузка-конфигурации-из-xml-файла)  
+> > > [3.1.1.2.2 Загрузка конфигурации из Groovy-файла](/conspect/3.md/#31122-загрузка-конфигурации-из-groovy-файла)  
+> > > [3.1.1.2.3 Использование конфигураций](/conspect/3.md/#31123-использование-конфигураций)  
+
+> [**3.1.2 Spring Bean**](/conspect/3.md/#312-spring-bean)  
+> > [_3.1.2.1 Переопределение бинов_](/conspect/3.md/#3121-переопределение-бинов)  
+> > [_3.1.2.2 Нейминг бинов_](/conspect/3.md/#3122-нейминг-бинов)  
+
+> [**3.1.3 Dependency Injection**](/conspect/3.md/#313-dependency-injection)
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 3.2 Spring Web
