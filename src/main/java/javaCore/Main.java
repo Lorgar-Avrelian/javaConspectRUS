@@ -7,22 +7,57 @@ import javaCore.models.Worker;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        inheritanceExample();
-        tryCatchFinallyExample();
-        genericExample();
-        listExample();
+//        inheritanceExample();
+//        tryCatchFinallyExample();
+//        genericExample();
+//        listExample();
+        iteratorExample();
+    }
+
+    private static void iteratorExample() {
+        List<Integer> arrayList = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        Iterator<Integer> iterator = arrayList.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next() % 2 == 0) {
+                iterator.remove();
+            }
+        }
+        System.out.println(arrayList);
     }
 
     private static void listExample() {
         List<Integer> arrayList = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        arrayList.add(11);
+        System.out.println(arrayList);
+        arrayList.add(5,0);
+        System.out.println(arrayList);
+        int value = arrayList.get(5);
+        System.out.println(value);
+        boolean b = arrayList.contains(0);
+        System.out.println(b);
+        arrayList.remove(5);
+        arrayList.remove(arrayList.size() - 1);
+        System.out.println(arrayList);
+        arrayList.clear();
+        System.out.println(arrayList);
         List<Integer> linkedList = new LinkedList(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        b = false;
+        b = arrayList.addAll(linkedList);
+        System.out.println(arrayList);
+        System.out.println(b);
+        int i = arrayList.indexOf(10);
+        System.out.println(i);
+        i = arrayList.indexOf(11);
+        System.out.println(i);
+        arrayList.sort(Comparator.reverseOrder());
+        System.out.println(arrayList);
+        System.out.println(linkedList);
+        Integer[] intArray = arrayList.toArray(new Integer[arrayList.size()]);
+        System.out.println(Arrays.toString(intArray));
     }
 
     private static void genericExample() {
