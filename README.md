@@ -280,6 +280,7 @@
 > > > [2.6.3.1.10 isEmpty()](/conspect/2.md/#263110-isempty)  
 > > > [2.6.3.1.11 sort()](/conspect/2.md/#263111-sort)  
 > > > [2.6.3.1.12 toArray()](/conspect/2.md/#263112-toarray)  
+
 > > [_2.6.3.2 LinkedList_](/conspect/2.md/#2632-linkedlist)  
 > > [_2.6.3.3 Разница между ArrayList и LinkedList_](/conspect/2.md/#2633-разница-между-arraylist-и-linkedlist)
 
