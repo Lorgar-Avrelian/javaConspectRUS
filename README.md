@@ -308,6 +308,8 @@
 > > > [2.6.7.6.8 push()](/conspect/2.md/#26768-push)  
 > > > [2.6.7.6.9 removeFirstOccurrence()](/conspect/2.md/#26769-removefirstoccurrence)  
 > > > [2.6.7.6.10 removeLastOccurrence()](/conspect/2.md/#267610-removelastoccurrence)
+
+> [**2.6.8 Мап (Map)**](/conspect/2.md/#268-мап-map)
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 2.7 Алгоритмическая сложность
