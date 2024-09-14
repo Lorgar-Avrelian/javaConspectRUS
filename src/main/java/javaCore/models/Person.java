@@ -2,7 +2,7 @@ package javaCore.models;
 
 import java.util.Objects;
 
-public class Person {
+public class Person implements Comparable<Person> {
     private String name;
     private String surname;
     private int age;
@@ -57,5 +57,10 @@ public class Person {
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
                 ']';
+    }
+
+    @Override
+    public int compareTo(Person o) {
+        return name.compareTo(o.name);
     }
 }

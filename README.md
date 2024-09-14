@@ -309,7 +309,24 @@
 > > > [2.6.7.6.9 removeFirstOccurrence()](/conspect/2.md/#26769-removefirstoccurrence)  
 > > > [2.6.7.6.10 removeLastOccurrence()](/conspect/2.md/#267610-removelastoccurrence)
 
-> [**2.6.8 Мап (Map)**](/conspect/2.md/#268-мап-map)
+> [**2.6.8 Мап (Map)**](/conspect/2.md/#268-мап-map)  
+> > [_2.6.8.1 HashMap_](/conspect/2.md/#2681-hashmap)  
+> > > [2.6.8.1.1 put()](/conspect/2.md/#26811-put)  
+> > > [2.6.8.1.2 get()](/conspect/2.md/#26812-get)  
+> > > [2.6.8.1.3 containsValue()](/conspect/2.md/#26813-containsvalue)  
+> > > [2.6.8.1.4 containsKey()](/conspect/2.md/#26814-containskey)  
+> > > [2.6.8.1.5 remove()](/conspect/2.md/#26815-remove)  
+> > > [2.6.8.1.6 isEmpty()](/conspect/2.md/#26816-isempty)  
+> > > [2.6.8.1.7 size()](/conspect/2.md/#26817-size)  
+> > > [2.6.8.1.8 clear()](/conspect/2.md/#26818-clear)  
+> > > [2.6.8.1.9 keySet()](/conspect/2.md/#26819-keyset)  
+> > > [2.6.8.1.10 values()](/conspect/2.md/#268110-values)  
+> 
+> > [_2.6.8.2 LinkedHashMap_](/conspect/2.md/#2682-linkedhashmap)  
+> > [_2.6.8.3 TreeMap_](/conspect/2.md/#2683-treemap)  
+> > [_2.6.8.4 Сравнительная таблица реализаций интерфейса Map_](/conspect/2.md/#2684-сравнительная-таблица-реализаций-интерфейса-map)
+
+> [**2.6.9 Comparable**](/conspect/2.md/#269-comparable)
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 2.7 Алгоритмическая сложность

@@ -18,7 +18,40 @@ public class Main {
 //        listExample();
 //        iteratorExample();
 //        comparatorExample();
-        dequeExample();
+//        dequeExample();
+//        hashMapExample();
+        treeMapExample();
+    }
+
+    private static void treeMapExample() {
+        Person ivan = new Person("Ivan", "Ivanov", 25);
+        Person petr = new Person("Petr", "Petrov", 25);
+        Person sidor = new Person("Sidor", "Sidorov", 31);
+        Map<Person, Integer> persons = new TreeMap<>();
+        persons.put(sidor, sidor.getAge());
+        persons.put(ivan, ivan.getAge());
+        persons.put(petr, petr.getAge());
+        System.out.println(persons);
+    }
+
+    private static void hashMapExample() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("key", 1);
+        System.out.println(map);
+        int i = map.get("key");
+        System.out.println(i);
+        boolean b = map.containsValue(2);
+        System.out.println(b);
+        b = map.containsKey("key");
+        System.out.println(b);
+        map.put("test", 0);
+        System.out.println(map);
+        b = map.remove("test", 1);
+        System.out.println(b);
+        i = map.remove("test");
+        System.out.println(i);
+        System.out.println(map);
+        System.out.println(map.get("test"));
     }
 
     private static void dequeExample() {
