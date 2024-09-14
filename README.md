@@ -296,6 +296,7 @@
 > > [_2.6.7.3 poll()_](/conspect/2.md/#2673-poll)  
 > > [_2.6.7.4 peek()_](/conspect/2.md/#2674-peek)  
 > > [_2.6.7.5 element()_](/conspect/2.md/#2675-element)  
+> 
 > > [_2.6.7.6 Двусторонняя очередь (Deque)_](/conspect/2.md/#2676-двусторонняя-очередь-deque)  
 > > > [2.6.7.6.1 addFirst()](/conspect/2.md/#26761-addfirst)  
 > > > [2.6.7.6.2 addLast()](/conspect/2.md/#26762-addlast)  
