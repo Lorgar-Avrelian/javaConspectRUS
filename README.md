@@ -285,6 +285,28 @@
 > > [_2.6.3.3 Разница между ArrayList и LinkedList_](/conspect/2.md/#2633-разница-между-arraylist-и-linkedlist)
 
 > [**2.6.4 Iterator**](/conspect/2.md/#264-iterator)
+
+> [**2.6.5 Множество (Set)**](/conspect/2.md/#265-множество-set)
+
+> [**2.6.6 Comparator**](/conspect/2.md/#266-comparator)
+
+> [**2.6.7 Очередь (Queue)**](/conspect/2.md/#267-очередь-queue)
+> > [_2.6.7.1 add()_](/conspect/2.md/#2671-add)  
+> > [_2.6.7.2 remove()_](/conspect/2.md/#2672-remove)  
+> > [_2.6.7.3 poll()_](/conspect/2.md/#2673-poll)  
+> > [_2.6.7.4 peek()_](/conspect/2.md/#2674-peek)  
+> > [_2.6.7.5 element()_](/conspect/2.md/#2675-element)  
+> > [_2.6.7.6 Двусторонняя очередь (Deque)_](/conspect/2.md/#2676-двусторонняя-очередь-deque)  
+> > > [2.6.7.6.1 addFirst()](/conspect/2.md/#26761-addfirst)  
+> > > [2.6.7.6.2 addLast()](/conspect/2.md/#26762-addlast)  
+> > > [2.6.7.6.3 getFirst()](/conspect/2.md/#26763-getfirst)  
+> > > [2.6.7.6.4 getLast()](/conspect/2.md/#26764-getlast)  
+> > > [2.6.7.6.5 offerFirst()](/conspect/2.md/#26765-offerfirst)  
+> > > [2.6.7.6.6 offerLast()](/conspect/2.md/#26766-offerlast)  
+> > > [2.6.7.6.7 рор()](/conspect/2.md/#26767-рор)  
+> > > [2.6.7.6.8 push()](/conspect/2.md/#26768-push)  
+> > > [2.6.7.6.9 removeFirstOccurrence()](/conspect/2.md/#26769-removefirstoccurrence)  
+> > > [2.6.7.6.10 removeLastOccurrence()](/conspect/2.md/#267610-removelastoccurrence)
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 2.7 Алгоритмическая сложность
@@ -356,6 +378,7 @@
 1. [**Получение изображения в директорию**](/conspect/example_1.md/#пример-1)
 1. [**Создание строки из массива байтов**](/conspect/1.md/#1542-массив-байтов)
 1. [**Создание исключения (_Exception_)**](/conspect/2.md/#253-написание-своих-исключений)
+1. [**Сортировка коллекции по длине строки**](/conspect/2.md/#267-очередь-queue)
 1. [**Счётчик (_counter_) в классе**](/conspect/2.md/#222-наследование)
 1. [**Тернарный оператор**](/conspect/1.md/#1214-тернарный-оператор)
 1. [**Тестирование приёма-передачи изображения**](/conspect/example_1.md/#пример-3)

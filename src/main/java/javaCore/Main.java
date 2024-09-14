@@ -1,5 +1,6 @@
 package javaCore;
 
+import javaCore.comparators.ReverseStringComparator;
 import javaCore.models.Person;
 import javaCore.models.VariableContainer;
 import javaCore.models.Worker;
@@ -15,7 +16,34 @@ public class Main {
 //        tryCatchFinallyExample();
 //        genericExample();
 //        listExample();
-        iteratorExample();
+//        iteratorExample();
+//        comparatorExample();
+        dequeExample();
+    }
+
+    private static void dequeExample() {
+        Deque<String> queue = new ArrayDeque<>(List.of("B", "A", "C", "D", "d", "b", "a", "c"));
+        System.out.println(queue);
+        queue.add("E");
+        System.out.println(queue);
+        queue.addFirst("e");
+        System.out.println(queue);
+        String str = queue.getFirst();
+        System.out.println(str);
+        System.out.println(queue);
+    }
+
+    private static void comparatorExample() {
+        Set<String> tree = new TreeSet<>(new ReverseStringComparator());
+        tree.add("B");
+        tree.add("A");
+        tree.add("C");
+        tree.add("D");
+        tree.add("d");
+        tree.add("b");
+        tree.add("a");
+        tree.add("c");
+        System.out.println(tree);
     }
 
     private static void iteratorExample() {
@@ -26,6 +54,7 @@ public class Main {
                 iterator.remove();
             }
         }
+        arrayList.sort(Comparator.naturalOrder());
         System.out.println(arrayList);
     }
 
@@ -33,7 +62,7 @@ public class Main {
         List<Integer> arrayList = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
         arrayList.add(11);
         System.out.println(arrayList);
-        arrayList.add(5,0);
+        arrayList.add(5, 0);
         System.out.println(arrayList);
         int value = arrayList.get(5);
         System.out.println(value);
