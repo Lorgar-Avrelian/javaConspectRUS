@@ -20,7 +20,29 @@ public class Main {
 //        comparatorExample();
 //        dequeExample();
 //        hashMapExample();
-        treeMapExample();
+//        treeMapExample();
+        mapEntryExample();
+    }
+
+    private static void mapEntryExample() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("key 1", 1);
+        map.put("key 2", 2);
+        map.put("key 3", 3);
+        map.put("key 4", 4);
+        Set<Map.Entry<String, Integer>> entrySet = map.entrySet();
+        System.out.println(entrySet);
+        System.out.println(map);
+        for (Map.Entry<String, Integer> entry : entrySet) {
+            int hashCode = entry.hashCode();
+            System.out.println(hashCode);
+            if (entry.getValue() % 2 == 0) {
+                entry.setValue(entry.getValue() + 1);
+            }
+        }
+        System.out.println();
+        System.out.println(entrySet);
+        System.out.println(map);
     }
 
     private static void treeMapExample() {

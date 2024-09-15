@@ -266,8 +266,8 @@
 
 > [**2.6.2 Дженерики (Параметрический полиморфизм)**](/conspect/2.md/#262-дженерики-параметрический-полиморфизм)
 
-> [**2.6.3 Список (List)**](/conspect/2.md/#263-список-list)  
-> > [_2.6.3.1 ArrayList_](/conspect/2.md/#2631-arraylist)  
+> [**2.6.3 Список (_List_)**](/conspect/2.md/#263-список-list)  
+> > [_2.6.3.1 **ArrayList**_](/conspect/2.md/#2631-arraylist)  
 > > > [2.6.3.1.1 add()](/conspect/2.md/#26311-add)  
 > > > [2.6.3.1.2 get()](/conspect/2.md/#26312-get)  
 > > > [2.6.3.1.3 set()](/conspect/2.md/#26313-set)  
@@ -281,23 +281,23 @@
 > > > [2.6.3.1.11 sort()](/conspect/2.md/#263111-sort)  
 > > > [2.6.3.1.12 toArray()](/conspect/2.md/#263112-toarray)  
 
-> > [_2.6.3.2 LinkedList_](/conspect/2.md/#2632-linkedlist)  
-> > [_2.6.3.3 Разница между ArrayList и LinkedList_](/conspect/2.md/#2633-разница-между-arraylist-и-linkedlist)
+> > [_2.6.3.2 **LinkedList**_](/conspect/2.md/#2632-linkedlist)  
+> > [_2.6.3.3 Разница между **ArrayList** и **LinkedList**_](/conspect/2.md/#2633-разница-между-arraylist-и-linkedlist)
 
-> [**2.6.4 Iterator**](/conspect/2.md/#264-iterator)
+> [**2.6.4 _Iterator_**](/conspect/2.md/#264-iterator)
 
-> [**2.6.5 Множество (Set)**](/conspect/2.md/#265-множество-set)
+> [**2.6.5 Множество (_Set_)**](/conspect/2.md/#265-множество-set)
 
-> [**2.6.6 Comparator**](/conspect/2.md/#266-comparator)
+> [**2.6.6 _Comparator_**](/conspect/2.md/#266-comparator)
 
-> [**2.6.7 Очередь (Queue)**](/conspect/2.md/#267-очередь-queue)
+> [**2.6.7 Очередь (_Queue_)**](/conspect/2.md/#267-очередь-queue)
 > > [_2.6.7.1 add()_](/conspect/2.md/#2671-add)  
 > > [_2.6.7.2 remove()_](/conspect/2.md/#2672-remove)  
 > > [_2.6.7.3 poll()_](/conspect/2.md/#2673-poll)  
 > > [_2.6.7.4 peek()_](/conspect/2.md/#2674-peek)  
 > > [_2.6.7.5 element()_](/conspect/2.md/#2675-element)  
 > 
-> > [_2.6.7.6 Двусторонняя очередь (Deque)_](/conspect/2.md/#2676-двусторонняя-очередь-deque)  
+> > [_2.6.7.6 Двусторонняя очередь (**Deque**)_](/conspect/2.md/#2676-двусторонняя-очередь-deque)  
 > > > [2.6.7.6.1 addFirst()](/conspect/2.md/#26761-addfirst)  
 > > > [2.6.7.6.2 addLast()](/conspect/2.md/#26762-addlast)  
 > > > [2.6.7.6.3 getFirst()](/conspect/2.md/#26763-getfirst)  
@@ -309,8 +309,8 @@
 > > > [2.6.7.6.9 removeFirstOccurrence()](/conspect/2.md/#26769-removefirstoccurrence)  
 > > > [2.6.7.6.10 removeLastOccurrence()](/conspect/2.md/#267610-removelastoccurrence)
 
-> [**2.6.8 Мап (Map)**](/conspect/2.md/#268-мап-map)  
-> > [_2.6.8.1 HashMap_](/conspect/2.md/#2681-hashmap)  
+> [**2.6.8 Мап (_Map_)**](/conspect/2.md/#268-мап-map)  
+> > [_2.6.8.1 **HashMap**_](/conspect/2.md/#2681-hashmap)  
 > > > [2.6.8.1.1 put()](/conspect/2.md/#26811-put)  
 > > > [2.6.8.1.2 get()](/conspect/2.md/#26812-get)  
 > > > [2.6.8.1.3 containsValue()](/conspect/2.md/#26813-containsvalue)  
@@ -321,12 +321,20 @@
 > > > [2.6.8.1.8 clear()](/conspect/2.md/#26818-clear)  
 > > > [2.6.8.1.9 keySet()](/conspect/2.md/#26819-keyset)  
 > > > [2.6.8.1.10 values()](/conspect/2.md/#268110-values)  
+> > > [2.6.8.1.11 entrySet()](/conspect/2.md/#268111-entryset)  
 > 
-> > [_2.6.8.2 LinkedHashMap_](/conspect/2.md/#2682-linkedhashmap)  
-> > [_2.6.8.3 TreeMap_](/conspect/2.md/#2683-treemap)  
-> > [_2.6.8.4 Сравнительная таблица реализаций интерфейса Map_](/conspect/2.md/#2684-сравнительная-таблица-реализаций-интерфейса-map)
+> > [_2.6.8.2 **LinkedHashMap**_](/conspect/2.md/#2682-linkedhashmap)  
+> > [_2.6.8.3 **TreeMap**_](/conspect/2.md/#2683-treemap)  
+> > [_2.6.8.4 Сравнительная таблица реализаций интерфейса **Map**_](/conspect/2.md/#2684-сравнительная-таблица-реализаций-интерфейса-map)  
+> 
+> > [_2.6.8.5 Интерфейс **Map.Entry**_](/conspect/2.md/#2685-интерфейс-mapentry)  
+> > > [2.6.8.5.1 equals()](/conspect/2.md/#26851-equals)  
+> > > [2.6.8.5.2 hashCode()](/conspect/2.md/#26852-hashcode)  
+> > > [2.6.8.5.3 getKey()](/conspect/2.md/#26853-getkey)  
+> > > [2.6.8.5.4 getValue()](/conspect/2.md/#26854-getvalue)  
+> > > [2.6.8.5.5 setValue()](/conspect/2.md/#26855-setvalue)  
 
-> [**2.6.9 Comparable**](/conspect/2.md/#269-comparable)
+> [**2.6.9 _Comparable_**](/conspect/2.md/#269-comparable)
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 2.7 Алгоритмическая сложность
