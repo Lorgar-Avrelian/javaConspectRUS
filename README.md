@@ -378,6 +378,8 @@
 > > > [2.8.3.3.9 min()](/conspect/2.md/#28339-min)  
 > > > [2.8.3.3.10 noneMatch()](/conspect/2.md/#283310-nonematch)  
 > > > [2.8.3.3.11 toArray()](/conspect/2.md/#283311-toarray)  
+
+> [**2.8.4 Collectors**](/conspect/2.md/#284-collectors)
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 3 Spring Framework
