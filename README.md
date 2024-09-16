@@ -367,7 +367,17 @@
 > > > [2.8.3.2.7 sorted()](/conspect/2.md/#28327-sorted)  
 > 
 > > [_2.8.3.3 Терминальные (конечные) операции Stream_](/conspect/2.md/#2833-терминальные-конечные-операции-stream)  
-> 
+> > > [2.8.3.3.1 allMatch()](/conspect/2.md/#28331-allmatch)  
+> > > [2.8.3.3.2 anyMatch()](/conspect/2.md/#28332-anymatch)  
+> > > [2.8.3.3.3 collect()](/conspect/2.md/#28333-collect)  
+> > > [2.8.3.3.4 count()](/conspect/2.md/#28334-count)  
+> > > [2.8.3.3.5 findFirst()](/conspect/2.md/#28335-findfirst)  
+> > > [2.8.3.3.6 findAny()](/conspect/2.md/#28336-findany)  
+> > > [2.8.3.3.7 forEach()](/conspect/2.md/#28337-foreach)  
+> > > [2.8.3.3.8 max()](/conspect/2.md/#28338-max)  
+> > > [2.8.3.3.9 min()](/conspect/2.md/#28339-min)  
+> > > [2.8.3.3.10 noneMatch()](/conspect/2.md/#283310-nonematch)  
+> > > [2.8.3.3.11 toArray()](/conspect/2.md/#283311-toarray)  
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 3 Spring Framework
