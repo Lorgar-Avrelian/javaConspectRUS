@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -21,7 +22,39 @@ public class Main {
 //        dequeExample();
 //        hashMapExample();
 //        treeMapExample();
-        mapEntryExample();
+//        mapEntryExample();
+        streamExample();
+    }
+
+    private static void streamExample() {
+        // Создадим список и заполним его буквами не по алфавиту
+        List<String> list = new ArrayList<>();
+        list.add("B");
+        list.add("D");
+        list.add("C");
+        list.add("A");
+        list.add("E");
+        List<String> list2 = new ArrayList<>(list);
+
+        // Отсортируем список с помощью метода пузырьковой сортировки.
+        // Она использует два вложенных цикла и одно сравнение.
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = i + 1; j < list.size(); j++) {
+                if (list.get(i).compareTo(list.get(j)) > 0) {
+                    String temp = list.get(i);
+                    list.set(i, list.get(j));
+                    list.set(j, temp);
+                }
+            }
+        }
+        System.out.println("Мы отсортировали это для тебя: " + list);
+
+        // Создадим стрим для элементов
+        ArrayList<String> sortedElements = list2.stream()
+                                                   .sorted()
+                                                   // Далее выведем данные в новую коллекцию с помощью коллектора
+                                                   .collect(Collectors.toCollection(ArrayList::new));
+        System.out.println("Мы отсортировали это для тебя: " + sortedElements + " Исходный список: " + list2);
     }
 
     private static void mapEntryExample() {
