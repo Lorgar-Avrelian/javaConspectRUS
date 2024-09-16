@@ -23,7 +23,15 @@ public class Main {
 //        hashMapExample();
 //        treeMapExample();
 //        mapEntryExample();
-        streamExample();
+//        streamExample();
+        streamMethodsExample();
+    }
+
+    private static void streamMethodsExample() {
+        List<Integer> list = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1));
+        System.out.println(list);
+        Integer i = list.stream().max(Comparator.naturalOrder()).get();
+        System.out.println(i);
     }
 
     private static void streamExample() {
@@ -35,7 +43,6 @@ public class Main {
         list.add("A");
         list.add("E");
         List<String> list2 = new ArrayList<>(list);
-
         // Отсортируем список с помощью метода пузырьковой сортировки.
         // Она использует два вложенных цикла и одно сравнение.
         for (int i = 0; i < list.size(); i++) {
@@ -48,12 +55,11 @@ public class Main {
             }
         }
         System.out.println("Мы отсортировали это для тебя: " + list);
-
         // Создадим стрим для элементов
         ArrayList<String> sortedElements = list2.stream()
-                                                   .sorted()
-                                                   // Далее выведем данные в новую коллекцию с помощью коллектора
-                                                   .collect(Collectors.toCollection(ArrayList::new));
+                                                .sorted()
+                                                // Далее выведем данные в новую коллекцию с помощью коллектора
+                                                .collect(Collectors.toCollection(ArrayList::new));
         System.out.println("Мы отсортировали это для тебя: " + sortedElements + " Исходный список: " + list2);
     }
 
