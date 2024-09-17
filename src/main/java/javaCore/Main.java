@@ -24,14 +24,36 @@ public class Main {
 //        treeMapExample();
 //        mapEntryExample();
 //        streamExample();
-        streamMethodsExample();
+//        streamMethodsExample();
+        optionalExample();
+    }
+
+    private static void optionalExample() {
+        List<String> companyNames = Arrays.asList(
+                "paypal", "oracle", "", "microsoft", "", "apple");
+        Optional<List<String>> listOptional = Optional.of(companyNames);
+        int size = listOptional
+                .map(List::size)
+                .orElse(0);
+        System.out.println(size);
     }
 
     private static void streamMethodsExample() {
         List<Integer> list = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1));
         System.out.println(list);
-        Integer[] array = list.stream().toArray(Integer[]::new);
-        System.out.println(Arrays.toString(array));
+        Map<String, Integer> map = list.stream()
+                                       .distinct()
+                                       .collect(Collectors.toMap(String::valueOf, x -> x));
+        List<String> stringList = list.stream()
+                                      .distinct()
+                                      .collect(Collectors.mapping(String::valueOf, Collectors.toList()));
+        String str = list.stream()
+                         .distinct()
+                         .map(String::valueOf)
+                         .collect(Collectors.joining(""));
+        System.out.println(map);
+        System.out.println(str);
+        System.out.println(stringList);
     }
 
     private static void streamExample() {

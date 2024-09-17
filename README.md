@@ -379,7 +379,19 @@
 > > > [2.8.3.3.10 noneMatch()](/conspect/2.md/#283310-nonematch)  
 > > > [2.8.3.3.11 toArray()](/conspect/2.md/#283311-toarray)  
 
-> [**2.8.4 Collectors**](/conspect/2.md/#284-collectors)
+> [**2.8.4 Collectors**](/conspect/2.md/#284-collectors)  
+
+> [**2.8.5 Optional**](/conspect/2.md/#285-optional)  
+> > [_2.8.5.1 Создание Optional_](/conspect/2.md/#2851-создание-optional)  
+> > [_2.8.5.2 isPresent() и isEmpty()_](/conspect/2.md/#2852-ispresent-и-isempty)  
+> > [_2.8.5.3 ifPresent()_](/conspect/2.md/#2853-ifpresent)  
+> > [_2.8.5.4 orElse()_](/conspect/2.md/#2854-orelse)  
+> > [_2.8.5.5 orElseGet()_](/conspect/2.md/#2855-orelseget)  
+> > [_2.8.5.6 orElseThrow()_](/conspect/2.md/#2856-orelsethrow)  
+> > [_2.8.5.7 get()_](/conspect/2.md/#2857-get)  
+> > [_2.8.5.8 filter()_](/conspect/2.md/#2858-filter)  
+> > [_2.8.5.9 map()_](/conspect/2.md/#2859-map)  
+> > [_2.8.5.10 flatMap()_](/conspect/2.md/#28510-flatmap)  
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 3 Spring Framework
@@ -444,6 +456,7 @@
 1. [**Перегрузка конструктора**](/conspect/1.md/#193-конструктор)
 1. [**Передача изображения из директории**](/conspect/example_1.md/#пример-2)
 1. [**Получение изображения в директорию**](/conspect/example_1.md/#пример-1)
+1. [**Превращение _List_ в _Map_ посредством _Stream_**](/conspect/2.md/#284-collectors)
 1. [**Создание строки из массива байтов**](/conspect/1.md/#1542-массив-байтов)
 1. [**Создание исключения (_Exception_)**](/conspect/2.md/#253-написание-своих-исключений)
 1. [**Сортировка коллекции по длине строки**](/conspect/2.md/#267-очередь-queue)
