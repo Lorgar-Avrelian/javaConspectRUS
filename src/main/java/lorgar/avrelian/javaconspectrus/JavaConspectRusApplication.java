@@ -9,5 +9,4 @@ public class JavaConspectRusApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JavaConspectRusApplication.class, args);
 	}
-
 }
