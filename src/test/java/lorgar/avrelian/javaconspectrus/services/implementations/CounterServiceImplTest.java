@@ -1,8 +1,8 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
-import lorgar.avrelian.javaconspectrus.services.CounterService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.concurrent.TimeUnit;
@@ -11,7 +11,8 @@ import java.util.concurrent.TimeUnit;
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CounterServiceImplTest {
-    private final CounterService counterService = new CounterServiceImpl();
+    @InjectMocks
+    private CounterServiceImpl counterService;
 
     @Test
     @DisplayName(value = "Get counter test")
