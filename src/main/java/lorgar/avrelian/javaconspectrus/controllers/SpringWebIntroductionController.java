@@ -14,12 +14,12 @@ public class SpringWebIntroductionController {
     }
 
     @GetMapping
-    public String getHello() {
-        return "Hello world!";
+    public ResponseEntity<String> getHello() {
+        return ResponseEntity.ok("Hello world!");
     }
     @GetMapping(path = "/counter")
-    public String getCounter() {
-        return String.valueOf(counterService.getCounter());
+    public ResponseEntity<String> getCounter() {
+        return ResponseEntity.ok(String.valueOf(counterService.getCounter()));
     }
     @GetMapping("/counter/change")
     public ResponseEntity<Integer> changeCounter1(@RequestParam(name = "counter") int counter) {

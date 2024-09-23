@@ -16,8 +16,8 @@ public class RandomizeController {
         this.random = random;
     }
 
-    @GetMapping()
-    public ResponseEntity getRandomValue() {
+    @GetMapping(path = "/random/")
+    public ResponseEntity<Integer> getRandomValue() {
         return ResponseEntity.status(200).body(random.nextInt());
     }
 }
