@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/controller")
 public class SpringWebIntroductionController {
     private final CounterService counterService;
 
