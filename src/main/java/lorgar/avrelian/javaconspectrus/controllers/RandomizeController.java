@@ -1,5 +1,6 @@
 package lorgar.avrelian.javaconspectrus.controllers;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lorgar.avrelian.javaconspectrus.services.RandomService;
 import lorgar.avrelian.javaconspectrus.services.implementations.RandomServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/random")
+@Hidden
 public class RandomizeController {
     private final RandomService randomService;
 

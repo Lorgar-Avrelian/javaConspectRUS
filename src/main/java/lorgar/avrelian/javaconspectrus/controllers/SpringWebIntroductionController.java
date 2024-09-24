@@ -1,10 +1,12 @@
 package lorgar.avrelian.javaconspectrus.controllers;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lorgar.avrelian.javaconspectrus.services.CounterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Hidden
 public class SpringWebIntroductionController {
     private final CounterService counterService;
 
