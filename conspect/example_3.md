@@ -4,7 +4,7 @@
 
 > [[**5.3 Mockito**]](/conspect/5.md/#53-mockito)
 
-- файл application-test.properties:
+- файл _application-test.properties_:
 
 ```properties
 ad.image.dir.path=tests_images
