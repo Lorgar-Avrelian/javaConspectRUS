@@ -1,17 +1,28 @@
 package lorgar.avrelian.javaconspectrus.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Schema(title = "Книга", description = "Сущность книги")
+@Entity
+@Table(name = "book")
 public class Book {
     @Schema(title = "ID", description = "ID книги", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false, unique = true)
     private long id;
     @Schema(title = "Название", description = "Название книги", defaultValue = "Война и мир", required = true, minLength = 3, maxLength = 30)
+    @Column(name = "title", nullable = false, unique = true, length = 30)
     private String title;
     @Schema(title = "Автор", description = "Автор книги", defaultValue = "Л.Н. Толстой", required = true, minLength = 8, maxLength = 24)
+    @Column(name = "author", nullable = false, length = 30)
     private String author;
+
+    public Book() {
+    }
 
     public Book(long id, String title, String author) {
         this.id = id;
