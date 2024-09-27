@@ -16,4 +16,6 @@ public interface BookService {
     Book deleteBook(long id);
 
     Collection<Book> getAllBooks();
+
+    Collection<Book> getAllBooks(String authorOrTitle);
 }

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.services.BookService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ import java.util.Collection;
 public class BooksController {
     private final BookService bookService;
 
-    public BooksController(BookService bookService) {
+    public BooksController(@Qualifier("bookServiceImplDB") BookService bookService) {
         this.bookService = bookService;
     }
 
@@ -45,6 +46,7 @@ public class BooksController {
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         return ResponseEntity.ok(bookService.createBook(book));
     }
+
     @Operation(
             summary = "Найти",
             description = "Найти информацию о книге по ID",
@@ -76,6 +78,7 @@ public class BooksController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @Operation(
             summary = "Редактировать",
             description = "Отредактировать информацию о книге",
@@ -107,6 +110,7 @@ public class BooksController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
     @Operation(
             summary = "Удалить",
             description = "Удалить информацию о книге по ID",
@@ -138,6 +142,7 @@ public class BooksController {
             return ResponseEntity.status(403).build();
         }
     }
+
     @Operation(
             summary = "Список",
             description = "Вывести список всех доступных книг",
@@ -149,11 +154,28 @@ public class BooksController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     array = @ArraySchema(schema = @Schema(implementation = Book.class))
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
                     )
             }
     )
     @GetMapping
-    public ResponseEntity<Collection<Book>> getAllBooks() {
-        return ResponseEntity.status(200).body(bookService.getAllBooks());
+    public ResponseEntity<Collection<Book>> getAllBooks(@RequestParam(required = false) @Parameter(description = "Часть ФИО автора или названия книги", schema = @Schema(implementation = String.class)) String authorOrTitle) {
+        Collection<Book> books;
+        if (authorOrTitle == null) {
+            books = bookService.getAllBooks();
+        } else {
+            books = bookService.getAllBooks(authorOrTitle);
+        }
+        if (!books.isEmpty()) {
+            return ResponseEntity.status(200).body(books);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class BookServiceImpl implements BookService {
+public class BookServiceImplDB implements BookService {
     private final BookRepository bookRepository;
 
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImplDB(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
@@ -49,5 +49,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public Collection<Book> getAllBooks() {
         return bookRepository.findAll();
+    }
+
+    @Override
+    public Collection<Book> getAllBooks(String authorOrTitle) {
+        return bookRepository.findByAuthorContainsIgnoreCaseOrTitleContainsIgnoreCase(authorOrTitle, authorOrTitle);
     }
 }
