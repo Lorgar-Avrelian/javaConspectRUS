@@ -23,7 +23,7 @@ public class BookServiceImplDB implements BookService {
 
     @Override
     public Book findBook(long id) {
-        return bookRepository.findById(id).get();
+        return bookRepository.findById(id).orElse(null);
     }
 
     @Override

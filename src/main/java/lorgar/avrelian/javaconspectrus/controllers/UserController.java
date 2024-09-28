@@ -1,12 +1,14 @@
 package lorgar.avrelian.javaconspectrus.controllers;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lorgar.avrelian.javaconspectrus.models.User;
 import lorgar.avrelian.javaconspectrus.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path= "/user")
+@RequestMapping(path = "/user")
+@Hidden
 public class UserController {
     private final UserService userService;
 
@@ -20,10 +22,10 @@ public class UserController {
         return ResponseEntity.ok(createdUser);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping(path = "/{userId}")
     public ResponseEntity<User> getUser(@PathVariable Long userId) {
         User user = userService.getUserById(userId);
-        if(user == null) {
+        if (user == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(user);
@@ -32,7 +34,7 @@ public class UserController {
     @PutMapping()
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         User updatedUser = userService.updateUser(user.getId(), user);
-        if(updatedUser == null) {
+        if (updatedUser == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedUser);

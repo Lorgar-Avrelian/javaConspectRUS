@@ -31,7 +31,7 @@ public class BooksController {
     @Operation(
             summary = "Создать",
             description = "Добавить информацию о книге",
-            tags = "Книги",
+            tags = "Книга",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -40,17 +40,29 @@ public class BooksController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = Book.class)
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "405",
+                            description = "Method Not Allowed",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
                     )
             }
     )
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        return ResponseEntity.ok(bookService.createBook(book));
+        try {
+            return ResponseEntity.ok(bookService.createBook(book));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(405).build();
+        }
     }
 
+    @GetMapping(path = "/{id}")     // http://localhost:8080/books/1    R - read
     @Operation(
             summary = "Найти",
             description = "Найти информацию о книге по ID",
-            tags = "Книги",
+            tags = "Книга",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -69,7 +81,6 @@ public class BooksController {
                     )
             }
     )
-    @GetMapping(path = "/{id}")     // http://localhost:8080/books/1    R - read
     public ResponseEntity<Book> readBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class)) long id) {
         Book findedBook = bookService.findBook(id);
         if (findedBook != null) {
@@ -79,10 +90,11 @@ public class BooksController {
         }
     }
 
+    @PutMapping                     // http://localhost:8080/books      U - update
     @Operation(
             summary = "Редактировать",
             description = "Отредактировать информацию о книге",
-            tags = "Книги",
+            tags = "Книга",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -101,7 +113,6 @@ public class BooksController {
                     )
             }
     )
-    @PutMapping                     // http://localhost:8080/books      U - update
     public ResponseEntity<Book> updateBook(@RequestBody Book book) {
         Book updatedBook = bookService.editBook(book);
         if (updatedBook != null) {
@@ -111,10 +122,11 @@ public class BooksController {
         }
     }
 
+    @DeleteMapping(path = "/{id}")  // http://localhost:8080/books/1    D - delete
     @Operation(
             summary = "Удалить",
             description = "Удалить информацию о книге по ID",
-            tags = "Книги",
+            tags = "Книга",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -133,7 +145,6 @@ public class BooksController {
                     )
             }
     )
-    @DeleteMapping(path = "/{id}")  // http://localhost:8080/books/1    D - delete
     public ResponseEntity<Book> deleteBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class)) long id) {
         Book deletedBook = bookService.deleteBook(id);
         if (deletedBook != null) {
@@ -143,9 +154,11 @@ public class BooksController {
         }
     }
 
+    @GetMapping
     @Operation(
-            summary = "Список",
+            summary = "Список  книг",
             description = "Вывести список всех доступных книг",
+            tags = "Поиск",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -164,7 +177,6 @@ public class BooksController {
                     )
             }
     )
-    @GetMapping
     public ResponseEntity<Collection<Book>> getAllBooks(@RequestParam(required = false) @Parameter(description = "Часть ФИО автора или названия книги", schema = @Schema(implementation = String.class)) String authorOrTitle) {
         Collection<Book> books;
         if (authorOrTitle == null) {
