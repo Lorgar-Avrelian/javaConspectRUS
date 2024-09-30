@@ -21,6 +21,9 @@ public class Book {
     @Schema(title = "Автор", description = "Автор книги", defaultValue = "Л.Н. Толстой", required = true, minLength = 8, maxLength = 24)
     @Column(name = "author", nullable = false, length = 30)
     private String author;
+    @Schema(title = "Год", description = "Год публикации книги", defaultValue = "1986", required = true, minimum = "1970")
+    @Column(name = "year", nullable = false)
+    private int year;
     @Schema(title = "ID читателя", description = "ID читателя", defaultValue = "null", minimum = "1", maximum = "9223372036854775807")
     @ManyToOne
     @JoinColumn(name = "reader_id")
@@ -29,10 +32,11 @@ public class Book {
     public Book() {
     }
 
-    public Book(long id, String title, String author, Reader reader) {
+    public Book(long id, String title, String author, int year, Reader reader) {
         this.id = id;
         this.title = title;
         this.author = author;
+        this.year = year;
         this.reader = reader;
     }
 
@@ -60,6 +64,14 @@ public class Book {
         this.author = author;
     }
 
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
     @JsonBackReference
     public Reader getReader() {
         return reader;
@@ -74,12 +86,12 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id == book.id && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(reader, book.reader);
+        return id == book.id && year == book.year && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(reader, book.reader);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, reader);
+        return Objects.hash(id, title, author, year, reader);
     }
 
     @Override
@@ -88,6 +100,7 @@ public class Book {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
+                ", year=" + year +
                 ", reader=" + reader +
                 '}';
     }
