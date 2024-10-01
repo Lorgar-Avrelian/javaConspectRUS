@@ -209,7 +209,7 @@ public class BooksController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Byte.class))
+                                    schema = @Schema(implementation = BookCover.class)
                             )
                     ),
                     @ApiResponse(
@@ -302,7 +302,7 @@ public class BooksController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                                    schema = @Schema(implementation = MultipartFile.class)
+                                    schema = @Schema(implementation = BookCover.class)
                             )
                     ),
                     @ApiResponse(
