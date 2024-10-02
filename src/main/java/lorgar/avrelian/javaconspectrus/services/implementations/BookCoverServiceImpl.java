@@ -35,13 +35,10 @@ public class BookCoverServiceImpl implements BookCoverService {
 
     @Override
     public BookCover uploadCover(long bookId, MultipartFile file) {
-        // Ищем указанную книгу по ID. Если не находим возвращаем null в контроллер
         Book book = bookService.findBook(bookId);
         if (book == null) {
             return null;
         }
-        // Создаём путь, по которому будет сохранён файл обложки
-        // При этом получаем расширение файла при помощи private метода getExtension()
         String fileName = file.getOriginalFilename();
         Path filePath;
         if (fileName != null && !fileName.isEmpty()) {
@@ -49,18 +46,12 @@ public class BookCoverServiceImpl implements BookCoverService {
         } else {
             return null;
         }
-        // При помощи методов класса Files создаём директорию (если она не существует) и удаляем старый файл (если он существует)
-        // Методы класса Files могут выбросить IOException, поэтому заключаем их в блок try-catch
         try {
             Files.createDirectories(filePath.getParent());
             Files.deleteIfExists(filePath);
         } catch (IOException e) {
             return null;
         }
-        // Запускаем входные и выходные потоки данных для сохранения файла обложки на жёсткий диск
-        // При этом создаём буферизированные потоки из входного и выходного, чтобы ускорить процесс обработки
-        // Выходной поток данных запускаем при помощи метода класса Files newOutputStream()
-        // Методы класса Files могут выбросить IOException, поэтому заключаем их в блок try-catch-with-resources
         try (
                 InputStream inputStream = file.getInputStream();
                 BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
@@ -71,24 +62,14 @@ public class BookCoverServiceImpl implements BookCoverService {
         } catch (IOException e) {
             return null;
         }
-        // Получаем сущность обложки из БД или создаём новую, если её в БД не существует при помощи private метода getBookCover()
         BookCover bookCover = getBookCover(bookId);
-        // Вносим изменения в сущность обложки:
-        // - заменяем ID обложки на ID книги
         bookCover.setId(bookId);
-        // - заменяем путь до оригинального файла на жёстком диске, конвертируя filePath в строку
         bookCover.setFilePath(filePath.toString());
-        // - заменяем размер файла: приводим его к значению int, поскольку метод getSize() возвращает значение типа long
         bookCover.setFileSize((int) file.getSize());
-        // - заменяем тип файла, получая его строчное значение благодаря методу getContentType()
         bookCover.setMediaType(file.getContentType());
-        // - заменяем превью, генерируя новое с помощью статического метода generatePreview()
         bookCover.setImagePreview(generatePreview(filePath));
-        // - заменяем ссылку на книгу в БД
         bookCover.setBook(book);
-        // - сохраняем обновлённую (или новую) сущность обложки в БД
         bookCoverRepository.save(bookCover);
-        // Возвращаем превью обложки (в случае, если она корректно сохранилась)
         return getBookCover(bookId);
     }
 
