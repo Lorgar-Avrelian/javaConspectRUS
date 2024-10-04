@@ -148,6 +148,8 @@ public class Book {
 - настройка репозитория _Spring Data JPA_:
 
 ```java
+
+@Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByAuthorContainsIgnoreCaseOrTitleContainsIgnoreCase(String author, String title);
 }

@@ -146,6 +146,7 @@ public class BookCover {
 - создание репозитория для работы с базой данных:
 
 ```java
+@Repository
 public interface BookCoverRepository extends JpaRepository<BookCover, Long> {
     Optional<BookCover> findByBookId(Long bookId);
 }
