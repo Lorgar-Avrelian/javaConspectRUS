@@ -23,6 +23,7 @@ import static lorgar.avrelian.javaconspectrus.constants.Constants.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application-test.properties")
+@DisplayName(value = "http://localhost:8080/readers")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ReaderControllerTest {
     @LocalServerPort
@@ -32,7 +33,7 @@ class ReaderControllerTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    @DisplayName(value = "POST http://localhost:8080/readers test")
+    @DisplayName(value = "POST http://localhost:8080/readers")
     @Order(1)
     void createReader() throws Exception {
         // 1. Проверка, что новая сущность (читатель) создаётся в базе данных (Способ 1: метод TestRestTemplate.postForObject())
@@ -106,50 +107,50 @@ class ReaderControllerTest {
     }
 
     @Test
-    @DisplayName(value = "GET http://localhost:8080/readers/{id} test")
+    @DisplayName(value = "GET http://localhost:8080/readers/{id}")
     @Order(2)
-    void readReader() {
+    void readReader() throws Exception {
     }
 
     @Test
-    @DisplayName(value = "PUT http://localhost:8080/readers test")
+    @DisplayName(value = "PUT http://localhost:8080/readers")
     @Order(3)
-    void updateReader() {
+    void updateReader() throws Exception {
     }
 
     @Test
-    @DisplayName(value = "DELETE http://localhost:8080/readers/{id} test")
+    @DisplayName(value = "DELETE http://localhost:8080/readers/{id}")
     @Order(4)
-    void deleteBook() {
+    void deleteBook() throws Exception {
     }
 
     @Test
-    @DisplayName(value = "GET http://localhost:8080/readers test")
+    @DisplayName(value = "GET http://localhost:8080/readers")
     @Order(5)
-    void getAllReaders() {
+    void getAllReaders() throws Exception {
     }
 
     @Test
-    @DisplayName(value = "GET http://localhost:8080/readers/name test")
+    @DisplayName(value = "GET http://localhost:8080/readers/name")
     @Order(6)
-    void getReadersByName() {
+    void getReadersByName() throws Exception {
     }
 
     @Test
-    @DisplayName(value = "GET http://localhost:8080/readers/secondName test")
+    @DisplayName(value = "GET http://localhost:8080/readers/secondName")
     @Order(7)
-    void getReadersBySecondName() {
+    void getReadersBySecondName() throws Exception {
     }
 
     @Test
-    @DisplayName(value = "GET http://localhost:8080/readers/surname test")
+    @DisplayName(value = "GET http://localhost:8080/readers/surname")
     @Order(8)
-    void getReadersBySurname() {
+    void getReadersBySurname() throws Exception {
     }
 
     @Test
-    @DisplayName(value = "GET http://localhost:8080/readers/books test")
+    @DisplayName(value = "GET http://localhost:8080/readers/books")
     @Order(9)
-    void getReaderBooks() {
+    void getReaderBooks() throws Exception {
     }
 }
