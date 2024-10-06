@@ -36,6 +36,12 @@ class ReaderControllerTest {
     @DisplayName(value = "POST http://localhost:8080/readers")
     @Order(1)
     void createReader() throws Exception {
+        // Подготовительный этап - проверка того, что в базе данных отсутствуют какие-либо сущности (читатели)
+        // - получение списка сущностей из БД
+        ResponseEntity<String> response = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        // - проверка того, что полученный список сущностей пуст
+        Assertions.assertThat(response.getBody()).isNull();
+        //
         // 1. Проверка, что новая сущность (читатель) создаётся в базе данных (Способ 1: метод TestRestTemplate.postForObject())
         // 1.1. получение новой сущности (читателя) из констант
         Reader expectedReader = TEST_READER_1;
@@ -75,41 +81,62 @@ class ReaderControllerTest {
         Assertions.assertThat(responseEntity.getBody().getSecondName()).isEqualTo(TEST_READER_3.getSecondName());
         Assertions.assertThat(responseEntity.getBody().getSurname()).isEqualTo(TEST_READER_3.getSurname());
         Assertions.assertThat(responseEntity.getBody().getPersonalNumber()).isEqualTo(TEST_READER_3.getPersonalNumber());
-        Assertions.assertThat(responseEntity.getBody().getBooks()).isNull();
-        //
-        // 5. Проверка статуса и содержания ошибочного HTTP-ответа
-        // 5.1. получение новой заведомо некорректной сущности (читателя) из констант
+        Assertions.assertThat(responseEntity.getBody().getBooks()).isEmpty();
+        // 5. Проведение всех вышеуказанных проверок с помощью метода TestRestTemplate.exchange()
         expectedReader = TEST_READER_4;
-        // 5.2. получение HTTP-ответа
-        responseEntity = restTemplate.postForEntity("http://localhost:" + port + "/readers", expectedReader, Reader.class);
-        // 5.3. сравнение полученного статуса HTTP-ответа с ожидаемым
-        Assertions.assertThat(responseEntity.getStatusCode().value()).isEqualTo(405);
-        // 5.4. проверка, что тело HTTP-ответа отсутствует
-        Assertions.assertThat(responseEntity.getBody()).isNull();
-        //
-        // 6. Проведение всех вышеуказанных проверок с помощью метода TestRestTemplate.exchange()
-        expectedReader = TEST_READER_5;
         responseEntity = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.POST, new HttpEntity<>(expectedReader), Reader.class);
         actualReader = responseEntity.getBody();
         Assertions.assertThat(actualReader).isEqualTo(expectedReader);
         //
+        // 6. Проверка статуса и содержания ошибочного HTTP-ответа
+        // 6.1. получение новой заведомо некорректной сущности (читателя) из констант
+        expectedReader = TEST_READER_UNSUPPORTED;
+        // 6.2. получение HTTP-ответа
+        responseEntity = restTemplate.postForEntity("http://localhost:" + port + "/readers", expectedReader, Reader.class);
+        // 6.3. сравнение полученного статуса HTTP-ответа с ожидаемым
+        Assertions.assertThat(responseEntity.getStatusCode().value()).isEqualTo(405);
+        // 6.4. проверка, что тело HTTP-ответа отсутствует
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+        //
+        //
         // 7. Проверка того, что все верные новые сущности (читатели) добавлены в БД
         // 7.1. создание ожидаемой коллекции сущностей (читателей)
-        Collection<Reader> expectedReaders = new ArrayList<>(List.of(TEST_READER_1, TEST_READER_2, TEST_READER_3, TEST_READER_5));
+        Collection<Reader> expectedReaders = new ArrayList<>(List.of(TEST_READER_1, TEST_READER_2, TEST_READER_3, TEST_READER_4));
         // 7.2. получение всех сущностей (читателей), имеющихся в БД (можно использовать методы TestRestTemplate.getForEntity() и TestRestTemplate.getForObject())
-        ResponseEntity<String> response = restTemplate.exchange("http://localhost:" + port + "/readers",HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        response = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.GET, HttpEntity.EMPTY, String.class);
         // 7.3. преобразование тела полученного HTTP-ответа в коллекцию объектов
         Collection<Reader> actualReaders = Arrays.asList(mapper.readValue(response.getBody(), Reader[].class));
         // 7.4. сравнение полученной коллекции сущностей с ожидаемой
         Assertions.assertThat(actualReaders).isEqualTo(expectedReaders);
         // 7.5 проверка того, что заведомо некорректная сущность отсутствует в полученной коллекции объектов
-        Assertions.assertThat(actualReaders).doesNotContain(TEST_READER_4);
+        Assertions.assertThat(actualReaders).doesNotContain(TEST_READER_UNSUPPORTED);
     }
 
     @Test
     @DisplayName(value = "GET http://localhost:8080/readers/{id}")
     @Order(2)
     void readReader() throws Exception {
+        // Подготовительный этап - проверка того, что в базе данных отсутствуют какие-либо сущности (читатели)
+        // - создание ожидаемой коллекции сущностей (читателей) в БД
+        Collection<Reader> expectedReaders = new ArrayList<>(List.of(TEST_READER_1, TEST_READER_2, TEST_READER_3, TEST_READER_4));
+        // - проверка того, что все новые сущности (читатели) добавлены в БД
+        //     * получение всех сущностей (читателей), имеющихся в БД (можно использовать методы TestRestTemplate.exchange() и TestRestTemplate.getForObject())
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/readers", String.class);
+        //     * преобразование тела полученного HTTP-ответа в коллекцию объектов
+        Collection<Reader> actualReaders = Arrays.asList(mapper.readValue(response.getBody(), Reader[].class));
+        //     * сравнение полученной коллекции сущностей с ожидаемой
+        Assertions.assertThat(actualReaders).isEqualTo(expectedReaders);
+        //     * проверка того, что заведомо некорректная сущность отсутствует в полученной коллекции объектов
+        Assertions.assertThat(actualReaders).doesNotContain(TEST_READER_UNSUPPORTED);
+        //
+        // 1. Проверка, что сущность пользователя можно получить по ID (Способ 1: метод TestRestTemplate.getForObject())
+        // 1.1. получение сущности (читателя) из констант
+        Reader expectedReader = TEST_READER_1;
+        // 1.2. получение JSON-объекта из сущности (читателя)
+        String expectedJson = mapper.writeValueAsString(expectedReader);
+        // 1.3. проверка, что возвращаемый в результате запроса JSON-объект совпадает с запрошенной сущностью (читателя) по ID
+        Assertions.assertThat(restTemplate.getForObject("http://localhost:" + port + "/readers/" + expectedReader.getId(), String.class))
+                  .isEqualTo(expectedJson);
     }
 
     @Test
