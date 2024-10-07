@@ -654,7 +654,17 @@
 [***5.4 Тестирование web-приложений***](/conspect/5.md/#54-тестирование-web-приложений)  
 
 > [**5.4.1 Тестирование с помощью TestRestTemplate**](/conspect/5.md/#541-тестирование-с-помощью-testresttemplate)  
+> > [_5.4.1.1 getForObject()_](/conspect/5.md/#5411-getforobject)  
+> > [_5.4.1.2 getForEntity()_](/conspect/5.md/#5412-getforentity)  
+> > [_5.4.1.3 postForObject()_](/conspect/5.md/#5413-postforobject)  
+> > [_5.4.1.4 postForEntity()_](/conspect/5.md/#5414-postforentity)  
+> > [_5.4.1.5 put()_](/conspect/5.md/#5415-put)  
+> > [_5.4.1.6 patchForObject()_](/conspect/5.md/#5416-patchforobject)  
+> > [_5.4.1.7 delete()_](/conspect/5.md/#5417-delete)  
+> > [_5.4.1.8 exchange()_](/conspect/5.md/#5418-exchange)  
+> > [_5.4.1.9 withBasicAuth()_](/conspect/5.md/#5419-withbasicauth)  
 > 
+> [**5.4.2 Тестирование с помощью WebMvcTest**](/conspect/5.md/#542-тестирование-с-помощью-webmvctest)  
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 6 SOAP
