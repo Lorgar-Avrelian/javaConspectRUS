@@ -117,7 +117,7 @@ class ReaderControllerTest {
     @DisplayName(value = "GET http://localhost:8080/readers/{id}")
     @Order(2)
     void readReader() throws Exception {
-        // Подготовительный этап - проверка того, что в базе данных отсутствуют какие-либо сущности (читатели)
+        // Подготовительный этап - проверка того, что в базе данных присутствуют добавленные сущности (читатели)
         // - создание ожидаемой коллекции сущностей (читателей) в БД
         Collection<Reader> expectedReaders = new ArrayList<>(List.of(TEST_READER_1, TEST_READER_2, TEST_READER_3, TEST_READER_4));
         // - проверка того, что все сущности (читатели) добавлены в БД
@@ -192,7 +192,7 @@ class ReaderControllerTest {
     @DisplayName(value = "PUT http://localhost:8080/readers")
     @Order(3)
     void updateReader() throws Exception {
-        // Подготовительный этап - проверка того, что в базе данных отсутствуют какие-либо сущности (читатели)
+        // Подготовительный этап - проверка того, что в базе данных присутствуют добавленные сущности (читатели)
         // - создание ожидаемой коллекции сущностей (читателей) в БД
         Collection<Reader> expectedReaders = new ArrayList<>(List.of(TEST_READER_1, TEST_READER_2, TEST_READER_3, TEST_READER_4));
         // - проверка того, что все сущности (читатели) добавлены в БД
@@ -240,7 +240,7 @@ class ReaderControllerTest {
         //     * проверка, что возвращаемая в результате запроса сущность (читатель) совпадает с запрошенной по ID сущностью (читателя)
         Assertions.assertThat(actualReader).isEqualTo(expectedReader);
         //
-        // 3. Проверка, что сущность пользователя можно отредактировать (Способ 3 - ОСНОВНОЙ: методы TestRestTemplate.put() и TestRestTemplate.getForEntity())
+        // 3. Проверка, что сущность пользователя можно отредактировать (Способ 3: методы TestRestTemplate.put() и TestRestTemplate.getForEntity())
         // 3.1. получение сущности (читателя) из базы данных
         ResponseEntity<Reader> responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/readers/" + 3, Reader.class);
         expectedReader = responseEntity.getBody();
@@ -249,7 +249,7 @@ class ReaderControllerTest {
         expectedReader.setSecondName("New second name");
         expectedReader.setSurname("New surname");
         expectedReader.setPersonalNumber(888);
-        // 2.3. проверка, что возвращаемый в результате запроса JSON-объект совпадает с отправленной сущностью (читателя)
+        // 3.3. проверка, что возвращаемый в результате запроса JSON-объект совпадает с отправленной сущностью (читателя)
         //     * отправка PUT-запроса на редактирование полей сущности (читателя)
         restTemplate.put("http://localhost:" + port + "/readers", expectedReader);
         //     * повторное получение сущности (читателя) из БД и проверка, что возвращаемый в результате запроса JSON-объект
@@ -273,7 +273,7 @@ class ReaderControllerTest {
         Assertions.assertThat(responseEntity.getBody().getPersonalNumber()).isEqualTo(expectedReader.getPersonalNumber());
         Assertions.assertThat(responseEntity.getBody().getBooks()).isEmpty();
         //
-        // 5. Проведение всех вышеуказанных проверок с помощью метода TestRestTemplate.exchange()
+        // 5. Проведение всех вышеуказанных проверок с помощью метода TestRestTemplate.exchange() - ОСНОВНОЙ
         responseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/" + 4, HttpMethod.GET, HttpEntity.EMPTY, Reader.class);
         expectedReader = responseEntity.getBody();
         expectedReader.setName("New name");
@@ -289,14 +289,10 @@ class ReaderControllerTest {
         Reader unavailableReader = TEST_READER_4;
         unavailableReader.setId(5L);
         // 6.2. отправка PUT-запроса на редактирование полей отсутствующей сущности (читателя)
-        restTemplate.put("http://localhost:" + port + "/readers", unavailableReader, Reader.class);
-        // 6.3. проверка, что указанной сущности (читателя) в БД не появилось
-        response = restTemplate.getForObject("http://localhost:" + port + "/readers", Reader[].class);
-        actualReaders = Arrays.asList(response);
-        Assertions.assertThat(actualReaders).doesNotContain(unavailableReader);
-        // 6.4. проверка, что сущности (читателя) с отсутствующим ID в БД не появилось
-        responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/readers/" + unavailableReader.getId(), Reader.class);
-        Assertions.assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
+        responseEntity = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.PUT, new HttpEntity<>(unavailableReader), Reader.class);
+        // 6.3. сравнение полученного статуса HTTP-ответа с ожидаемым
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        // 6.4. проверка, что тело HTTP-ответа отсутствует
         Assertions.assertThat(responseEntity.getBody()).isNull();
     }
 
@@ -304,35 +300,220 @@ class ReaderControllerTest {
     @DisplayName(value = "DELETE http://localhost:8080/readers/{id}")
     @Order(4)
     void deleteBook() throws Exception {
+        // Подготовительный этап - проверка того, что в базе данных присутствуют добавленные сущности (читатели)
+        // - получение всех сущностей (читателей), имеющихся в БД (можно использовать методы TestRestTemplate.exchange() и TestRestTemplate.getForEntity())
+        Reader[] response = restTemplate.getForObject("http://localhost:" + port + "/readers", Reader[].class);
+        // - преобразование тела полученного HTTP-ответа в коллекцию объектов
+        Collection<Reader> actualReaders = Arrays.asList(response);
+        // - проверка того, что коллекция сущностей (читателей) в БД не равна нулю
+        Assertions.assertThat(actualReaders).isNotNull();
+        // - проверка того, что размер коллекции сущностей (читателей) в БД больше нуля
+        Assertions.assertThat(actualReaders).isNotEmpty();
+        //
+        // 1. Проверка, что сущность (читателя) можно удалить (Способ 1: методы TestRestTemplate.delete() и TestRestTemplate.getForObject())
+        // 1.1. получение сущности (читателя) из базы данных
+        Reader expectedReader = restTemplate.getForObject("http://localhost:" + port + "/readers/" + 1, Reader.class);
+        // 1.2. проверка, что в результате запроса сущностью (читателя) удаляется из БД
+        //     * отправка DELETE-запроса на удаление сущности (читателя)
+        restTemplate.delete("http://localhost:" + port + "/readers/" + expectedReader.getId());
+        //     * повторное получение сущности (читателя) из БД и проверка, что он отсутствует в БД
+        Assertions.assertThat(restTemplate.getForObject("http://localhost:" + port + "/readers/" + expectedReader.getId(), String.class))
+                  .isNull();
+        // 1.3. проверка, что в результате повторного запроса на удаление получен ожидаемый HTTP-статус
+        ResponseEntity<Reader> responseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/" + expectedReader.getId(), HttpMethod.DELETE, HttpEntity.EMPTY, Reader.class);
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+        //
+        // 2. Проверка, что сущность (читателя) можно удалить (Способ 2: методы TestRestTemplate.delete() и TestRestTemplate.getForObject())
+        // 2.1. получение сущности (читателя) из базы данных
+        expectedReader = restTemplate.getForObject("http://localhost:" + port + "/readers/" + 2, Reader.class);
+        // 2.2. проверка, что в результате запроса сущностью (читателя) удаляется из БД
+        //     * отправка DELETE-запроса на удаление сущности (читателя)
+        restTemplate.delete("http://localhost:" + port + "/readers/" + expectedReader.getId());
+        //     * повторное получение сущности (читателя) из БД и проверка, что в результате возвращается null
+        Reader actualReader = restTemplate.getForObject("http://localhost:" + port + "/readers/" + expectedReader.getId(), Reader.class);
+        Assertions.assertThat(actualReader).isNull();
+        //
+        // 3. Проверка, что сущность (читателя) можно удалить (Способ 3: методы TestRestTemplate.delete() и TestRestTemplate.getForEntity())
+        // 3.1. получение сущности (читателя) из базы данных
+        responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/readers/" + 3, Reader.class);
+        expectedReader = responseEntity.getBody();
+        // 3.2. проверка, что в результате запроса сущностью (читателя) удаляется из БД
+        //     * отправка DELETE-запроса на удаление сущности (читателя)
+        restTemplate.delete("http://localhost:" + port + "/readers/" + expectedReader.getId());
+        //     * повторное получение сущности (читателя) из БД и проверка, что в результате возвращается null
+        responseEntity = restTemplate.getForEntity("http://localhost:" + port + "/readers/" + expectedReader.getId(), Reader.class);
+        actualReader = responseEntity.getBody();
+        //     * проверка, что возвращаемая в результате запроса сущность (читатель) совпадает с запрошенной по ID сущностью (читателя)
+        Assertions.assertThat(actualReader).isNull();
+        //     * проверка HTTP-статуса GET-запроса
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        //
+        // 4. Проверка, что сущность (читателя) можно удалить (Способ 4 - ОСНОВНОЙ: метод TestRestTemplate.exchange())
+        // 4.1. получение сущности (читателя) из базы данных
+        expectedReader = restTemplate.getForObject("http://localhost:" + port + "/readers/" + 4, Reader.class);
+        // 4.2. отправка DELETE-запроса на удаление сущности (читателя)
+        responseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/" + expectedReader.getId(), HttpMethod.DELETE, HttpEntity.EMPTY, Reader.class);
+        // 4.3. сравнение статуса HTTP-ответа с ожидаемым
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        // 4.3. сравнение содержания HTTP-ответа с ожидаемым
+        Assertions.assertThat(responseEntity.getBody()).isNotNull();
+        Assertions.assertThat(responseEntity.getBody()).isEqualTo(expectedReader);
+        Assertions.assertThat(responseEntity.getBody().getId()).isEqualTo(expectedReader.getId());
+        Assertions.assertThat(responseEntity.getBody().getName()).isEqualTo(expectedReader.getName());
+        Assertions.assertThat(responseEntity.getBody().getSecondName()).isEqualTo(expectedReader.getSecondName());
+        Assertions.assertThat(responseEntity.getBody().getSurname()).isEqualTo(expectedReader.getSurname());
+        Assertions.assertThat(responseEntity.getBody().getPersonalNumber()).isEqualTo(expectedReader.getPersonalNumber());
+        Assertions.assertThat(responseEntity.getBody().getBooks()).isEmpty();
+        //
+        // 5. Проверка, что отсутствующую сущность (читателя) нельзя удалить
+        // 5.1. отправка повторного DELETE-запроса на удаление сущности (читателя)
+        responseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/" + expectedReader.getId(), HttpMethod.DELETE, HttpEntity.EMPTY, Reader.class);
+        // 4.3. сравнение статуса HTTP-ответа с ожидаемым
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        // 4.3. сравнение содержания HTTP-ответа с ожидаемым
+        Assertions.assertThat(responseEntity.getBody()).isNull();
     }
 
     @Test
     @DisplayName(value = "GET http://localhost:8080/readers")
     @Order(5)
     void getAllReaders() throws Exception {
+        // 1. Проверка статуса HTTP-ответа при пустой БД
+        ResponseEntity<String> readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(readersResponseEntity.getBody()).isNull();
+        // 2. Заполнение БД сущностями (читателями) и проверка, что все они внесены в БД (ID сущностей присваиваются
+        //    автоматически, поэтому не совпадают с указанными в константах)
+        Collection<Reader> expectedReaders = new ArrayList<>();
+        Reader expectedReader = restTemplate.postForObject("http://localhost:" + port + "/readers", TEST_READER_1, Reader.class);
+        expectedReaders.add(expectedReader);
+        expectedReader = restTemplate.postForObject("http://localhost:" + port + "/readers", TEST_READER_2, Reader.class);
+        expectedReaders.add(expectedReader);
+        expectedReader = restTemplate.postForObject("http://localhost:" + port + "/readers", TEST_READER_3, Reader.class);
+        expectedReaders.add(expectedReader);
+        expectedReader = restTemplate.postForObject("http://localhost:" + port + "/readers", TEST_READER_4, Reader.class);
+        expectedReaders.add(expectedReader);
+        readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Collection<Reader> actualReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+        Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(actualReaders).isEqualTo(expectedReaders);
+        // 3. Проверка нахождения коллекции сущностей (читателей) по содержимому одного из полей
+        readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers?partOfNameSecondNameOrSurname=" + expectedReader.getName(), HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(readersResponseEntity.getBody()).isNotNull();
+        actualReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+        expectedReaders = new ArrayList<>(List.of(expectedReader));
+        Assertions.assertThat(actualReaders).isEqualTo(expectedReaders);
+        readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers?partOfNameSecondNameOrSurname=" + expectedReader.getSecondName(), HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(readersResponseEntity.getBody()).isNotNull();
+        actualReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+        Assertions.assertThat(actualReaders).isEqualTo(expectedReaders);
+        readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers?partOfNameSecondNameOrSurname=" + expectedReader.getSurname(), HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(readersResponseEntity.getBody()).isNotNull();
+        actualReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+        Assertions.assertThat(actualReaders).isEqualTo(expectedReaders);
+        // 4. Проверка статуса HTTP-ответа при отсутствии в БД искомой сущности (читателя)
+        readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers?partOfNameSecondNameOrSurname=" + "random string", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(readersResponseEntity.getBody()).isNull();
     }
 
     @Test
     @DisplayName(value = "GET http://localhost:8080/readers/name")
     @Order(6)
     void getReadersByName() throws Exception {
+        ResponseEntity<String> readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Collection<Reader> expectedReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+        Collection<Reader> actualReaders;
+        Collection<Reader> expectedCollection;
+        for (Reader expectedReader : expectedReaders) {
+            readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/name?partOfName=" + expectedReader.getName(), HttpMethod.GET, HttpEntity.EMPTY, String.class);
+            actualReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+            expectedCollection = new ArrayList<>(List.of(expectedReader));
+            Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            Assertions.assertThat(readersResponseEntity.getBody()).isNotNull();
+            Assertions.assertThat(actualReaders).isEqualTo(expectedCollection);
+        }
+        readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/name?partOfName=" + "random string", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(readersResponseEntity.getBody()).isNull();
     }
 
     @Test
     @DisplayName(value = "GET http://localhost:8080/readers/secondName")
     @Order(7)
     void getReadersBySecondName() throws Exception {
+        ResponseEntity<String> readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Collection<Reader> expectedReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+        Collection<Reader> actualReaders;
+        Collection<Reader> expectedCollection;
+        for (Reader expectedReader : expectedReaders) {
+            readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/secondName?partOfSecondName=" + expectedReader.getSecondName(), HttpMethod.GET, HttpEntity.EMPTY, String.class);
+            actualReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+            expectedCollection = new ArrayList<>(List.of(expectedReader));
+            Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            Assertions.assertThat(readersResponseEntity.getBody()).isNotNull();
+            Assertions.assertThat(actualReaders).isEqualTo(expectedCollection);
+        }
+        readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/secondName?partOfSecondName=" + "random string", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(readersResponseEntity.getBody()).isNull();
     }
 
     @Test
     @DisplayName(value = "GET http://localhost:8080/readers/surname")
     @Order(8)
     void getReadersBySurname() throws Exception {
+        ResponseEntity<String> readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Collection<Reader> expectedReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+        Collection<Reader> actualReaders;
+        Collection<Reader> expectedCollection;
+        for (Reader expectedReader : expectedReaders) {
+            readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/surname?partOfSurname=" + expectedReader.getSurname(), HttpMethod.GET, HttpEntity.EMPTY, String.class);
+            actualReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+            expectedCollection = new ArrayList<>(List.of(expectedReader));
+            Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            Assertions.assertThat(readersResponseEntity.getBody()).isNotNull();
+            Assertions.assertThat(actualReaders).isEqualTo(expectedCollection);
+        }
+        readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/surname?partOfSurname=" + "random string", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(readersResponseEntity.getBody()).isNull();
     }
 
     @Test
     @DisplayName(value = "GET http://localhost:8080/readers/books")
     @Order(9)
     void getReaderBooks() throws Exception {
+        ResponseEntity<String> readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers", HttpMethod.GET, HttpEntity.EMPTY, String.class);
+        Collection<Reader> expectedReaders = Arrays.asList(mapper.readValue(readersResponseEntity.getBody(), Reader[].class));
+        for (Reader expectedReader : expectedReaders) {
+            readersResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/books?id=" + expectedReader.getId(), HttpMethod.GET, HttpEntity.EMPTY, String.class);
+            Assertions.assertThat(readersResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+            Assertions.assertThat(readersResponseEntity.getBody()).isNull();
+        }
+        restTemplate.exchange("http://localhost:" + port + "/books", HttpMethod.POST, new HttpEntity<>(TEST_BOOK_1), String.class);
+        restTemplate.exchange("http://localhost:" + port + "/books", HttpMethod.POST, new HttpEntity<>(TEST_BOOK_2), String.class);
+        restTemplate.exchange("http://localhost:" + port + "/books", HttpMethod.POST, new HttpEntity<>(TEST_BOOK_3), String.class);
+        restTemplate.exchange("http://localhost:" + port + "/books", HttpMethod.POST, new HttpEntity<>(TEST_BOOK_4), String.class);
+        restTemplate.exchange("http://localhost:" + port + "/books", HttpMethod.POST, new HttpEntity<>(TEST_BOOK_5), String.class);
+        Collection<Book> actualBooks;
+        Collection<Book> expectedCollection;
+        ResponseEntity<String> booksResponseEntity;
+        int counter = 1;
+        for (Reader expectedReader : expectedReaders) {
+            restTemplate.exchange("http://localhost:" + port + "/manage?bookId=" + counter + "&readerId=" + expectedReader.getId(), HttpMethod.POST, HttpEntity.EMPTY, String.class);
+            Book expectedBook = restTemplate.exchange("http://localhost:" + port + "/books/" + counter, HttpMethod.GET, HttpEntity.EMPTY, Book.class).getBody();
+            expectedCollection = new ArrayList<>(List.of(expectedBook));
+            booksResponseEntity = restTemplate.exchange("http://localhost:" + port + "/readers/books?id=" + expectedReader.getId(), HttpMethod.GET, HttpEntity.EMPTY, String.class);
+            Assertions.assertThat(booksResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            Assertions.assertThat(booksResponseEntity.getBody()).isNotNull();
+            actualBooks = Arrays.asList(mapper.readValue(booksResponseEntity.getBody(), Book[].class));
+            Assertions.assertThat(actualBooks).isEqualTo(expectedCollection);
+            counter++;
+        }
     }
 }
