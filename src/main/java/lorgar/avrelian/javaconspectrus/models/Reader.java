@@ -16,13 +16,13 @@ public class Reader {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Schema(title = "Имя", description = "Имя читателя", defaultValue = "Иван", required = true, minLength = 2, maxLength = 12)
-    @Column(name = "name", nullable = false, unique = true, length = 12)
+    @Column(name = "name", nullable = false, length = 12)
     private String name;
     @Schema(title = "Отчество", description = "Отчество читателя", defaultValue = "Иванович", minLength = 2, maxLength = 16)
-    @Column(name = "second_name", nullable = false, unique = true, length = 16)
+    @Column(name = "second_name", nullable = false, length = 16)
     private String secondName;
     @Schema(title = "Фамилия", description = "Фамилия читателя", defaultValue = "Иванов", required = true, minLength = 2, maxLength = 30)
-    @Column(name = "surname", nullable = false, unique = true, length = 30)
+    @Column(name = "surname", nullable = false, length = 30)
     private String surname;
     @Schema(title = "Номер билета", description = "Номер читательского билета", defaultValue = "1", required = true, minimum = "1", maximum = "2147483648")
     @Column(name = "personal_number", nullable = false, unique = true)

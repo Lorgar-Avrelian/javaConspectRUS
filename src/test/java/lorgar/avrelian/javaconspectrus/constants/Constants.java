@@ -16,7 +16,7 @@ public class Constants {
     public static final Reader TEST_READER_2 = new Reader(2, "2nd name", "2nd second name", "2nd surname", 222, new ArrayList<>());
     public static final Reader TEST_READER_3 = new Reader(3, "3rd name", "3rd second name", "3rd surname", 333, new ArrayList<>());
     public static final Reader TEST_READER_4 = new Reader(4, "4th name", "4th second name", "4th surname", 444, new ArrayList<>());
-    public static final Reader TEST_READER_UNSUPPORTED = new Reader(4, "4th name with unsupported length, that will be ignored", "4th second name", "4th surname", 444, new ArrayList<>());
+    public static final Reader TEST_READER_UNSUPPORTED = new Reader(4, "4th name with unsupported length, that will be ignored", "4th second name", "4th surname", 444, new ArrayList<>()            );
     public static final Path TEST_BOOK_IMAGE_PATH_1 = Path.of("src/test/resources/testImages/1.jpg");
     public static final Path TEST_BOOK_IMAGE_PATH_2 = Path.of("src/test/resources/testImages/2.jpg");
     public static final Path TEST_BOOK_IMAGE_PATH_3 = Path.of("src/test/resources/testImages/3.jpg");
