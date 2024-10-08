@@ -574,4 +574,4 @@ class ReaderControllerTest {
 
 > [[_оглавление_]](../README.md/#54-тестирование-web-приложений)
 
-> [**[5.4.1 Тестирование с помощью TestRestTemplate]**](/conspect/5.md/#541-тестирование-с-помощью-testresttemplate)
+> [**[5.4.2 Тестирование с помощью WebMvcTest]**](/conspect/5.md/#542-тестирование-с-помощью-webmvctest)
