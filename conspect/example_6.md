@@ -64,3 +64,93 @@ VALUES ('Ivan', 1, 500, 'SWE'),
       FROM employees;
       ```
 
+## Пример 2:
+
+> [[_оглавление_]](../README.md/#83-sql)
+
+> [[**8.3.2.2 Агрегатные функции**]](/conspect/8.md/#8322-агрегатные-функции)
+
+```sql
+CREATE TABLE expense
+(
+    id       INTEGER DEFAULT nextval('table_name_id_seq'::regclass) NOT NULL,
+    title    TEXT                                                   NOT NULL,
+    date     DATE                                                   NOT NULL,
+    category TEXT,
+    amount   INTEGER                                                NOT NULL
+);
+
+INSERT INTO public.expense (id, title, date, category, amount)
+VALUES (1, 'Проезд в автобусе', '2021-01-30', 'Транспорт', 50);
+
+INSERT INTO public.expense (id, title, date, category, amount)
+VALUES (2, 'Проезд в метро', '2021-01-30', 'Транспорт', 50);
+
+INSERT INTO public.expense (id, title, date, category, amount)
+VALUES (3, 'Покупка книги', '2021-01-31', 'Прочие покупки', 300);
+
+INSERT INTO public.expense (id, title, date, category, amount)
+VALUES (4, 'Покупка продуктов', '2021-01-31', 'Покупка продуктов', 450);
+
+INSERT INTO public.expense (id, title, date, category, amount)
+VALUES (5, 'Поход в кино', '2021-02-01', 'Развлечения', 400);
+
+INSERT INTO public.expense (id, title, date, category, amount)
+VALUES (6, 'Кофе', '2021-02-01', 'Еда вне дома', 150);
+
+INSERT INTO public.expense (id, title, date, category, amount)
+VALUES (7, 'Покупка продуктов', '2021-02-02', 'Покупка продуктов', 600);
+
+INSERT INTO public.expense (id, title, date, category, amount)
+VALUES (8, 'Поход в театр', '2021-02-14', 'Развлечения', 1000);
+
+INSERT INTO public.expense (id, title, date, category, amount)
+VALUES (9, 'Цветы', '2021-02-14', null, 500);
+
+SELECT *
+FROM expense;
+
+SELECT *
+FROM expense
+ORDER BY amount DESC;
+
+SELECT COUNT(*)
+FROM expense;
+
+SELECT COUNT(DISTINCT (category))
+FROM expense;
+
+SELECT category, COUNT(*)
+FROM expense
+GROUP BY category;
+
+SELECT category, MIN(amount), MAX(amount), AVG(amount)
+FROM expense
+GROUP BY category;
+
+SELECT category, SUM(amount)
+FROM expense
+GROUP BY category;
+
+SELECT category, COUNT(*)
+FROM expense
+GROUP BY category
+HAVING COUNT(*) > 1;
+
+SELECT category, SUM(amount)
+FROM expense
+GROUP BY category
+HAVING SUM(amount) > 1000;
+
+SELECT *
+FROM expense
+LIMIT 4;
+
+SELECT *
+FROM expense
+OFFSET 4;
+
+SELECT *
+FROM expense
+LIMIT 2 OFFSET 4;
+```
