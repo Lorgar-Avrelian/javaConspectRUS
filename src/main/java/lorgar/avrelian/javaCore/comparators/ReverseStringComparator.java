@@ -1,4 +1,4 @@
-package javaCore.comparators;
+package lorgar.avrelian.javaCore.comparators;
 
 import java.util.Comparator;
 

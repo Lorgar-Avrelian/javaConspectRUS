@@ -1,9 +1,9 @@
-package javaCore;
+package lorgar.avrelian.javaCore;
 
-import javaCore.comparators.ReverseStringComparator;
-import javaCore.models.Person;
-import javaCore.models.VariableContainer;
-import javaCore.models.Worker;
+import lorgar.avrelian.javaCore.comparators.ReverseStringComparator;
+import lorgar.avrelian.javaCore.models.Person;
+import lorgar.avrelian.javaCore.models.VariableContainer;
+import lorgar.avrelian.javaCore.models.Worker;
 
 import java.io.File;
 import java.io.IOException;

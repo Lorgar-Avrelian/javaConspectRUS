@@ -1,4 +1,4 @@
-package javaCore.models;
+package lorgar.avrelian.javaCore.models;
 
 import java.util.Objects;
 

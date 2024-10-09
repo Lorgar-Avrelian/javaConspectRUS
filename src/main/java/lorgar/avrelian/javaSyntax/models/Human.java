@@ -1,16 +1,23 @@
-package javaCore.models;
+package lorgar.avrelian.javaSyntax.models;
 
 import java.util.Objects;
 
-public class Person implements Comparable<Person> {
+public class Human {
     private String name;
     private String surname;
     private int age;
 
-    public Person(String name, String surname, int age) {
+    public Human(String name, int age) {
+        this(name, null, age);
+    }
+
+    public Human(String name, String surname, int age) {
         this.name = name;
         this.surname = surname;
         this.age = age;
+    }
+
+    public Human() {
     }
 
     public String getName() {
@@ -41,8 +48,8 @@ public class Person implements Comparable<Person> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return age == person.age && Objects.equals(name, person.name) && Objects.equals(surname, person.surname);
+        Human human = (Human) o;
+        return age == human.age && Objects.equals(name, human.name) && Objects.equals(surname, human.surname);
     }
 
     @Override
@@ -52,15 +59,10 @@ public class Person implements Comparable<Person> {
 
     @Override
     public String toString() {
-        return "Person[" +
+        return "Human{" +
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
-                ']';
-    }
-
-    @Override
-    public int compareTo(Person o) {
-        return name.compareTo(o.name);
+                '}';
     }
 }

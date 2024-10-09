@@ -1,7 +1,7 @@
-package javaSyntax;
+package lorgar.avrelian.javaSyntax;
 
-import javaSyntax.models.Human;
-import javaSyntax.models.HumanUtility;
+import lorgar.avrelian.javaSyntax.models.Human;
+import lorgar.avrelian.javaSyntax.models.HumanUtility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
