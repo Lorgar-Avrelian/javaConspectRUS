@@ -4,7 +4,8 @@ import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.BookCover;
 import lorgar.avrelian.javaconspectrus.repository.BookCoverRepository;
 import lorgar.avrelian.javaconspectrus.repository.BookRepository;
-import lorgar.avrelian.javaconspectrus.repository.ReaderRepository;
+import lorgar.avrelian.javaconspectrus.services.BookCoverService;
+import lorgar.avrelian.javaconspectrus.services.BookService;
 import lorgar.avrelian.javaconspectrus.services.implementations.BookCoverServiceImpl;
 import lorgar.avrelian.javaconspectrus.services.implementations.BookServiceImplDB;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -13,15 +14,14 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -32,17 +32,16 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 
 import static lorgar.avrelian.javaconspectrus.constants.Constants.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-@WebMvcTest(controllers = BooksController.class)
-@ComponentScan(basePackages = {"lorgar.avrelian.javaconspectrus.services.implementations"}) // аннотация использована по
-// причине возникновения UnsatisfiedDependencyException и IllegalStateException
-@TestPropertySource(locations = "classpath:application-test.properties")
+@WebMvcTest(controllers = BooksController.class, properties = "books.covers.dir.path=src/test/resources/testImages/result")
 @DisplayName(value = "http://localhost:8080/books")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BooksControllerTest {
@@ -51,22 +50,27 @@ class BooksControllerTest {
     @InjectMocks
     private BooksController controller;
     @SpyBean
-    private BookServiceImplDB bookServiceImplDB;
+    private BookService bookService;
     @SpyBean
-    private BookCoverServiceImpl bookCoverServiceImpl;
+    private BookCoverService bookCoverService;
     @MockBean
     private BookRepository bookRepository;
     @MockBean
     private BookCoverRepository bookcoverRepository;
-    // ----------------------------------------------------------------------
-    // добавленные макеты в результате использования аннотации @ComponentScan
-    @MockBean
-    private ReaderRepository readerRepository;
-    @MockBean
-    private Random random;
-    // ----------------------------------------------------------------------
-    @Value("${books.covers.dir.path}")
-    private String sourceImageDir;
+    private final String sourceImageDir = "src/test/resources/testImages/result";
+
+    @TestConfiguration
+    public static class BooksControllerTestConfiguration {
+        @Bean(name = "bookServiceImplDB")
+        public BookService bookService(BookRepository bookRepository) {
+            return new BookServiceImplDB(bookRepository);
+        }
+
+        @Bean(name = "bookCoverServiceImpl")
+        public BookCoverService bookCoverService(BookService bookService, BookCoverRepository bookcoverRepository) {
+            return new BookCoverServiceImpl(bookService, bookcoverRepository);
+        }
+    }
 
     @Test
     @DisplayName(value = "POST http://localhost:8080/books")
@@ -104,6 +108,7 @@ class BooksControllerTest {
                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(TEST_BOOK_1.getTitle()))
                .andExpect(MockMvcResultMatchers.jsonPath("$.author").value(TEST_BOOK_1.getAuthor()))
                .andExpect(MockMvcResultMatchers.jsonPath("$.year").value(TEST_BOOK_1.getYear()));
+        expectedBook.setId(1);
         expectedBook = TEST_BOOK_2;
         expectedBookJson = toJsonObject(expectedBook);
         expectedBook.setId(0);
@@ -116,6 +121,7 @@ class BooksControllerTest {
                        )
                .andExpect(MockMvcResultMatchers.status().isMethodNotAllowed())
                .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+        expectedBook.setId(2);
     }
 
     @Test
@@ -137,7 +143,7 @@ class BooksControllerTest {
                .andExpect(MockMvcResultMatchers.jsonPath("$.author").value(TEST_BOOK_1.getAuthor()))
                .andExpect(MockMvcResultMatchers.jsonPath("$.year").value(TEST_BOOK_1.getYear()));
         expectedBook = TEST_BOOK_3;
-        when(bookServiceImplDB.findBook(eq(expectedBook.getId()))).thenReturn(null);
+        when(bookService.findBook(eq(expectedBook.getId()))).thenReturn(null);
         mockMvc.perform(
                        MockMvcRequestBuilders.get("/books/" + expectedBook.getId())
                                              .content("")
@@ -187,7 +193,7 @@ class BooksControllerTest {
     void deleteBook() throws Exception {
         Book expectedBook = TEST_BOOK_1;
         when(bookRepository.existsById(eq(expectedBook.getId()))).thenReturn(true);
-        when(bookServiceImplDB.findBook(eq(expectedBook.getId()))).thenReturn(TEST_BOOK_1);
+        when(bookService.findBook(eq(expectedBook.getId()))).thenReturn(TEST_BOOK_1);
         mockMvc.perform(
                        MockMvcRequestBuilders.delete("/books/" + expectedBook.getId())
                                              .content("")
@@ -301,22 +307,31 @@ class BooksControllerTest {
     @DisplayName(value = "POST http://localhost:8080/books/{id}/cover")
     @Order(6)
     void uploadCover() throws Exception {
+        //                                  Проверка успешного запроса
         // 1. Задание поведения репозитория родительского сервиса (bookRepository) для случая поиска сущности (книги)
         //    дочерним сервисом bookCoverServiceImpl
         when(bookRepository.findById(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(TEST_BOOK_1));
         // 2. Создания массива байт из источника изображения
         byte[] inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_1);
         // 3. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
-        BookCover cover = new BookCover(TEST_BOOK_1.getId(), sourceImageDir + "/1.jpg", inputImage.length, MediaType.IMAGE_JPEG.toString(), generatePreview(TEST_BOOK_IMAGE_PATH_1), TEST_BOOK_1);
+        BookCover cover = new BookCover(TEST_BOOK_1.getId(),
+                                        sourceImageDir + "/1.jpg",
+                                        inputImage.length,
+                                        MediaType.IMAGE_JPEG.toString(),
+                                        generatePreview(TEST_BOOK_IMAGE_PATH_1),
+                                        TEST_BOOK_1);
         // 4. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
         //    хранения данных изображения (BookCover)
         when(bookcoverRepository.save(any(BookCover.class))).thenReturn(cover);
         when(bookcoverRepository.findByBookId(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(cover));
         // 5. Создание макета передаваемого в запросе файла класса MultipartFile
-        MockMultipartFile multipartFile = new MockMultipartFile("file", "1.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        MockMultipartFile multipartFile = new MockMultipartFile("file",              // имя параметра в HTTP-запросе
+                                                                "1.jpg",                   // оригинальное название файла
+                                                                MediaType.IMAGE_JPEG_VALUE,// тип файла
+                                                                inputImage);               // байт-код файла
         // 6. Создание запроса и проверка его ответа
         mockMvc.perform(
-                       MockMvcRequestBuilders.multipart(HttpMethod.POST, "/books/1/cover")
+                       MockMvcRequestBuilders.multipart(HttpMethod.POST, "/books/" + TEST_BOOK_1.getId() + "/cover")
                                              .file(multipartFile)
                                              .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                                              .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
@@ -326,6 +341,66 @@ class BooksControllerTest {
         // 7. Создание массива байт из загруженного изображения и сравнение его с оригиналом
         byte[] outputImage = Files.readAllBytes(Path.of(sourceImageDir + "/1.jpg"));
         Assertions.assertArrayEquals(inputImage, outputImage);
+        //
+        //                          Проверка запроса при отсутствующем родительском объекте
+        // 1. Задание поведения родительского сервиса (bookServiceImplDB) для случая поиска сущности (книги)
+        //    дочерним сервисом bookCoverServiceImpl
+        when(bookService.findBook(eq(TEST_BOOK_2.getId()))).thenReturn(null);
+        // 2. Создания массива байт из источника изображения
+        inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_2);
+        // 3. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        cover = new BookCover(TEST_BOOK_2.getId(),
+                              sourceImageDir + "/2.jpg",
+                              inputImage.length,
+                              MediaType.IMAGE_JPEG.toString(),
+                              generatePreview(TEST_BOOK_IMAGE_PATH_2),
+                              TEST_BOOK_2);
+        // 4. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.save(any(BookCover.class))).thenReturn(cover);
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_2.getId()))).thenReturn(Optional.of(cover));
+        // 5. Создание макета передаваемого в запросе файла класса MultipartFile
+        multipartFile = new MockMultipartFile("file",              // имя параметра в HTTP-запросе
+                                              "2.jpg",                   // оригинальное название файла
+                                              MediaType.IMAGE_JPEG_VALUE,// тип файла
+                                              inputImage);               // байт-код файла
+        // 6. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.multipart(HttpMethod.POST, "/books/" + TEST_BOOK_2.getId() + "/cover")
+                                             .file(multipartFile)
+                                             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+        // 7. Проверка того, что файл не загрузился
+        Assertions.assertTrue(Files.notExists(Path.of(sourceImageDir + "/2.jpg")));
+        //
+        //                       Проверка запроса при обработке которого возникла ошибка
+        // 1. Задание поведения родительского сервиса (bookServiceImplDB) для случая поиска сущности (книги)
+        //    дочерним сервисом bookCoverServiceImpl
+        when(bookRepository.findById(eq(TEST_BOOK_3.getId()))).thenReturn(Optional.of(TEST_BOOK_3));
+        // 2. Создания массива байт из источника изображения
+        inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_3);
+        // 3. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        cover = new BookCover();
+        // 4. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.save(any(BookCover.class))).thenReturn(null);
+        // 5. Создание макета передаваемого в запросе файла класса MultipartFile
+        multipartFile = new MockMultipartFile("file",              // имя параметра в HTTP-запросе
+                                              "3.jpg",                   // оригинальное название файла
+                                              MediaType.IMAGE_JPEG_VALUE,// тип файла
+                                              inputImage);               // байт-код файла
+        // 6. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.multipart(HttpMethod.POST, "/books/" + TEST_BOOK_3.getId() + "/cover")
+                                             .file(multipartFile)
+                                             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isForbidden())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+        // 7. Проверка того, что файл не загрузился
+        Assertions.assertTrue(Files.notExists(Path.of(sourceImageDir + "/3.jpg")));
         // 8. Удаление ненужной директории с результатами теста, после его завершения
         FileUtils.deleteDirectory(new File(sourceImageDir));
     }
@@ -334,12 +409,106 @@ class BooksControllerTest {
     @DisplayName(value = "GET http://localhost:8080/books/{id}/cover/preview")
     @Order(7)
     void downloadCover() throws Exception {
+        //                                  Проверка успешного запроса
+        // 1. Создания массива байт из источника изображения
+        byte[] inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_1);
+        // 2. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        BookCover cover = new BookCover(TEST_BOOK_1.getId(),
+                                        sourceImageDir + "/1.jpg",
+                                        inputImage.length,
+                                        MediaType.IMAGE_JPEG.toString(),
+                                        generatePreview(TEST_BOOK_IMAGE_PATH_1),
+                                        TEST_BOOK_1);
+        // 3. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(cover));
+        // 4. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_1.getId() + "/cover/preview")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.content().contentType(MediaType.IMAGE_JPEG_VALUE))
+               .andExpect(MockMvcResultMatchers.content().bytes(Objects.requireNonNull(generatePreview(TEST_BOOK_IMAGE_PATH_1))));
+        //
+        //                       Проверка запроса при обработке которого возникла ошибка
+        // 1. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(new BookCover()));
+        // 2. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_3.getId() + "/cover/preview")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isForbidden())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
     }
 
     @Test
     @DisplayName(value = "GET http://localhost:8080/books/{id}/cover")
     @Order(8)
     void testDownloadCover() throws Exception {
+        //                                  Проверка успешного запроса
+        // 1. Создания массива байт из источника изображения
+        byte[] inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_1);
+        // 2. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        BookCover cover = new BookCover(TEST_BOOK_1.getId(),
+                                        TEST_BOOK_IMAGE_PATH_1.toString(),
+                                        inputImage.length,
+                                        MediaType.IMAGE_JPEG.toString(),
+                                        generatePreview(TEST_BOOK_IMAGE_PATH_1),
+                                        TEST_BOOK_1);
+        // 3. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(cover));
+        // 4. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_1.getId() + "/cover")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.content().contentType(MediaType.IMAGE_JPEG_VALUE))
+               .andExpect(MockMvcResultMatchers.content().bytes(Files.readAllBytes(TEST_BOOK_IMAGE_PATH_1)));
+        //
+        //                          Проверка запроса при отсутствующем файле
+        // 1. Создания массива байт из источника изображения
+        inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_2);
+        // 2. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        cover = new BookCover(TEST_BOOK_2.getId(),
+                                        TEST_BOOK_IMAGE_PATH_2 + "random",
+                                        inputImage.length,
+                                        MediaType.IMAGE_JPEG.toString(),
+                                        generatePreview(TEST_BOOK_IMAGE_PATH_2),
+                                        TEST_BOOK_2);
+        // 3. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_2.getId()))).thenReturn(Optional.of(cover));
+        // 4. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_2.getId() + "/cover")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isBadGateway())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+        //
+        //                       Проверка запроса при обработке которого возникла ошибка
+        // 1. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        cover = new BookCover();
+        // 2. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_2.getId()))).thenReturn(Optional.of(cover));
+        // 3. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_2.getId() + "/cover")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isNotFound())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
     }
 
     private static JSONObject toJsonObject(Book book) throws JSONException {

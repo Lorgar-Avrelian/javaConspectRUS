@@ -22,5 +22,4 @@ public class Constants {
     public static final Path TEST_BOOK_IMAGE_PATH_3 = Path.of("src/test/resources/testImages/3.jpg");
     public static final Path TEST_BOOK_IMAGE_PATH_4 = Path.of("src/test/resources/testImages/4.jpg");
     public static final Path TEST_BOOK_IMAGE_PATH_5 = Path.of("src/test/resources/testImages/5.jpg");
-    public static final Path TEST_BOOK_COVER_IMAGES_PATH = Path.of("src/test/resources/testImages/result");
 }

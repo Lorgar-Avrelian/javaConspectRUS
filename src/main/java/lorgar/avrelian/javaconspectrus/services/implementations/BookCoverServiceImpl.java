@@ -70,7 +70,15 @@ public class BookCoverServiceImpl implements BookCoverService {
         bookCover.setImagePreview(generatePreview(filePath));
         bookCover.setBook(book);
         bookCoverRepository.save(bookCover);
-        return getBookCover(bookId);
+        bookCover = getBookCover(bookId);
+        if (bookCover.getId() == 0) {
+            try {
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                return bookCover;
+            }
+        }
+        return bookCover;
     }
 
     private String getExtension(String filename) {

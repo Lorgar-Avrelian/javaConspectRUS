@@ -255,13 +255,6 @@ public class BooksController {
                             )
                     ),
                     @ApiResponse(
-                            responseCode = "400",
-                            description = "Bad Request",
-                            content = @Content(
-                                    schema = @Schema(implementation = Void.class)
-                            )
-                    ),
-                    @ApiResponse(
                             responseCode = "403",
                             description = "Forbidden",
                             content = @Content(
@@ -272,11 +265,7 @@ public class BooksController {
     )
     public ResponseEntity<byte[]> downloadCover(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class)) long id) {
         BookCover bookCover = bookCoverService.getBookCover(id);
-        if (bookCover != null) {
-            return getCover(bookCover);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        return getCover(bookCover);
     }
 
     private ResponseEntity<byte[]> getCover(BookCover bookCover) {

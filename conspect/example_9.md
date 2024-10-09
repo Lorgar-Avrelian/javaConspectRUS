@@ -575,3 +575,1511 @@ class ReaderControllerTest {
 > [[_оглавление_]](../README.md/#54-тестирование-web-приложений)
 
 > [**[5.4.2 Тестирование с помощью WebMvcTest]**](/conspect/5.md/#542-тестирование-с-помощью-webmvctest)
+
+- изображение загружается с помощью аннотации `@RequestParam`:
+
+```java
+
+@WebMvcTest(controllers = BooksController.class, properties = "books.covers.dir.path=src/test/resources/testImages/result")
+@DisplayName(value = "http://localhost:8080/books")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class BooksControllerTest {
+    @Autowired
+    private MockMvc mockMvc;
+    @InjectMocks
+    private BooksController controller;
+    @SpyBean
+    private BookService bookService;
+    @SpyBean
+    private BookCoverService bookCoverService;
+    @MockBean
+    private BookRepository bookRepository;
+    @MockBean
+    private BookCoverRepository bookcoverRepository;
+    private final String sourceImageDir = "src/test/resources/testImages/result";
+
+    @TestConfiguration
+    public static class BooksControllerTestConfiguration {
+        @Bean(name = "bookServiceImplDB")
+        public BookService bookService(BookRepository bookRepository) {
+            return new BookServiceImplDB(bookRepository);
+        }
+
+        @Bean(name = "bookCoverServiceImpl")
+        public BookCoverService bookCoverService(BookService bookService, BookCoverRepository bookcoverRepository) {
+            return new BookCoverServiceImpl(bookService, bookcoverRepository);
+        }
+    }
+
+    @Test
+    @DisplayName(value = "POST http://localhost:8080/books")
+    @Order(1)
+    void createBook() throws Exception {
+        // 1. Подготовительный этап
+        // 1.1. получение сущности из констант
+        Book expectedBook = TEST_BOOK_1;
+        // 1.2. получение JSON-объекта из сущности при помощи статического метода toJsonObject() (в конце класса)
+        JSONObject expectedBookJson = toJsonObject(expectedBook);
+        // 1.3. приведение значений сущности в соответствии с логикой сервиса
+        expectedBook.setId(0);
+        // 1.4. изменение поведения репозитория при вызове метода save() и получении на вход изменённой в соответствии
+        //      с логикой сервиса сущности
+        when(bookRepository.save(eq(expectedBook))).thenReturn(TEST_BOOK_1);
+        //
+        // 2. Проведение теста
+        // 2.1. формирование запроса
+        mockMvc.perform(
+                       // 2.1.1. определение типа и адреса запроса
+                       MockMvcRequestBuilders.post("/books")
+                                             // 2.1.2. добавление контента запроса
+                                             .content(expectedBookJson.toString())
+                                             // 2.1.3. добавление типа контента запроса
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             // 2.1.3. добавление типа контента ответа
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               // 2.2. проверка ответа
+               // 2.2.1. проверка статуса ответа
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               // 2.2.2. проверка содержимого ответа
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isNotEmpty())
+               .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(TEST_BOOK_1.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(TEST_BOOK_1.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.author").value(TEST_BOOK_1.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.year").value(TEST_BOOK_1.getYear()));
+        expectedBook.setId(1);
+        expectedBook = TEST_BOOK_2;
+        expectedBookJson = toJsonObject(expectedBook);
+        expectedBook.setId(0);
+        when(bookRepository.save(eq(expectedBook))).thenThrow(new RuntimeException());
+        mockMvc.perform(
+                       MockMvcRequestBuilders.post("/books")
+                                             .content(expectedBookJson.toString())
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isMethodNotAllowed())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+        expectedBook.setId(2);
+    }
+
+    @Test
+    @DisplayName(value = "GET http://localhost:8080/books/{id}")
+    @Order(2)
+    void readBook() throws Exception {
+        Book expectedBook = TEST_BOOK_1;
+        when(bookRepository.findById(eq(expectedBook.getId()))).thenReturn(Optional.of(TEST_BOOK_1));
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + expectedBook.getId())
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isNotEmpty())
+               .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(TEST_BOOK_1.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(TEST_BOOK_1.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.author").value(TEST_BOOK_1.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.year").value(TEST_BOOK_1.getYear()));
+        expectedBook = TEST_BOOK_3;
+        when(bookService.findBook(eq(expectedBook.getId()))).thenReturn(null);
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + expectedBook.getId())
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isNotFound())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @DisplayName(value = "PUT http://localhost:8080/books")
+    @Order(3)
+    void updateBook() throws Exception {
+        Book expectedBook = TEST_BOOK_1;
+        JSONObject expectedBookJson = toJsonObject(expectedBook);
+        when(bookRepository.existsById(eq(expectedBook.getId()))).thenReturn(true);
+        when(bookRepository.save(eq(expectedBook))).thenReturn(TEST_BOOK_1);
+        mockMvc.perform(
+                       MockMvcRequestBuilders.put("/books")
+                                             .content(expectedBookJson.toString())
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isNotEmpty())
+               .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(TEST_BOOK_1.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(TEST_BOOK_1.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.author").value(TEST_BOOK_1.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.year").value(TEST_BOOK_1.getYear()));
+        expectedBook = TEST_BOOK_4;
+        expectedBookJson = toJsonObject(expectedBook);
+        when(bookRepository.existsById(eq(expectedBook.getId()))).thenReturn(false);
+        mockMvc.perform(
+                       MockMvcRequestBuilders.put("/books")
+                                             .content(expectedBookJson.toString())
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @DisplayName(value = "DELETE http://localhost:8080/books/{id}")
+    @Order(4)
+    void deleteBook() throws Exception {
+        Book expectedBook = TEST_BOOK_1;
+        when(bookRepository.existsById(eq(expectedBook.getId()))).thenReturn(true);
+        when(bookService.findBook(eq(expectedBook.getId()))).thenReturn(TEST_BOOK_1);
+        mockMvc.perform(
+                       MockMvcRequestBuilders.delete("/books/" + expectedBook.getId())
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isNotEmpty())
+               .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(TEST_BOOK_1.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(TEST_BOOK_1.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.author").value(TEST_BOOK_1.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.year").value(TEST_BOOK_1.getYear()));
+        expectedBook = TEST_BOOK_5;
+        when(bookRepository.existsById(eq(expectedBook.getId()))).thenReturn(false);
+        mockMvc.perform(
+                       MockMvcRequestBuilders.delete("/books/" + expectedBook.getId())
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isForbidden())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @DisplayName(value = "GET http://localhost:8080/books")
+    @Order(5)
+    void getAllBooks() throws Exception {
+        List<Book> expectedBookCollection = new ArrayList<>(List.of(TEST_BOOK_1, TEST_BOOK_2, TEST_BOOK_3, TEST_BOOK_4, TEST_BOOK_5));
+        when(bookRepository.findAll()).thenReturn(expectedBookCollection);
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isNotEmpty())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(TEST_BOOK_1.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value(TEST_BOOK_1.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].author").value(TEST_BOOK_1.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].year").value(TEST_BOOK_1.getYear()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(TEST_BOOK_2.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value(TEST_BOOK_2.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[1].author").value(TEST_BOOK_2.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[1].year").value(TEST_BOOK_2.getYear()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[2].id").value(TEST_BOOK_3.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[2].title").value(TEST_BOOK_3.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[2].author").value(TEST_BOOK_3.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[2].year").value(TEST_BOOK_3.getYear()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[3].id").value(TEST_BOOK_4.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[3].title").value(TEST_BOOK_4.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[3].author").value(TEST_BOOK_4.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[3].year").value(TEST_BOOK_4.getYear()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[4].id").value(TEST_BOOK_5.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[4].title").value(TEST_BOOK_5.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[4].author").value(TEST_BOOK_5.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[4].year").value(TEST_BOOK_5.getYear()));
+        List<Book> bookCollection1 = new ArrayList<>(List.of(TEST_BOOK_1));
+        when(bookRepository.findByAuthorContainsIgnoreCaseOrTitleContainsIgnoreCase(eq(TEST_BOOK_1.getAuthor()), eq(TEST_BOOK_1.getAuthor()))).thenReturn(bookCollection1);
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books?authorOrTitle=" + TEST_BOOK_1.getAuthor())
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isNotEmpty())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(TEST_BOOK_1.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value(TEST_BOOK_1.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].author").value(TEST_BOOK_1.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].year").value(TEST_BOOK_1.getYear()));
+        List<Book> bookCollection2 = new ArrayList<>(List.of(TEST_BOOK_4));
+        when(bookRepository.findByAuthorContainsIgnoreCaseOrTitleContainsIgnoreCase(eq(TEST_BOOK_4.getTitle()), eq(TEST_BOOK_4.getTitle()))).thenReturn(bookCollection2);
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books?authorOrTitle=" + TEST_BOOK_4.getTitle())
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isNotEmpty())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(TEST_BOOK_4.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value(TEST_BOOK_4.getTitle()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].author").value(TEST_BOOK_4.getAuthor()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].year").value(TEST_BOOK_4.getYear()));
+        when(bookRepository.findAll()).thenReturn(new ArrayList<>());
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isNotFound())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+        when(bookRepository.findByAuthorContainsIgnoreCaseOrTitleContainsIgnoreCase(anyString(), anyString())).thenReturn(new ArrayList<>());
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books?authorOrTitle=random string")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON)
+                                             .accept(MediaType.APPLICATION_JSON)
+                       )
+               .andExpect(MockMvcResultMatchers.status().isNotFound())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+    }
+
+    @Test // файл передаётся с помощью аннотации @RequestParam
+    @DisplayName(value = "POST http://localhost:8080/books/{id}/cover")
+    @Order(6)
+    void uploadCover() throws Exception {
+        //                                  Проверка успешного запроса
+        // 1. Задание поведения репозитория родительского сервиса (bookRepository) для случая поиска сущности (книги)
+        //    дочерним сервисом bookCoverServiceImpl
+        when(bookRepository.findById(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(TEST_BOOK_1));
+        // 2. Создания массива байт из источника изображения
+        byte[] inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_1);
+        // 3. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        BookCover cover = new BookCover(TEST_BOOK_1.getId(),
+                                        sourceImageDir + "/1.jpg",
+                                        inputImage.length,
+                                        MediaType.IMAGE_JPEG.toString(),
+                                        generatePreview(TEST_BOOK_IMAGE_PATH_1),
+                                        TEST_BOOK_1);
+        // 4. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.save(any(BookCover.class))).thenReturn(cover);
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(cover));
+        // 5. Создание макета передаваемого в запросе файла класса MultipartFile
+        MockMultipartFile multipartFile = new MockMultipartFile("file",              // имя параметра в HTTP-запросе
+                                                                "1.jpg",                   // оригинальное название файла
+                                                                MediaType.IMAGE_JPEG_VALUE,// тип файла
+                                                                inputImage);               // байт-код файла
+        // 6. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.multipart(HttpMethod.POST, "/books/" + TEST_BOOK_1.getId() + "/cover")
+                                             .file(multipartFile)
+                                             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.content().contentType(MediaType.IMAGE_JPEG_VALUE))
+               .andExpect(MockMvcResultMatchers.content().bytes(Objects.requireNonNull(generatePreview(TEST_BOOK_IMAGE_PATH_1))));
+        // 7. Создание массива байт из загруженного изображения и сравнение его с оригиналом
+        byte[] outputImage = Files.readAllBytes(Path.of(sourceImageDir + "/1.jpg"));
+        Assertions.assertArrayEquals(inputImage, outputImage);
+        //
+        //                          Проверка запроса при отсутствующем родительском объекте
+        // 1. Задание поведения родительского сервиса (bookServiceImplDB) для случая поиска сущности (книги)
+        //    дочерним сервисом bookCoverServiceImpl
+        when(bookService.findBook(eq(TEST_BOOK_2.getId()))).thenReturn(null);
+        // 2. Создания массива байт из источника изображения
+        inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_2);
+        // 3. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        cover = new BookCover(TEST_BOOK_2.getId(),
+                              sourceImageDir + "/2.jpg",
+                              inputImage.length,
+                              MediaType.IMAGE_JPEG.toString(),
+                              generatePreview(TEST_BOOK_IMAGE_PATH_2),
+                              TEST_BOOK_2);
+        // 4. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.save(any(BookCover.class))).thenReturn(cover);
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_2.getId()))).thenReturn(Optional.of(cover));
+        // 5. Создание макета передаваемого в запросе файла класса MultipartFile
+        multipartFile = new MockMultipartFile("file",              // имя параметра в HTTP-запросе
+                                              "2.jpg",                   // оригинальное название файла
+                                              MediaType.IMAGE_JPEG_VALUE,// тип файла
+                                              inputImage);               // байт-код файла
+        // 6. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.multipart(HttpMethod.POST, "/books/" + TEST_BOOK_2.getId() + "/cover")
+                                             .file(multipartFile)
+                                             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isBadRequest())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+        // 7. Проверка того, что файл не загрузился
+        Assertions.assertTrue(Files.notExists(Path.of(sourceImageDir + "/2.jpg")));
+        //
+        //                       Проверка запроса при обработке которого возникла ошибка
+        // 1. Задание поведения родительского сервиса (bookServiceImplDB) для случая поиска сущности (книги)
+        //    дочерним сервисом bookCoverServiceImpl
+        when(bookRepository.findById(eq(TEST_BOOK_3.getId()))).thenReturn(Optional.of(TEST_BOOK_3));
+        // 2. Создания массива байт из источника изображения
+        inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_3);
+        // 3. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        cover = new BookCover();
+        // 4. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.save(any(BookCover.class))).thenReturn(null);
+        // 5. Создание макета передаваемого в запросе файла класса MultipartFile
+        multipartFile = new MockMultipartFile("file",              // имя параметра в HTTP-запросе
+                                              "3.jpg",                   // оригинальное название файла
+                                              MediaType.IMAGE_JPEG_VALUE,// тип файла
+                                              inputImage);               // байт-код файла
+        // 6. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.multipart(HttpMethod.POST, "/books/" + TEST_BOOK_3.getId() + "/cover")
+                                             .file(multipartFile)
+                                             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isForbidden())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+        // 7. Проверка того, что файл не загрузился
+        Assertions.assertTrue(Files.notExists(Path.of(sourceImageDir + "/3.jpg")));
+        // 8. Удаление ненужной директории с результатами теста, после его завершения
+        FileUtils.deleteDirectory(new File(sourceImageDir));
+    }
+
+    @Test
+    @DisplayName(value = "GET http://localhost:8080/books/{id}/cover/preview")
+    @Order(7)
+    void downloadCover() throws Exception {
+        //                                  Проверка успешного запроса
+        // 1. Создания массива байт из источника изображения
+        byte[] inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_1);
+        // 2. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        BookCover cover = new BookCover(TEST_BOOK_1.getId(),
+                                        sourceImageDir + "/1.jpg",
+                                        inputImage.length,
+                                        MediaType.IMAGE_JPEG.toString(),
+                                        generatePreview(TEST_BOOK_IMAGE_PATH_1),
+                                        TEST_BOOK_1);
+        // 3. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(cover));
+        // 4. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_1.getId() + "/cover/preview")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.content().contentType(MediaType.IMAGE_JPEG_VALUE))
+               .andExpect(MockMvcResultMatchers.content().bytes(Objects.requireNonNull(generatePreview(TEST_BOOK_IMAGE_PATH_1))));
+        //
+        //                       Проверка запроса при обработке которого возникла ошибка
+        // 1. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(new BookCover()));
+        // 2. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_3.getId() + "/cover/preview")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isForbidden())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @DisplayName(value = "GET http://localhost:8080/books/{id}/cover")
+    @Order(8)
+    void testDownloadCover() throws Exception {
+        //                                  Проверка успешного запроса
+        // 1. Создания массива байт из источника изображения
+        byte[] inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_1);
+        // 2. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        BookCover cover = new BookCover(TEST_BOOK_1.getId(),
+                                        TEST_BOOK_IMAGE_PATH_1.toString(),
+                                        inputImage.length,
+                                        MediaType.IMAGE_JPEG.toString(),
+                                        generatePreview(TEST_BOOK_IMAGE_PATH_1),
+                                        TEST_BOOK_1);
+        // 3. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_1.getId()))).thenReturn(Optional.of(cover));
+        // 4. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_1.getId() + "/cover")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.content().contentType(MediaType.IMAGE_JPEG_VALUE))
+               .andExpect(MockMvcResultMatchers.content().bytes(Files.readAllBytes(TEST_BOOK_IMAGE_PATH_1)));
+        //
+        //                          Проверка запроса при отсутствующем файле
+        // 1. Создания массива байт из источника изображения
+        inputImage = Files.readAllBytes(TEST_BOOK_IMAGE_PATH_2);
+        // 2. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        cover = new BookCover(TEST_BOOK_2.getId(),
+                              TEST_BOOK_IMAGE_PATH_2 + "random",
+                              inputImage.length,
+                              MediaType.IMAGE_JPEG.toString(),
+                              generatePreview(TEST_BOOK_IMAGE_PATH_2),
+                              TEST_BOOK_2);
+        // 3. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_2.getId()))).thenReturn(Optional.of(cover));
+        // 4. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_2.getId() + "/cover")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isBadGateway())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+        //
+        //                       Проверка запроса при обработке которого возникла ошибка
+        // 1. Создание возвращаемой сущности для хранения превью изображения и пути к нему на жёстком диске (BookCover)
+        cover = new BookCover();
+        // 2. Задания поведения репозитория дочернего сервиса (bookCoverRepository) для случаев работы с сущностью для
+        //    хранения данных изображения (BookCover)
+        when(bookcoverRepository.findByBookId(eq(TEST_BOOK_2.getId()))).thenReturn(Optional.of(cover));
+        // 3. Создание запроса и проверка его ответа
+        mockMvc.perform(
+                       MockMvcRequestBuilders.get("/books/" + TEST_BOOK_2.getId() + "/cover")
+                                             .content("")
+                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                             .accept(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE))
+               .andExpect(MockMvcResultMatchers.status().isNotFound())
+               .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+    }
+
+    private static JSONObject toJsonObject(Book book) throws JSONException {
+        JSONObject bookJson = new JSONObject();
+        bookJson.put("id", book.getId());
+        bookJson.put("title", book.getTitle());
+        bookJson.put("author", book.getAuthor());
+        bookJson.put("year", book.getYear());
+        bookJson.put("reader", book.getReader());
+        return bookJson;
+    }
+
+    private static byte[] generatePreview(Path path) {
+        try (
+                InputStream inputStream = Files.newInputStream(path);
+                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()
+        ) {
+            BufferedImage bufferedImage = ImageIO.read(bufferedInputStream);
+            int height = bufferedImage.getHeight();
+            int width = bufferedImage.getWidth();
+            BufferedImage preview;
+            if (height > width) {
+                height = bufferedImage.getHeight() / (bufferedImage.getWidth() / 100);
+                preview = new BufferedImage(100, height, bufferedImage.getType());
+                width = 100;
+            } else {
+                width = bufferedImage.getWidth() / (bufferedImage.getHeight() / 100);
+                preview = new BufferedImage(width, 100, bufferedImage.getType());
+                height = 100;
+            }
+            Graphics2D graphics2D = preview.createGraphics();
+            graphics2D.drawImage(bufferedImage, 0, 0, width, height, null);
+            graphics2D.dispose();
+            ImageIO.write(preview, getExtension(path.getFileName().toString()), byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private static String getExtension(String filename) {
+        return filename.substring(filename.lastIndexOf(".") + 1);
+    }
+}
+```
+
+## Пример 3:
+
+> [[_оглавление_]](../README.md/#54-тестирование-web-приложений)
+
+> [**[5.4.2 Тестирование с помощью WebMvcTest]**](/conspect/5.md/#542-тестирование-с-помощью-webmvctest)
+
+- изображение загружается с помощью аннотаций `@RequestPart` и `@RequestBody`, тестирование ответа с _HashMap_:
+
+```java
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@TestPropertySource(locations = "classpath:application-test.properties")
+class HomeworkApplicationTest {
+    @Value("${user.image.dir.path}")
+    private String userImageDir;
+    @Value("${ad.image.dir.path}")
+    private String adsImageDir;
+    @Value("${source.image.dir.path}")
+    private String sourceImageDir;
+    private AdDTO AD_1_DTO = new AdDTO();
+    private AdDTO AD_2_DTO = new AdDTO();
+    private AdDTO AD_3_DTO = new AdDTO();
+    private AdsDTO ADS_DTO = new AdsDTO();
+    private AdsDTO ADS_USER_DTO = new AdsDTO();
+    private AdsDTO ADS_ADMIN_DTO = new AdsDTO();
+    private CommentDTO COMMENT_1_DTO = new CommentDTO();
+    private CommentDTO COMMENT_2_DTO = new CommentDTO();
+    private CommentDTO COMMENT_3_DTO = new CommentDTO();
+    private CommentsDTO COMMENTS_DTO = new CommentsDTO();
+    private CreateOrUpdateAdDTO CREATE_OR_UPDATE_AD_1_DTO = new CreateOrUpdateAdDTO();
+    private CreateOrUpdateAdDTO CREATE_OR_UPDATE_AD_2_DTO = new CreateOrUpdateAdDTO();
+    private CreateOrUpdateAdDTO CREATE_OR_UPDATE_AD_3_DTO = new CreateOrUpdateAdDTO();
+    private CreateOrUpdateCommentDTO CREATE_OR_UPDATE_COMMENT_1_DTO = new CreateOrUpdateCommentDTO();
+    private CreateOrUpdateCommentDTO CREATE_OR_UPDATE_COMMENT_2_DTO = new CreateOrUpdateCommentDTO();
+    private CreateOrUpdateCommentDTO CREATE_OR_UPDATE_COMMENT_3_DTO = new CreateOrUpdateCommentDTO();
+    private ExtendedAdDTO EXTENDED_AD_1_DTO = new ExtendedAdDTO();
+    private ExtendedAdDTO EXTENDED_AD_2_DTO = new ExtendedAdDTO();
+    private ExtendedAdDTO EXTENDED_AD_3_DTO = new ExtendedAdDTO();
+    private LoginDTO LOGIN_USER_DTO = new LoginDTO();
+    private LoginDTO LOGIN_ADMIN_DTO = new LoginDTO();
+    private LoginDTO LOGIN_ANOTHER_USER_DTO = new LoginDTO();
+    private NewPasswordDTO NEW_PASSWORD_USER_DTO = new NewPasswordDTO();
+    private NewPasswordDTO NEW_PASSWORD_ANOTHER_USER_DTO = new NewPasswordDTO();
+    private NewPasswordDTO NEW_PASSWORD_ADMIN_DTO = new NewPasswordDTO();
+    private RegisterDTO REGISTER_USER_DTO = new RegisterDTO();
+    private RegisterDTO REGISTER_ADMIN_DTO = new RegisterDTO();
+    private RegisterDTO REGISTER_ANOTHER_USER_DTO = new RegisterDTO();
+    private UpdateUserDTO UPDATE_USER_DTO = new UpdateUserDTO();
+    private UpdateUserDTO UPDATE_ADMIN_DTO = new UpdateUserDTO();
+    private UserDTO USER_DTO = new UserDTO();
+    private UserDTO ADMIN_DTO = new UserDTO();
+    @Autowired
+    MockMvc mockMvc;
+    @Autowired
+    WebApplicationContext context;
+    @MockBean
+    PasswordEncoderConfig passwordEncoderConfig;
+    @MockBean
+    DaoAuthenticationProvider daoAuthenticationProvider;
+    @MockBean
+    BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    SecurityFilterChainConfig securityFilterChainConfig;
+    @MockBean
+    AdRepository adRepository;
+    @MockBean
+    CommentRepository commentRepository;
+    @MockBean
+    UserRepository userRepository;
+    @Autowired
+    AdMapper adMapper;
+    @Autowired
+    CommentMapper commentMapper;
+    @Autowired
+    UserMapper userMapper;
+    @SpyBean
+    AdsServiceImpl adsService;
+    @SpyBean
+    AuthenticationServiceImpl authenticationService;
+    @SpyBean
+    ImageServiceImpl imageService;
+    @SpyBean
+    UsersServiceImpl usersService;
+    @Autowired
+    AdsController adsController;
+    @Autowired
+    AuthenticationController authenticationController;
+    @Autowired
+    ImageController imageController;
+    @Autowired
+    UsersController usersController;
+    @MockBean
+    Clock clock;
+    @MockBean
+    ClockConfig clockConfig;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+        AD_1_DTO.setAuthor(AD_1.getAuthor().getId());
+        AD_1_DTO.setImage("/" + AD_1.getImage());
+        AD_1_DTO.setPk(AD_1.getPk());
+        AD_1_DTO.setPrice(AD_1.getPrice());
+        AD_1_DTO.setTitle(AD_1.getTitle());
+        AD_2_DTO.setAuthor(AD_2.getAuthor().getId());
+        AD_2_DTO.setImage("/" + AD_2.getImage());
+        AD_2_DTO.setPk(AD_2.getPk());
+        AD_2_DTO.setPrice(AD_2.getPrice());
+        AD_2_DTO.setTitle(AD_2.getTitle());
+        AD_3_DTO.setAuthor(AD_3.getAuthor().getId());
+        AD_3_DTO.setImage("/" + AD_3.getImage());
+        AD_3_DTO.setPk(AD_3.getPk());
+        AD_3_DTO.setPrice(AD_3.getPrice());
+        AD_3_DTO.setTitle(AD_3.getTitle());
+        ADS_DTO.setCount(3);
+        ADS_DTO.setResults(List.of(AD_1_DTO, AD_2_DTO, AD_3_DTO));
+        ADS_USER_DTO.setCount(2);
+        ADS_USER_DTO.setResults(List.of(AD_1_DTO, AD_2_DTO));
+        ADS_ADMIN_DTO.setCount(1);
+        ADS_ADMIN_DTO.setResults(List.of(AD_3_DTO));
+        COMMENT_1_DTO.setAuthor(COMMENT_1.getAuthor().getId());
+        COMMENT_1_DTO.setAuthorImage("/" + COMMENT_1.getAuthorImage());
+        COMMENT_1_DTO.setAuthorFirstName(COMMENT_1.getAuthorFirstName());
+        COMMENT_1_DTO.setCreatedAt(COMMENT_1.getCreatedAt());
+        COMMENT_1_DTO.setPk(COMMENT_1.getPk());
+        COMMENT_1_DTO.setText(COMMENT_1.getText());
+        COMMENT_2_DTO.setAuthor(COMMENT_2.getAuthor().getId());
+        COMMENT_2_DTO.setAuthorImage("/" + COMMENT_2.getAuthorImage());
+        COMMENT_2_DTO.setAuthorFirstName(COMMENT_2.getAuthorFirstName());
+        COMMENT_2_DTO.setCreatedAt(COMMENT_2.getCreatedAt());
+        COMMENT_2_DTO.setPk(COMMENT_2.getPk());
+        COMMENT_2_DTO.setText(COMMENT_2.getText());
+        COMMENT_3_DTO.setAuthor(COMMENT_3.getAuthor().getId());
+        COMMENT_3_DTO.setAuthorImage("/" + COMMENT_3.getAuthorImage());
+        COMMENT_3_DTO.setAuthorFirstName(COMMENT_3.getAuthorFirstName());
+        COMMENT_3_DTO.setCreatedAt(COMMENT_3.getCreatedAt());
+        COMMENT_3_DTO.setPk(COMMENT_3.getPk());
+        COMMENT_3_DTO.setText(COMMENT_3.getText());
+        COMMENTS_DTO.setCount(3);
+        COMMENTS_DTO.setResults(List.of(COMMENT_1_DTO, COMMENT_2_DTO, COMMENT_3_DTO));
+        CREATE_OR_UPDATE_AD_1_DTO.setTitle(AD_1.getTitle());
+        CREATE_OR_UPDATE_AD_1_DTO.setPrice(AD_1.getPrice());
+        CREATE_OR_UPDATE_AD_1_DTO.setDescription(AD_1.getDescription());
+        CREATE_OR_UPDATE_AD_2_DTO.setTitle(AD_2.getTitle());
+        CREATE_OR_UPDATE_AD_2_DTO.setPrice(AD_2.getPrice());
+        CREATE_OR_UPDATE_AD_2_DTO.setDescription(AD_2.getDescription());
+        CREATE_OR_UPDATE_AD_3_DTO.setTitle(AD_3.getTitle());
+        CREATE_OR_UPDATE_AD_3_DTO.setPrice(AD_3.getPrice());
+        CREATE_OR_UPDATE_AD_3_DTO.setDescription(AD_3.getDescription());
+        CREATE_OR_UPDATE_COMMENT_1_DTO.setText(COMMENT_1.getText());
+        CREATE_OR_UPDATE_COMMENT_2_DTO.setText(COMMENT_2.getText());
+        CREATE_OR_UPDATE_COMMENT_3_DTO.setText(COMMENT_3.getText());
+        EXTENDED_AD_1_DTO.setPk(AD_1.getPk());
+        EXTENDED_AD_1_DTO.setAuthorFirstName(AD_1.getAuthor().getFirstName());
+        EXTENDED_AD_1_DTO.setAuthorLastName(AD_1.getAuthor().getLastName());
+        EXTENDED_AD_1_DTO.setDescription(AD_1.getDescription());
+        EXTENDED_AD_1_DTO.setEmail(AD_1.getAuthor().getEmail());
+        EXTENDED_AD_1_DTO.setImage("/" + AD_1.getImage());
+        EXTENDED_AD_1_DTO.setPhone(AD_1.getAuthor().getPhone());
+        EXTENDED_AD_1_DTO.setPrice(AD_1.getPrice());
+        EXTENDED_AD_1_DTO.setTitle(AD_1.getTitle());
+        EXTENDED_AD_2_DTO.setPk(AD_2.getPk());
+        EXTENDED_AD_2_DTO.setAuthorFirstName(AD_2.getAuthor().getFirstName());
+        EXTENDED_AD_2_DTO.setAuthorLastName(AD_2.getAuthor().getLastName());
+        EXTENDED_AD_2_DTO.setDescription(AD_2.getDescription());
+        EXTENDED_AD_2_DTO.setEmail(AD_2.getAuthor().getEmail());
+        EXTENDED_AD_2_DTO.setImage("/" + AD_2.getImage());
+        EXTENDED_AD_2_DTO.setPhone(AD_2.getAuthor().getPhone());
+        EXTENDED_AD_2_DTO.setPrice(AD_2.getPrice());
+        EXTENDED_AD_2_DTO.setTitle(AD_2.getTitle());
+        EXTENDED_AD_3_DTO.setPk(AD_3.getPk());
+        EXTENDED_AD_3_DTO.setAuthorFirstName(AD_3.getAuthor().getFirstName());
+        EXTENDED_AD_3_DTO.setAuthorLastName(AD_3.getAuthor().getLastName());
+        EXTENDED_AD_3_DTO.setDescription(AD_3.getDescription());
+        EXTENDED_AD_3_DTO.setEmail(AD_3.getAuthor().getEmail());
+        EXTENDED_AD_3_DTO.setImage("/" + AD_3.getImage());
+        EXTENDED_AD_3_DTO.setPhone(AD_3.getAuthor().getPhone());
+        EXTENDED_AD_3_DTO.setPrice(AD_3.getPrice());
+        EXTENDED_AD_3_DTO.setTitle(AD_3.getTitle());
+        LOGIN_USER_DTO.setUsername(USER.getEmail());
+        LOGIN_USER_DTO.setPassword(USER.getPassword());
+        LOGIN_ADMIN_DTO.setUsername(ADMIN.getEmail());
+        LOGIN_ADMIN_DTO.setPassword(ADMIN.getPassword());
+        LOGIN_ANOTHER_USER_DTO.setUsername(ANOTHER_USER.getEmail());
+        LOGIN_ANOTHER_USER_DTO.setPassword(ANOTHER_USER.getPassword());
+        NEW_PASSWORD_USER_DTO.setCurrentPassword(USER.getPassword());
+        NEW_PASSWORD_USER_DTO.setNewPassword(ADMIN.getPassword());
+        NEW_PASSWORD_ADMIN_DTO.setCurrentPassword(ADMIN.getPassword());
+        NEW_PASSWORD_ADMIN_DTO.setNewPassword(USER.getPassword());
+        NEW_PASSWORD_ANOTHER_USER_DTO.setCurrentPassword(ANOTHER_USER.getPassword());
+        NEW_PASSWORD_ANOTHER_USER_DTO.setNewPassword(ADMIN.getPassword());
+        REGISTER_USER_DTO.setUsername(USER.getEmail());
+        REGISTER_USER_DTO.setPassword(USER.getPassword());
+        REGISTER_USER_DTO.setFirstName(USER.getFirstName());
+        REGISTER_USER_DTO.setLastName(USER.getLastName());
+        REGISTER_USER_DTO.setPhone(USER.getPhone());
+        REGISTER_USER_DTO.setRole(USER.getRole());
+        REGISTER_ADMIN_DTO.setUsername(ADMIN.getEmail());
+        REGISTER_ADMIN_DTO.setPassword(ADMIN.getPassword());
+        REGISTER_ADMIN_DTO.setFirstName(ADMIN.getFirstName());
+        REGISTER_ADMIN_DTO.setLastName(ADMIN.getLastName());
+        REGISTER_ADMIN_DTO.setPhone(ADMIN.getPhone());
+        REGISTER_ADMIN_DTO.setRole(ADMIN.getRole());
+        REGISTER_ANOTHER_USER_DTO.setUsername(ANOTHER_USER.getEmail());
+        REGISTER_ANOTHER_USER_DTO.setPassword(ANOTHER_USER.getPassword());
+        REGISTER_ANOTHER_USER_DTO.setFirstName(ANOTHER_USER.getFirstName());
+        REGISTER_ANOTHER_USER_DTO.setLastName(ANOTHER_USER.getLastName());
+        REGISTER_ANOTHER_USER_DTO.setPhone(ANOTHER_USER.getPhone());
+        REGISTER_ANOTHER_USER_DTO.setRole(ANOTHER_USER.getRole());
+        UPDATE_USER_DTO.setFirstName(USER.getFirstName());
+        UPDATE_USER_DTO.setLastName(USER.getLastName());
+        UPDATE_USER_DTO.setPhone(USER.getPhone());
+        UPDATE_ADMIN_DTO.setFirstName(ADMIN.getFirstName());
+        UPDATE_ADMIN_DTO.setLastName(ADMIN.getLastName());
+        UPDATE_ADMIN_DTO.setPhone(ADMIN.getPhone());
+        USER_DTO.setId(USER.getId());
+        USER_DTO.setEmail(USER.getEmail());
+        USER_DTO.setFirstName(USER.getFirstName());
+        USER_DTO.setLastName(USER.getLastName());
+        USER_DTO.setPhone(USER.getPhone());
+        USER_DTO.setRole(USER.getRole());
+        USER_DTO.setImage("/" + USER.getImage());
+        ADMIN_DTO.setId(ADMIN.getId());
+        ADMIN_DTO.setEmail(ADMIN.getEmail());
+        ADMIN_DTO.setFirstName(ADMIN.getFirstName());
+        ADMIN_DTO.setLastName(ADMIN.getLastName());
+        ADMIN_DTO.setPhone(ADMIN.getPhone());
+        ADMIN_DTO.setRole(ADMIN.getRole());
+        ADMIN_DTO.setImage("/" + ADMIN.getImage());
+        lenient().when(clockConfig.clock()).thenReturn(clock);
+        lenient().when(clock.millis()).thenReturn(111111L);
+        lenient().when(userRepository.findByEmail(USER.getEmail())).thenReturn(Optional.of(USER));
+        lenient().when(userRepository.findByEmail(ADMIN.getEmail())).thenReturn(Optional.of(ADMIN));
+        lenient().when(userRepository.save(USER)).thenReturn(USER);
+        lenient().when(userRepository.save(ADMIN)).thenReturn(ADMIN);
+        lenient().when(userRepository.save(ANOTHER_USER_REGISTER)).thenReturn(ANOTHER_USER);
+        lenient().when(passwordEncoderConfig.passwordEncoder()).thenReturn(passwordEncoder);
+        lenient().when(passwordEncoder.encode(USER.getPassword())).thenReturn(USER.getPassword());
+        lenient().when(passwordEncoder.encode(ADMIN.getPassword())).thenReturn(ADMIN.getPassword());
+        lenient().when(passwordEncoder.encode(ANOTHER_USER.getPassword())).thenReturn(ANOTHER_USER.getPassword());
+        lenient().when(passwordEncoder.matches(USER.getPassword(), USER.getPassword())).thenReturn(true);
+        lenient().when(passwordEncoder.matches(ADMIN.getPassword(), ADMIN.getPassword())).thenReturn(true);
+        lenient().when(adRepository.findAll()).thenReturn(ADS);
+        lenient().when(adRepository.findByPk(AD_1.getPk())).thenReturn(Optional.of(AD_1));
+        lenient().when(adRepository.findByPk(AD_2.getPk())).thenReturn(Optional.of(AD_2));
+        lenient().when(adRepository.findByPk(AD_3.getPk())).thenReturn(Optional.of(AD_3));
+        lenient().doNothing().when(adRepository).delete(any(Ad.class));
+        lenient().when(adRepository.save(AD_1)).thenReturn(AD_1);
+        lenient().when(adRepository.save(AD_2)).thenReturn(AD_2);
+        lenient().when(adRepository.save(AD_3)).thenReturn(AD_3);
+        lenient().when(adRepository.save(AD_1_CREATE)).thenReturn(AD_1);
+        lenient().when(adRepository.save(AD_2_CREATE)).thenReturn(AD_2);
+        lenient().when(adRepository.save(AD_3_CREATE)).thenReturn(AD_3);
+        lenient().when(adRepository.findByAuthor(USER)).thenReturn(ADS_USER);
+        lenient().when(adRepository.findByAuthor(ADMIN)).thenReturn(ADS_ADMIN);
+        lenient().when(commentRepository.findByAd(AD_1)).thenReturn(COMMENTS);
+        lenient().when(commentRepository.save(COMMENT_1_SAVE)).thenReturn(COMMENT_1);
+        lenient().when(commentRepository.save(COMMENT_2_SAVE)).thenReturn(COMMENT_2);
+        lenient().when(commentRepository.save(COMMENT_3_SAVE)).thenReturn(COMMENT_3);
+        lenient().when(commentRepository.save(COMMENT_1)).thenReturn(COMMENT_1);
+        lenient().when(commentRepository.save(COMMENT_2)).thenReturn(COMMENT_2);
+        lenient().when(commentRepository.save(COMMENT_3)).thenReturn(COMMENT_3);
+        lenient().when(commentRepository.findByPk(COMMENT_1.getPk())).thenReturn(Optional.of(COMMENT_1));
+        lenient().when(commentRepository.findByPk(COMMENT_2.getPk())).thenReturn(Optional.of(COMMENT_2));
+        lenient().when(commentRepository.findByPk(COMMENT_3.getPk())).thenReturn(Optional.of(COMMENT_3));
+        lenient().doNothing().when(commentRepository).delete(any(Comment.class));
+    }
+
+    @Test
+    void setPassword() throws Exception {
+        mockMvc.perform(post("/users/set_password")
+                                .with(user(USER.getEmail()).password(USER.getPassword()))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(NEW_PASSWORD_USER_DTO)))
+               .andExpect(status().isOk());
+        mockMvc.perform(post("/users/set_password")
+                                .with(user(ADMIN.getEmail()).password(ADMIN.getPassword()))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(NEW_PASSWORD_ADMIN_DTO)))
+               .andExpect(status().isOk());
+        mockMvc.perform(post("/users/set_password")
+                                .with(anonymous())
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(NEW_PASSWORD_ANOTHER_USER_DTO)))
+               .andExpect(status().isUnauthorized());
+        mockMvc.perform(post("/users/set_password")
+                                .with(user(ADMIN.getEmail()).password(ADMIN.getPassword()))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(NEW_PASSWORD_ANOTHER_USER_DTO)))
+               .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void me() throws Exception {
+        mockMvc.perform(get("/users/me")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.id").value(USER_DTO.getId()))
+               .andExpect(jsonPath("$.email").value(USER_DTO.getEmail()))
+               .andExpect(jsonPath("$.firstName").value(USER_DTO.getFirstName()))
+               .andExpect(jsonPath("$.lastName").value(USER_DTO.getLastName()))
+               .andExpect(jsonPath("$.role").value(String.valueOf(USER_DTO.getRole())))
+               .andExpect(jsonPath("$.image").value(USER_DTO.getImage()));
+        mockMvc.perform(get("/users/me")
+                                .with(user("admin@test.com").password("321"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.id").value(ADMIN_DTO.getId()))
+               .andExpect(jsonPath("$.email").value(ADMIN_DTO.getEmail()))
+               .andExpect(jsonPath("$.firstName").value(ADMIN_DTO.getFirstName()))
+               .andExpect(jsonPath("$.lastName").value(ADMIN_DTO.getLastName()))
+               .andExpect(jsonPath("$.role").value(String.valueOf(ADMIN_DTO.getRole())))
+               .andExpect(jsonPath("$.image").value(ADMIN_DTO.getImage()));
+        mockMvc.perform(get("/users/me")
+                                .with(anonymous())
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void meUpdate() throws Exception {
+        mockMvc.perform(patch("/users/me")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(UPDATE_USER_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.firstName").value(UPDATE_USER_DTO.getFirstName()))
+               .andExpect(jsonPath("$.lastName").value(UPDATE_USER_DTO.getLastName()))
+               .andExpect(jsonPath("$.phone").value(UPDATE_USER_DTO.getPhone()));
+        mockMvc.perform(patch("/users/me")
+                                .with(user("admin@test.com").password("321"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(UPDATE_ADMIN_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.firstName").value(UPDATE_ADMIN_DTO.getFirstName()))
+               .andExpect(jsonPath("$.lastName").value(UPDATE_ADMIN_DTO.getLastName()))
+               .andExpect(jsonPath("$.phone").value(UPDATE_ADMIN_DTO.getPhone()));
+        mockMvc.perform(patch("/users/me")
+                                .with(anonymous())
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(UPDATE_ADMIN_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void meImage() throws Exception {
+        byte[] inputImage = Files.readAllBytes(Path.of(sourceImageDir, "user.jpg"));
+        MockMultipartFile multipartFile = new MockMultipartFile("image", "user.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/users/me/image").file(multipartFile)
+                                                                      .with(user("user@test.com").password("123")))
+               .andExpect(status().isOk());
+        byte[] result = Files.readAllBytes(Path.of(userImageDir, USER.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(result);
+                InputStream inputStream2 = new FileInputStream(Path.of(userImageDir, USER.getImage()).toFile())) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "admin.jpg"));
+        multipartFile = new MockMultipartFile("image", "admin.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/users/me/image").file(multipartFile)
+                                                                      .with(user("admin@test.com").password("321")))
+               .andExpect(status().isOk());
+        result = Files.readAllBytes(Path.of(userImageDir, ADMIN.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(result);
+                InputStream inputStream2 = new FileInputStream(Path.of(userImageDir, ADMIN.getImage()).toFile())) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "user.jpg"));
+        multipartFile = new MockMultipartFile("image", "user.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/users/me/image").file(multipartFile)
+                                                                      .with(anonymous()))
+               .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void login() throws Exception {
+        mockMvc.perform(post("/login")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(LOGIN_USER_DTO)))
+               .andExpect(status().isOk());
+        mockMvc.perform(post("/login")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(LOGIN_ADMIN_DTO)))
+               .andExpect(status().isOk());
+        mockMvc.perform(post("/login")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(LOGIN_ANOTHER_USER_DTO)))
+               .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void register() throws Exception {
+        mockMvc.perform(post("/register")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(REGISTER_USER_DTO)))
+               .andExpect(status().isBadRequest());
+        mockMvc.perform(post("/register")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(REGISTER_ADMIN_DTO)))
+               .andExpect(status().isBadRequest());
+        mockMvc.perform(post("/register")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(REGISTER_ANOTHER_USER_DTO)))
+               .andExpect(status().isCreated());
+    }
+
+    @Test
+    void getAll() throws Exception {
+        mockMvc.perform(get("/ads")
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.count").value(ADS_DTO.getCount()))
+               .andExpect(jsonPath("$.results[0].author").value(AD_1_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[0].image").value(AD_1_DTO.getImage()))
+               .andExpect(jsonPath("$.results[0].pk").value(AD_1_DTO.getPk()))
+               .andExpect(jsonPath("$.results[0].price").value(AD_1_DTO.getPrice()))
+               .andExpect(jsonPath("$.results[0].title").value(AD_1_DTO.getTitle()))
+               .andExpect(jsonPath("$.results[1].author").value(AD_2_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[1].image").value(AD_2_DTO.getImage()))
+               .andExpect(jsonPath("$.results[1].pk").value(AD_2_DTO.getPk()))
+               .andExpect(jsonPath("$.results[1].price").value(AD_2_DTO.getPrice()))
+               .andExpect(jsonPath("$.results[1].title").value(AD_2_DTO.getTitle()))
+               .andExpect(jsonPath("$.results[2].author").value(AD_3_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[2].image").value(AD_3_DTO.getImage()))
+               .andExpect(jsonPath("$.results[2].pk").value(AD_3_DTO.getPk()))
+               .andExpect(jsonPath("$.results[2].price").value(AD_3_DTO.getPrice()))
+               .andExpect(jsonPath("$.results[2].title").value(AD_3_DTO.getTitle()));
+    }
+
+    @Test
+        // файл передаётся с помощью аннотации @RequestPart
+    void postAd() throws Exception {
+        byte[] inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_1.jpg"));
+        MockMultipartFile multipartFile = new MockMultipartFile("image", "ad_1.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        MockMultipartFile propertiesFile = new MockMultipartFile("properties", "properties", MediaType.APPLICATION_JSON_VALUE, new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_AD_1_DTO).getBytes());
+        mockMvc.perform(multipart(HttpMethod.POST, "/ads").file(multipartFile).file(propertiesFile)
+                                                          .with(user("user@test.com").password("123"))
+                                                          .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                                          .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isCreated())
+               .andExpect(jsonPath("$.author").value(AD_1_DTO.getAuthor()))
+               .andExpect(jsonPath("$.image").value(AD_1_DTO.getImage()))
+               .andExpect(jsonPath("$.pk").value(AD_1_DTO.getPk()))
+               .andExpect(jsonPath("$.price").value(AD_1_DTO.getPrice()))
+               .andExpect(jsonPath("$.title").value(AD_1_DTO.getTitle()));
+        byte[] outputImage = Files.readAllBytes(Path.of(adsImageDir, AD_1.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(inputImage);
+                InputStream inputStream2 = new ByteArrayInputStream(outputImage)
+        ) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_2.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_2.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        propertiesFile = new MockMultipartFile("properties", "properties", MediaType.APPLICATION_JSON_VALUE, new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_AD_2_DTO).getBytes());
+        mockMvc.perform(multipart(HttpMethod.POST, "/ads").file(multipartFile).file(propertiesFile)
+                                                          .with(user("user@test.com").password("123"))
+                                                          .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                                          .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isCreated())
+               .andExpect(jsonPath("$.author").value(AD_2_DTO.getAuthor()))
+               .andExpect(jsonPath("$.image").value(AD_2_DTO.getImage()))
+               .andExpect(jsonPath("$.pk").value(AD_2_DTO.getPk()))
+               .andExpect(jsonPath("$.price").value(AD_2_DTO.getPrice()))
+               .andExpect(jsonPath("$.title").value(AD_2_DTO.getTitle()));
+        outputImage = Files.readAllBytes(Path.of(adsImageDir, AD_2.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(inputImage);
+                InputStream inputStream2 = new ByteArrayInputStream(outputImage)
+        ) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_3.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_3.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        propertiesFile = new MockMultipartFile("properties", "properties", MediaType.APPLICATION_JSON_VALUE, new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_AD_3_DTO).getBytes());
+        mockMvc.perform(multipart(HttpMethod.POST, "/ads").file(multipartFile).file(propertiesFile)
+                                                          .with(user("admin@test.com").password("321"))
+                                                          .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                                          .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isCreated())
+               .andExpect(jsonPath("$.author").value(AD_3_DTO.getAuthor()))
+               .andExpect(jsonPath("$.image").value(AD_3_DTO.getImage()))
+               .andExpect(jsonPath("$.pk").value(AD_3_DTO.getPk()))
+               .andExpect(jsonPath("$.price").value(AD_3_DTO.getPrice()))
+               .andExpect(jsonPath("$.title").value(AD_3_DTO.getTitle()));
+        outputImage = Files.readAllBytes(Path.of(adsImageDir, AD_3.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(inputImage);
+                InputStream inputStream2 = new ByteArrayInputStream(outputImage)
+        ) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_1.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_1.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        propertiesFile = new MockMultipartFile("properties", "properties", MediaType.APPLICATION_JSON_VALUE, new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_AD_1_DTO).getBytes());
+        mockMvc.perform(multipart(HttpMethod.POST, "/ads").file(multipartFile).file(propertiesFile)
+                                                          .with(anonymous())
+                                                          .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                                          .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getAd() throws Exception {
+        mockMvc.perform(get("/ads/1")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.pk").value(EXTENDED_AD_1_DTO.getPk()))
+               .andExpect(jsonPath("$.authorFirstName").value(EXTENDED_AD_1_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.authorLastName").value(EXTENDED_AD_1_DTO.getAuthorLastName()))
+               .andExpect(jsonPath("$.description").value(EXTENDED_AD_1_DTO.getDescription()))
+               .andExpect(jsonPath("$.email").value(EXTENDED_AD_1_DTO.getEmail()))
+               .andExpect(jsonPath("$.image").value(EXTENDED_AD_1_DTO.getImage()))
+               .andExpect(jsonPath("$.phone").value(EXTENDED_AD_1_DTO.getPhone()))
+               .andExpect(jsonPath("$.price").value(EXTENDED_AD_1_DTO.getPrice()))
+               .andExpect(jsonPath("$.title").value(EXTENDED_AD_1_DTO.getTitle()));
+        mockMvc.perform(get("/ads/1")
+                                .with(user("admin@test.com").password("321"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.pk").value(EXTENDED_AD_1_DTO.getPk()))
+               .andExpect(jsonPath("$.authorFirstName").value(EXTENDED_AD_1_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.authorLastName").value(EXTENDED_AD_1_DTO.getAuthorLastName()))
+               .andExpect(jsonPath("$.description").value(EXTENDED_AD_1_DTO.getDescription()))
+               .andExpect(jsonPath("$.email").value(EXTENDED_AD_1_DTO.getEmail()))
+               .andExpect(jsonPath("$.image").value(EXTENDED_AD_1_DTO.getImage()))
+               .andExpect(jsonPath("$.phone").value(EXTENDED_AD_1_DTO.getPhone()))
+               .andExpect(jsonPath("$.price").value(EXTENDED_AD_1_DTO.getPrice()))
+               .andExpect(jsonPath("$.title").value(EXTENDED_AD_1_DTO.getTitle()));
+        mockMvc.perform(get("/ads/1")
+                                .with(anonymous())
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/ads/4")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteAd() throws Exception {
+        mockMvc.perform(delete("/ads/1")
+                                .with(user("user@test.com").password("123")))
+               .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/ads/1")
+                                .with(user("admin@test.com").password("321")))
+               .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/ads/1")
+                                .with(anonymous()))
+               .andExpect(status().isUnauthorized());
+        mockMvc.perform(delete("/ads/3")
+                                .with(user("user@test.com").password("123")))
+               .andExpect(status().isForbidden());
+        mockMvc.perform(delete("/ads/4")
+                                .with(user("user@test.com").password("123")))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateAd() throws Exception {
+        mockMvc.perform(patch("/ads/2")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_AD_2_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.author").value(AD_2_DTO.getAuthor()))
+               .andExpect(jsonPath("$.image").value(AD_2_DTO.getImage()))
+               .andExpect(jsonPath("$.pk").value(AD_2_DTO.getPk()))
+               .andExpect(jsonPath("$.price").value(AD_2_DTO.getPrice()))
+               .andExpect(jsonPath("$.title").value(AD_2_DTO.getTitle()));
+        mockMvc.perform(patch("/ads/2")
+                                .with(user("admin@test.com").password("321"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_AD_2_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.author").value(AD_2_DTO.getAuthor()))
+               .andExpect(jsonPath("$.image").value(AD_2_DTO.getImage()))
+               .andExpect(jsonPath("$.pk").value(AD_2_DTO.getPk()))
+               .andExpect(jsonPath("$.price").value(AD_2_DTO.getPrice()))
+               .andExpect(jsonPath("$.title").value(AD_2_DTO.getTitle()));
+        mockMvc.perform(patch("/ads/2")
+                                .with(anonymous())
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_AD_2_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+        mockMvc.perform(patch("/ads/3")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_AD_2_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isForbidden());
+        mockMvc.perform(patch("/ads/4")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_AD_2_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getMe() throws Exception {
+        mockMvc.perform(get("/ads/me")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.count").value(ADS_USER_DTO.getCount()))
+               .andExpect(jsonPath("$.results[0].author").value(AD_1_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[0].image").value(AD_1_DTO.getImage()))
+               .andExpect(jsonPath("$.results[0].pk").value(AD_1_DTO.getPk()))
+               .andExpect(jsonPath("$.results[0].price").value(AD_1_DTO.getPrice()))
+               .andExpect(jsonPath("$.results[0].title").value(AD_1_DTO.getTitle()))
+               .andExpect(jsonPath("$.results[1].author").value(AD_2_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[1].image").value(AD_2_DTO.getImage()))
+               .andExpect(jsonPath("$.results[1].pk").value(AD_2_DTO.getPk()))
+               .andExpect(jsonPath("$.results[1].price").value(AD_2_DTO.getPrice()))
+               .andExpect(jsonPath("$.results[1].title").value(AD_2_DTO.getTitle()));
+        mockMvc.perform(get("/ads/me")
+                                .with(user("admin@test.com").password("321"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.count").value(ADS_ADMIN_DTO.getCount()))
+               .andExpect(jsonPath("$.results[0].author").value(AD_3_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[0].image").value(AD_3_DTO.getImage()))
+               .andExpect(jsonPath("$.results[0].pk").value(AD_3_DTO.getPk()))
+               .andExpect(jsonPath("$.results[0].price").value(AD_3_DTO.getPrice()))
+               .andExpect(jsonPath("$.results[0].title").value(AD_3_DTO.getTitle()));
+        mockMvc.perform(get("/ads/me")
+                                .with(anonymous())
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+        // файл передаётся с помощью аннотации @RequestBody
+    void patchAdImage() throws Exception {
+        byte[] inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_1.jpg"));
+        MockMultipartFile multipartFile = new MockMultipartFile("image", "ad_1.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/ads/1/image").file(multipartFile)
+                                                                   .with(user("user@test.com").password("123"))
+                                                                   .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(content().string(String.valueOf(Path.of(adsImageDir, AD_1.getImage()))));
+        byte[] outputImage = Files.readAllBytes(Path.of(adsImageDir, AD_1.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(inputImage);
+                InputStream inputStream2 = new ByteArrayInputStream(outputImage)
+        ) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_2.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_2.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/ads/2/image").file(multipartFile)
+                                                                   .with(user("user@test.com").password("123"))
+                                                                   .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(content().string(String.valueOf(Path.of(adsImageDir, AD_2.getImage()))));
+        outputImage = Files.readAllBytes(Path.of(adsImageDir, AD_2.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(inputImage);
+                InputStream inputStream2 = new ByteArrayInputStream(outputImage)
+        ) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_3.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_3.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/ads/3/image").file(multipartFile)
+                                                                   .with(user("user@test.com").password("123"))
+                                                                   .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isForbidden());
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_1.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_1.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/ads/1/image").file(multipartFile)
+                                                                   .with(user("admin@test.com").password("321"))
+                                                                   .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(content().string(String.valueOf(Path.of(adsImageDir, AD_1.getImage()))));
+        outputImage = Files.readAllBytes(Path.of(adsImageDir, AD_1.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(inputImage);
+                InputStream inputStream2 = new ByteArrayInputStream(outputImage)
+        ) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_2.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_2.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/ads/2/image").file(multipartFile)
+                                                                   .with(user("admin@test.com").password("321"))
+                                                                   .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(content().string(String.valueOf(Path.of(adsImageDir, AD_2.getImage()))));
+        outputImage = Files.readAllBytes(Path.of(adsImageDir, AD_2.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(inputImage);
+                InputStream inputStream2 = new ByteArrayInputStream(outputImage)
+        ) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_3.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_3.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/ads/3/image").file(multipartFile)
+                                                                   .with(user("admin@test.com").password("321"))
+                                                                   .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(content().string(String.valueOf(Path.of(adsImageDir, AD_3.getImage()))));
+        outputImage = Files.readAllBytes(Path.of(adsImageDir, AD_3.getImage()));
+        try (
+                InputStream inputStream1 = new ByteArrayInputStream(inputImage);
+                InputStream inputStream2 = new ByteArrayInputStream(outputImage)
+        ) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_3.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_3.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/ads/3/image").file(multipartFile)
+                                                                   .with(anonymous())
+                                                                   .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+        inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_1.jpg"));
+        multipartFile = new MockMultipartFile("image", "ad_1.jpg", MediaType.IMAGE_JPEG_VALUE, inputImage);
+        mockMvc.perform(multipart(HttpMethod.PATCH, "/ads/4/image").file(multipartFile)
+                                                                   .with(user("user@test.com").password("123"))
+                                                                   .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+        // тестирование содержания HashMap
+    void getAdComments() throws Exception {
+        mockMvc.perform(get("/ads/1/comments")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.count").value(COMMENTS_DTO.getCount()))
+               .andExpect(jsonPath("$.results[0].author").value(COMMENT_1_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[0].authorImage").value(COMMENT_1_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.results[0].authorFirstName").value(COMMENT_1_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.results[0].createdAt").value(COMMENT_1_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.results[0].pk").value(COMMENT_1_DTO.getPk()))
+               .andExpect(jsonPath("$.results[0].text").value(COMMENT_1_DTO.getText()))
+               .andExpect(jsonPath("$.results[1].author").value(COMMENT_2_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[1].authorImage").value(COMMENT_2_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.results[1].authorFirstName").value(COMMENT_2_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.results[1].createdAt").value(COMMENT_2_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.results[1].pk").value(COMMENT_2_DTO.getPk()))
+               .andExpect(jsonPath("$.results[1].text").value(COMMENT_2_DTO.getText()))
+               .andExpect(jsonPath("$.results[2].author").value(COMMENT_3_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[2].authorImage").value(COMMENT_3_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.results[2].authorFirstName").value(COMMENT_3_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.results[2].createdAt").value(COMMENT_3_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.results[2].pk").value(COMMENT_3_DTO.getPk()))
+               .andExpect(jsonPath("$.results[2].text").value(COMMENT_3_DTO.getText()));
+        mockMvc.perform(get("/ads/1/comments")
+                                .with(user("admin@test.com").password("321"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.count").value(COMMENTS_DTO.getCount()))
+               .andExpect(jsonPath("$.results[0].author").value(COMMENT_1_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[0].authorImage").value(COMMENT_1_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.results[0].authorFirstName").value(COMMENT_1_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.results[0].createdAt").value(COMMENT_1_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.results[0].pk").value(COMMENT_1_DTO.getPk()))
+               .andExpect(jsonPath("$.results[0].text").value(COMMENT_1_DTO.getText()))
+               .andExpect(jsonPath("$.results[1].author").value(COMMENT_2_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[1].authorImage").value(COMMENT_2_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.results[1].authorFirstName").value(COMMENT_2_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.results[1].createdAt").value(COMMENT_2_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.results[1].pk").value(COMMENT_2_DTO.getPk()))
+               .andExpect(jsonPath("$.results[1].text").value(COMMENT_2_DTO.getText()))
+               .andExpect(jsonPath("$.results[2].author").value(COMMENT_3_DTO.getAuthor()))
+               .andExpect(jsonPath("$.results[2].authorImage").value(COMMENT_3_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.results[2].authorFirstName").value(COMMENT_3_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.results[2].createdAt").value(COMMENT_3_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.results[2].pk").value(COMMENT_3_DTO.getPk()))
+               .andExpect(jsonPath("$.results[2].text").value(COMMENT_3_DTO.getText()));
+        mockMvc.perform(get("/ads/1/comments")
+                                .with(anonymous())
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/ads/2/comments")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void postAdComment() throws Exception {
+        mockMvc.perform(post("/ads/1/comments")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_1_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.author").value(COMMENT_1_DTO.getAuthor()))
+               .andExpect(jsonPath("$.authorImage").value(COMMENT_1_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.authorFirstName").value(COMMENT_1_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.createdAt").value(COMMENT_1_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.pk").value(COMMENT_1_DTO.getPk()))
+               .andExpect(jsonPath("$.text").value(COMMENT_1_DTO.getText()));
+        mockMvc.perform(post("/ads/1/comments")
+                                .with(user("admin@test.com").password("321"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_3_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.author").value(COMMENT_3_DTO.getAuthor()))
+               .andExpect(jsonPath("$.authorImage").value(COMMENT_3_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.authorFirstName").value(COMMENT_3_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.createdAt").value(COMMENT_3_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.pk").value(COMMENT_3_DTO.getPk()))
+               .andExpect(jsonPath("$.text").value(COMMENT_3_DTO.getText()));
+        mockMvc.perform(post("/ads/3/comments")
+                                .with(anonymous())
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_1_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+        mockMvc.perform(post("/ads/4/comments")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_1_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteAdComment() throws Exception {
+        mockMvc.perform(delete("/ads/1/comments/1")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk());
+        mockMvc.perform(delete("/ads/1/comments/1")
+                                .with(user("admin@test.com").password("321"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk());
+        mockMvc.perform(delete("/ads/1/comments/1")
+                                .with(anonymous())
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+        mockMvc.perform(delete("/ads/1/comments/3")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isForbidden());
+        mockMvc.perform(delete("/ads/2/comments/1")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isNotFound());
+        mockMvc.perform(delete("/ads/1/comments/4")
+                                .with(user("user@test.com").password("123"))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateAdComment() throws Exception {
+        mockMvc.perform(patch("/ads/1/comments/1")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_1_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.author").value(COMMENT_1_DTO.getAuthor()))
+               .andExpect(jsonPath("$.authorImage").value(COMMENT_1_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.authorFirstName").value(COMMENT_1_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.createdAt").value(COMMENT_1_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.pk").value(COMMENT_1_DTO.getPk()))
+               .andExpect(jsonPath("$.text").value(COMMENT_1_DTO.getText()));
+        mockMvc.perform(patch("/ads/1/comments/1")
+                                .with(user("admin@test.com").password("321"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_1_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.author").value(COMMENT_1_DTO.getAuthor()))
+               .andExpect(jsonPath("$.authorImage").value(COMMENT_1_DTO.getAuthorImage()))
+               .andExpect(jsonPath("$.authorFirstName").value(COMMENT_1_DTO.getAuthorFirstName()))
+               .andExpect(jsonPath("$.createdAt").value(COMMENT_1_DTO.getCreatedAt()))
+               .andExpect(jsonPath("$.pk").value(COMMENT_1_DTO.getPk()))
+               .andExpect(jsonPath("$.text").value(COMMENT_1_DTO.getText()));
+        mockMvc.perform(patch("/ads/1/comments/1")
+                                .with(anonymous())
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_1_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isUnauthorized());
+        mockMvc.perform(patch("/ads/1/comments/3")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_3_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isForbidden());
+        mockMvc.perform(patch("/ads/2/comments/1")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_1_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isNotFound());
+        mockMvc.perform(patch("/ads/1/comments/4")
+                                .with(user("user@test.com").password("123"))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(new ObjectMapper().writeValueAsString(CREATE_OR_UPDATE_COMMENT_1_DTO))
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void downloadImage() throws Exception {
+        byte[] result = mockMvc.perform(get("/" + USER.getImage())
+                                                .with(user("user@test.com").password("123")))
+                               .andExpect(status().isOk())
+                               .andReturn().getResponse().getContentAsByteArray();
+        try (InputStream inputStream1 = new ByteArrayInputStream(result);
+             InputStream inputStream2 = new FileInputStream(Path.of(userImageDir, USER.getImage()).toFile())) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        result = mockMvc.perform(get("/" + ADMIN.getImage())
+                                         .with(user("user@test.com").password("123")))
+                        .andExpect(status().isOk())
+                        .andReturn().getResponse().getContentAsByteArray();
+        try (InputStream inputStream1 = new ByteArrayInputStream(result);
+             InputStream inputStream2 = new FileInputStream(Path.of(userImageDir, ADMIN.getImage()).toFile())) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        result = mockMvc.perform(get("/" + USER.getImage())
+                                         .with(user("admin@test.com").password("321")))
+                        .andExpect(status().isOk())
+                        .andReturn().getResponse().getContentAsByteArray();
+        try (InputStream inputStream1 = new ByteArrayInputStream(result);
+             InputStream inputStream2 = new FileInputStream(Path.of(userImageDir, USER.getImage()).toFile())) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        result = mockMvc.perform(get("/" + ADMIN.getImage())
+                                         .with(user("admin@test.com").password("321")))
+                        .andExpect(status().isOk())
+                        .andReturn().getResponse().getContentAsByteArray();
+        try (InputStream inputStream1 = new ByteArrayInputStream(result);
+             InputStream inputStream2 = new FileInputStream(Path.of(userImageDir, ADMIN.getImage()).toFile())) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        result = mockMvc.perform(get("/" + AD_1.getImage())
+                                         .with(user("user@test.com").password("123")))
+                        .andExpect(status().isOk())
+                        .andReturn().getResponse().getContentAsByteArray();
+        try (InputStream inputStream1 = new ByteArrayInputStream(result);
+             InputStream inputStream2 = new FileInputStream(Path.of(adsImageDir, AD_1.getImage()).toFile())) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        result = mockMvc.perform(get("/" + AD_2.getImage())
+                                         .with(user("admin@test.com").password("321")))
+                        .andExpect(status().isOk())
+                        .andReturn().getResponse().getContentAsByteArray();
+        try (InputStream inputStream1 = new ByteArrayInputStream(result);
+             InputStream inputStream2 = new FileInputStream(Path.of(adsImageDir, AD_2.getImage()).toFile())) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        result = mockMvc.perform(get("/" + AD_3.getImage())
+                                         .with(anonymous()))
+                        .andExpect(status().isOk())
+                        .andReturn().getResponse().getContentAsByteArray();
+        try (InputStream inputStream1 = new ByteArrayInputStream(result);
+             InputStream inputStream2 = new FileInputStream(Path.of(adsImageDir, AD_3.getImage()).toFile())) {
+            assertTrue(IOUtils.contentEquals(inputStream1, inputStream2));
+        }
+        mockMvc.perform(get("/wrong_image_name.jpg")
+                                .with(user("user@test.com").password("123")))
+               .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/wrong_image_name.jpg")
+                                .with(user("admin@test.com").password("321")))
+               .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/wrong_image_name.jpg")
+                                .with(anonymous()))
+               .andExpect(status().isBadRequest());
+    }
+}
+```

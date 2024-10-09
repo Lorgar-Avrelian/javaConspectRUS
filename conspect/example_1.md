@@ -621,34 +621,7 @@ public interface AvatarRepository extends JpaRepository<Avatar, Long> {
 - контроллер:
 
 ```java
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.apache.log4j.Logger;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import ru.service.ImageService;
-import ru.service.impl.ImageServiceImpl;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.lang.reflect.Array;
-
-/**
- * A controller for users and ads image requests. <br>
- * <br>
- * <hr>
- * <br>
- * Контроллер для запросов изображений пользователей и объявлений. <br>
- * <br>
- */
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 public class ImageController {
@@ -659,21 +632,6 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    /**
-     * A method of the controller for getting {@link Array} of {@link Byte} with image of user or ad. <br>
-     * Used service method {@link ImageService#getImage(String, HttpServletResponse)}. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Метод контроллера для получения массива {@link Array} байтов {@link Byte} с изображением пользователя или объявления. <br>
-     * Использован метод сервиса {@link ImageService#getImage(String, HttpServletResponse)}. <br>
-     * <br>
-     *
-     * @param imageName
-     * @param response
-     * @return {@link HttpStatus#UNAUTHORIZED} or {@link HttpStatus#OK} and {@link Array} of {@link Byte}
-     * @see ImageService#getImage(String, HttpServletResponse)
-     */
     @Operation(
             tags = "Изображения",
             summary = "Получение изображения пользователя или объявления",
@@ -708,34 +666,7 @@ public class ImageController {
 - сервис:
 
 ```java
-import org.apache.log4j.Logger;
-import org.apache.tika.Tika;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import service.ImageService;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-/**
- * An implementation of the service for processing ads and ad commits requests {@link ImageService}. <br>
- * <br>
- * <hr>
- * <br>
- * Реализация сервиса для обработки запросов объявлений и комментариев к объявлениям {@link ImageService}. <br>
- * <br>
- *
- * @see ImageService
- */
 @Service
 public class ImageServiceImpl implements ImageService {
     @Value("${user.image.dir.path}")
@@ -744,20 +675,6 @@ public class ImageServiceImpl implements ImageService {
     private String addsImageDir;
     private static final Logger log = Logger.getLogger(ImageServiceImpl.class);
 
-    /**
-     * A method of the service for getting {@link Array} of {@link Byte} with image of user or ad. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Метод сервиса для получения массива {@link Array} байтов {@link Byte} с изображением пользователя или объявления. <br>
-     * <br>
-     *
-     * @param imageName
-     * @param response
-     * @return {@link HttpStatus#OK} and {@link Array} of {@link Byte}
-     * @throws IOException
-     * @see ImageService#getImage(String, HttpServletResponse)
-     */
     @Override
     public ResponseEntity<byte[]> getImage(String imageName, HttpServletResponse response) throws IOException {
         Path imagePath = Path.of(userImageDir, imageName);
@@ -790,41 +707,7 @@ public class ImageServiceImpl implements ImageService {
 - модель:
 
 ```java
-import dto.Role;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Objects;
-
-import static javax.persistence.GenerationType.IDENTITY;
-
-/**
- * DAO <br>
- * <hr>
- * <br>
- * User { <br><br>
- * Integer id <br>
- * id пользователя <br><br>
- * String email <br>
- * логин пользователя <br><br>
- * String firstName <br>
- * имя пользователя <br><br>
- * String lastName <br>
- * фамилия пользователя <br><br>
- * String phone <br>
- * телефон пользователя <br><br>
- * {@link Role} role <br>
- * роль пользователя <br><br>
- * String image <br>
- * ссылка на аватар пользователя <br><br>
- * String password <br>
- * minLength: 8 <br>
- * maxLength: 16 <br>
- * текущий пароль <br>
- * }
- */
 @Entity
 @Table(name = "users")
 public class User {
@@ -947,32 +830,7 @@ public class User {
 ```
 
 ```java
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import javax.persistence.*;
-import java.util.Objects;
-
-import static javax.persistence.GenerationType.IDENTITY;
-
-/**
- * DAO <br>
- * <hr>
- * <br>
- * Ad { <br><br>
- * Integer pk <br>
- * id автора объявления <br><br>
- * {@link User} author <br>
- * автор объявления <br><br>
- * String image <br>
- * ссылка на картинку объявления <br><br>
- * int price <br>
- * цена объявления <br><br>
- * String title <br>
- * заголовок объявления <br><br>
- * String description <br>
- * описание объявления <br>
- * }
- */
 @Entity
 @Table(name = "ad")
 public class Ad {
@@ -1077,29 +935,6 @@ public class Ad {
 - DTO:
 
 ```java
-import io.swagger.v3.oas.annotations.media.Schema;
-
-/**
- * DTO <br>
- * <hr>
- * <br>
- * User { <br><br>
- * id	integer($int32) <br>
- * id пользователя <br><br>
- * email	string <br>
- * логин пользователя <br><br>
- * firstName	string <br>
- * имя пользователя <br><br>
- * lastName	string <br>
- * фамилия пользователя <br><br>
- * phone	string <br>
- * телефон пользователя <br><br>
- * {@link Role}	string <br>
- * роль пользователя <br><br>
- * image	string <br>
- * ссылка на аватар пользователя <br>
- * }
- */
 public class UserDTO {
     @Schema(example = "1", description = "id пользователя")
     private int id;
@@ -1175,25 +1010,6 @@ public class UserDTO {
 ```
 
 ```java
-import io.swagger.v3.oas.annotations.media.Schema;
-
-/**
- * DTO <br>
- * <hr>
- * <br>
- * Ad { <br><br>
- * author	integer($int32) <br>
- * id автора объявления <br><br>
- * image	string <br>
- * ссылка на картинку объявления <br><br>
- * pk	integer($int32) <br>
- * id объявления <br><br>
- * price	integer($int32) <br>
- * цена объявления <br><br>
- * title	string <br>
- * заголовок объявления <br>
- * }
- */
 public class AdDTO {
     @Schema(example = "1", description = "id автора объявления")
     private int author;
@@ -1251,22 +1067,7 @@ public class AdDTO {
 - репозиторий:
 
 ```java
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import entity.User;
 
-import java.util.Optional;
-
-/**
- * {@link JpaRepository} for storage DAO {@link User} and operating with it. <br>
- * <br>
- * <hr>
- * <br>
- * {@link JpaRepository} для хранения DAO {@link User} и работы с ней. <br>
- * <br>
- *
- * @see JpaRepository
- */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
@@ -1274,24 +1075,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 ```
 
 ```java
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import entity.Ad;
-import entity.User;
 
-import java.util.List;
-import java.util.Optional;
-
-/**
- * {@link JpaRepository} for storage DAO {@link Ad} and operating with it. <br>
- * <br>
- * <hr>
- * <br>
- * {@link JpaRepository} для хранения DAO {@link Ad} и работы с ней. <br>
- * <br>
- *
- * @see JpaRepository
- */
 @Repository
 public interface AdRepository extends JpaRepository<Ad, Integer> {
     List<Ad> findByAuthor(User user);
@@ -1303,21 +1087,7 @@ public interface AdRepository extends JpaRepository<Ad, Integer> {
 - маппер:
 
 ```java
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import dto.*;
-import entity.User;
 
-/**
- * {@link Mapper} that converts DAO {@link User} to DTO's {@link UserDTO}, {@link UpdateUserDTO}, {@link RegisterDTO}, {@link ExtendedAdDTO} and {@link LoginDTO}, and vice versa. <br>
- * <br>
- * <hr>
- * <br>
- * {@link Mapper}, который конвертирует DAO {@link User} в DTO {@link UserDTO}, {@link UpdateUserDTO}, {@link RegisterDTO}, {@link ExtendedAdDTO} и {@link LoginDTO}, и наоборот. <br>
- * <br>
- *
- * @see Mapper
- */
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     default UserDTO userToUserDto(User user) {
@@ -1361,24 +1131,7 @@ public interface UserMapper {
 ```
 
 ```java
-import org.mapstruct.Mapper;
-import dto.*;
-import entity.Ad;
-import entity.User;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * {@link Mapper} that converts DAO {@link Ad} to DTO's {@link AdDTO}, {@link AdsDTO}, {@link CreateOrUpdateAdDTO} and {@link ExtendedAdDTO}, and vice versa. <br>
- * <br>
- * <hr>
- * <br>
- * {@link Mapper}, который конвертирует DAO {@link Ad} в DTO {@link AdDTO}, {@link AdsDTO}, {@link CreateOrUpdateAdDTO} и {@link ExtendedAdDTO}, и наоборот. <br>
- * <br>
- *
- * @see Mapper
- */
 @Mapper(componentModel = "spring")
 public interface AdMapper {
     default AdDTO adToAdDto(Ad ad) {
@@ -1431,67 +1184,6 @@ public interface AdMapper {
 - тест:
 
 ```java
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tika.io.IOUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import config.ClockConfig;
-import config.PasswordEncoderConfig;
-import config.SecurityFilterChainConfig;
-import controller.AdsController;
-import controller.AuthenticationController;
-import controller.ImageController;
-import controller.UsersController;
-import dto.*;
-import entity.Ad;
-import entity.Comment;
-import mapper.AdMapper;
-import mapper.CommentMapper;
-import mapper.UserMapper;
-import repository.AdRepository;
-import repository.CommentRepository;
-import repository.UserRepository;
-import service.impl.AdsServiceImpl;
-import service.impl.AuthenticationServiceImpl;
-import service.impl.ImageServiceImpl;
-import service.impl.UsersServiceImpl;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Clock;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static constants.Constants.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -1756,20 +1448,6 @@ class HomeworkApplicationTest {
         lenient().doNothing().when(commentRepository).delete(any(Comment.class));
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} when password changed. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * Should return status code {@link HttpStatus#FORBIDDEN} when current password not equals user password. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK}, когда пароль изменён. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#FORBIDDEN}, когда текущий пароль не совпадает с паролем пользователя. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void setPassword() throws Exception {
         mockMvc.perform(post("/users/set_password")
@@ -1794,18 +1472,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isForbidden());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link UserDTO} when user is authorized. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link UserDTO}, когда пользователь авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void me() throws Exception {
         mockMvc.perform(get("/users/me")
@@ -1834,18 +1500,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isUnauthorized());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link UpdateUserDTO} when user is authorized. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link UpdateUserDTO}, когда пользователь авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void meUpdate() throws Exception {
         mockMvc.perform(patch("/users/me")
@@ -1874,18 +1528,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isUnauthorized());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} when user is authorized. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK}, когда пользователь авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void meImage() throws Exception {
         byte[] inputImage = Files.readAllBytes(Path.of(sourceImageDir, "user.jpg"));
@@ -1917,18 +1559,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isUnauthorized());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} when user is authorized. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK}, когда пользователь авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void login() throws Exception {
         mockMvc.perform(post("/login")
@@ -1945,18 +1575,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isUnauthorized());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#CREATED} when user is registered. <br>
-     * Should return status code {@link HttpStatus#BAD_REQUEST} when user already registered before. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#CREATED}, когда пользователь зарегистрирован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#BAD_REQUEST}, когда пользователь был зарегистрирован ранее. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void register() throws Exception {
         mockMvc.perform(post("/register")
@@ -1973,16 +1591,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isCreated());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link AdsDTO}. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} {@link AdsDTO}. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void getAll() throws Exception {
         mockMvc.perform(get("/ads")
@@ -2006,18 +1614,6 @@ class HomeworkApplicationTest {
                .andExpect(jsonPath("$.results[2].title").value(AD_3_DTO.getTitle()));
     }
 
-    /**
-     * Should return status code {@link HttpStatus#CREATED} and {@link AdDTO} when ad created. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#CREATED} и {@link AdDTO}, когда объявление создано. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void postAd() throws Exception {
         byte[] inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_1.jpg"));
@@ -2090,20 +1686,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isUnauthorized());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link ExtendedAdDTO} when ad is exist. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * Should return status code {@link HttpStatus#NOT_FOUND} when ad isn't exist. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link ExtendedAdDTO}, когда объявление существует. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#NOT_FOUND}, когда объявление не существует. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void getAd() throws Exception {
         mockMvc.perform(get("/ads/1")
@@ -2142,22 +1724,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isNotFound());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#NO_CONTENT} when ad is deleted. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * Should return status code {@link HttpStatus#FORBIDDEN} when user doesn't have such rights. <br>
-     * Should return status code {@link HttpStatus#NOT_FOUND} when ad isn't exist. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#NO_CONTENT}, когда объявление удалено. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#FORBIDDEN}, когда пользователь не имеет таких прав. <br>
-     * Должен возвращать статус-код {@link HttpStatus#NOT_FOUND}, когда объявление не существует. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void deleteAd() throws Exception {
         mockMvc.perform(delete("/ads/1")
@@ -2177,22 +1743,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isNotFound());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link AdDTO} when ad is updated. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * Should return status code {@link HttpStatus#FORBIDDEN} when user doesn't have such rights. <br>
-     * Should return status code {@link HttpStatus#NOT_FOUND} when ad isn't exist. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link AdDTO}, когда объявление обновлено. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#FORBIDDEN}, когда пользователь не имеет таких прав. <br>
-     * Должен возвращать статус-код {@link HttpStatus#NOT_FOUND}, когда объявление не существует. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void updateAd() throws Exception {
         mockMvc.perform(patch("/ads/2")
@@ -2237,18 +1787,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isNotFound());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link AdsDTO} when user is authorized. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link AdsDTO}, когда пользователь авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void getMe() throws Exception {
         mockMvc.perform(get("/ads/me")
@@ -2282,22 +1820,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isUnauthorized());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link String} when ad image is updated. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * Should return status code {@link HttpStatus#FORBIDDEN} when user doesn't have such rights. <br>
-     * Should return status code {@link HttpStatus#NOT_FOUND} when ad isn't exist. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link String}, когда изображение объявления обновлено. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#FORBIDDEN}, когда пользователь не имеет таких прав. <br>
-     * Должен возвращать статус-код {@link HttpStatus#NOT_FOUND}, когда объявление не существует. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void patchAdImage() throws Exception {
         byte[] inputImage = Files.readAllBytes(Path.of(sourceImageDir, "ad_1.jpg"));
@@ -2390,20 +1912,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isNotFound());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link CommentsDTO} when ad comments are exist. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * Should return status code {@link HttpStatus#NOT_FOUND} when ad comments are not exist. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link CommentsDTO}, когда комментарии к объявлению существуют. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#NOT_FOUND}, когда комментарии к объявлению не существуют. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void getAdComments() throws Exception {
         mockMvc.perform(get("/ads/1/comments")
@@ -2462,20 +1970,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isNotFound());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link CommentDTO} when ad comment is added. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * Should return status code {@link HttpStatus#NOT_FOUND} when ad isn't exist. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link CommentDTO}, когда комментарий к объявлению добавлен. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#NOT_FOUND}, когда объявление не существует. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void postAdComment() throws Exception {
         mockMvc.perform(post("/ads/1/comments")
@@ -2516,22 +2010,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isNotFound());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} when ad comment is deleted. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * Should return status code {@link HttpStatus#FORBIDDEN} when user doesn't have such rights. <br>
-     * Should return status code {@link HttpStatus#NOT_FOUND} when ad comment isn't exist. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK}, когда комментарий к объявлению удалён. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#FORBIDDEN}, когда пользователь не имеет таких прав. <br>
-     * Должен возвращать статус-код {@link HttpStatus#NOT_FOUND}, когда комментарий к объявлению не существует. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void deleteAdComment() throws Exception {
         mockMvc.perform(delete("/ads/1/comments/1")
@@ -2560,22 +2038,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isNotFound());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link CommentDTO} when ad comment is updated. <br>
-     * Should return status code {@link HttpStatus#UNAUTHORIZED} when user isn't authorized. <br>
-     * Should return status code {@link HttpStatus#FORBIDDEN} when user doesn't have such rights. <br>
-     * Should return status code {@link HttpStatus#NOT_FOUND} when ad comment isn't exist. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link CommentDTO}, когда комментарий к объявлению обновлён. <br>
-     * Должен возвращать статус-код {@link HttpStatus#UNAUTHORIZED}, когда пользователь не авторизован. <br>
-     * Должен возвращать статус-код {@link HttpStatus#FORBIDDEN}, когда пользователь не имеет таких прав. <br>
-     * Должен возвращать статус-код {@link HttpStatus#NOT_FOUND}, когда комментарий к объявлению не существует. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void updateAdComment() throws Exception {
         mockMvc.perform(patch("/ads/1/comments/1")
@@ -2628,18 +2090,6 @@ class HomeworkApplicationTest {
                .andExpect(status().isNotFound());
     }
 
-    /**
-     * Should return status code {@link HttpStatus#OK} and {@link ByteArrayOutputStream} when image is exist. <br>
-     * Should return status code {@link HttpStatus#BAD_REQUEST} when image isn't exist. <br>
-     * <br>
-     * <hr>
-     * <br>
-     * Должен возвращать статус-код {@link HttpStatus#OK} и {@link ByteArrayOutputStream}, когда изображение существует. <br>
-     * Должен возвращать статус-код {@link HttpStatus#BAD_REQUEST}, когда изображение не существует. <br>
-     * <br>
-     *
-     * @throws Exception
-     */
     @Test
     void downloadImage() throws Exception {
         byte[] result = mockMvc.perform(get("/" + USER.getImage())
