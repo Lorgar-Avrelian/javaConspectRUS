@@ -372,3 +372,44 @@ ALTER TABLE users
 ALTER TABLE users
     DROP COLUMN passport_number;
 ```
+
+## Пример 7:
+
+> [[_оглавление_]](../README.md/#83-sql)
+
+> [[**8.3.6 Оператор JOIN**]](/conspect/8.md/#836-оператор-join)
+
+- INNER JOIN:
+
+```sql
+SELECT employees.name, departments.department_name
+FROM employees
+         INNER JOIN departments ON employees.department_id = departments.department_id;
+```
+
+- LEFT JOIN:
+
+```sql
+SELECT employees.name, departments.department_name
+FROM employees
+         LEFT JOIN departments ON employees.department_id = departments.department_id;
+```
+
+- RIGHT JOIN:
+
+```sql
+SELECT employees.name, departments.department_name
+FROM employees
+         RIGHT JOIN departments ON employees.department_id = departments.department_id;
+```
+
+- FULL JOIN:
+
+```sql
+SELECT employees.name, departments.department_name
+FROM employees
+         FULL JOIN departments ON employees.department_id = departments.department_id;
+```
+
+
+
