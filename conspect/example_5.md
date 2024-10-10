@@ -273,3 +273,102 @@ GROUP BY author, year
 HAVING COUNT(author) < 2
 ORDER BY year DESC;
 ```
+
+## Пример 6:
+
+> [[_оглавление_]](../README.md/#83-sql)
+
+> [[**8.3.2.1 SELECT-запросы**]](/conspect/8.md/#8312-оператор-alter-table)
+
+###### Примеры использования оператора _ALTER TABLE_:
+
+```sql
+CREATE TABLE users
+(
+    id   INTEGER,
+    name VARCHAR(30)
+);
+
+INSERT INTO users(id, name)
+VALUES (1, 'Иван'),
+       (2, 'Пётр'),
+       (3, 'Фёдор');
+```
+
+- ADD COLUMN:
+
+```sql
+ALTER TABLE users
+    ADD COLUMN age INTEGER;
+
+ALTER TABLE users
+    ADD COLUMN salary NUMERIC(8, 2) DEFAULT 0.00;
+
+ALTER TABLE users
+    ADD COLUMN position VARCHAR(30) NOT NULL DEFAULT 'junior';
+
+ALTER TABLE users
+    ADD COLUMN passport_number VARCHAR(30) UNIQUE;
+```
+
+- ALTER COLUMN:
+
+```sql
+ALTER TABLE users
+    ALTER COLUMN id
+        TYPE BIGINT;
+
+ALTER TABLE users
+    ADD UNIQUE (id);
+
+ALTER TABLE users
+    DROP CONSTRAINT users_id_key;
+
+ALTER TABLE users
+    ADD PRIMARY KEY (id);
+
+ALTER TABLE users
+    ALTER COLUMN name
+        SET NOT NULL;
+
+ALTER TABLE users
+    ALTER COLUMN age
+        SET DATA TYPE SMALLINT;
+
+ALTER TABLE users
+    ALTER COLUMN age
+        SET DEFAULT 1;
+
+ALTER TABLE users
+    ALTER COLUMN age
+        DROP DEFAULT;
+```
+
+- ADD CONSTRAINT:
+
+```sql
+ALTER TABLE users
+    ADD CONSTRAINT age_check CHECK (age > 0);
+```
+
+- DROP CONSTRAINT:
+
+```sql
+ALTER TABLE users
+    DROP CONSTRAINT users_id_key;
+```
+
+- RENAME COLUMN:
+
+```sql
+ALTER TABLE users
+    RENAME COLUMN name
+        TO fio;
+```
+
+- DROP COLUMN:
+
+```sql
+ALTER TABLE users
+    DROP COLUMN passport_number;
+```
