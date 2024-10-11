@@ -7,12 +7,15 @@ import lorgar.avrelian.javaconspectrus.repository.ReaderRepository;
 import lorgar.avrelian.javaconspectrus.services.BookService;
 import lorgar.avrelian.javaconspectrus.services.ManageService;
 import lorgar.avrelian.javaconspectrus.services.ReaderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
 @Service
 public class ManageServiceImpl implements ManageService {
+    private Logger logger = LoggerFactory.getLogger(ManageServiceImpl.class);
     private final BookRepository bookRepository;
     private final ReaderRepository readerRepository;
 
@@ -31,11 +34,13 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public Reader giveBookToReader(long bookId, long readerId) {
+        logger.info("Give to reader " + readerId + " book " + bookId);
         Reader reader = setReaderService().findReader(readerId);
         Book book = setBookService().findBook(bookId);
         if (book != null && reader != null && book.getReader() == null) {
             book.setReader(reader);
         } else {
+            logger.error("Book " + bookId + " or reader " + readerId + " not found");
             return null;
         }
         return setReaderBooks(book, reader);
@@ -43,16 +48,19 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public Collection<Book> findReaderBooks(long readerId) {
+        logger.info("Find reader " + readerId);
         return bookRepository.findByReaderId(readerId);
     }
 
     @Override
     public Reader takeBookFromReader(long bookId, long readerId) {
+        logger.info("Take book " + bookId + " from reader " + readerId);
         Reader reader = setReaderService().findReader(readerId);
         Book book = setBookService().findBook(bookId);
         if (book != null && reader != null && reader.equals(book.getReader())) {
             book.setReader(null);
         } else {
+            logger.error("Book " + bookId + " or reader " + readerId + " not found");
             return null;
         }
         return setReaderBooks(book, reader);
@@ -61,6 +69,8 @@ public class ManageServiceImpl implements ManageService {
     private Reader setReaderBooks(Book book, Reader reader) {
         setBookService().editBook(book);
         reader.setBooks(findReaderBooks(reader.getId()));
+        logger.info("Book " + book.getId() + " has been edited");
+        logger.info("Reader " + reader.getId() + " had been edited");
         return reader;
     }
 }
