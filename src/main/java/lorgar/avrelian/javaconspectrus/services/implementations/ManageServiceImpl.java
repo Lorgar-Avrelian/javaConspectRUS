@@ -34,7 +34,7 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public Reader giveBookToReader(long bookId, long readerId) {
-        logger.info("Give to reader " + readerId + " book " + bookId);
+        logger.debug("Give to reader " + readerId + " book " + bookId);
         Reader reader = setReaderService().findReader(readerId);
         Book book = setBookService().findBook(bookId);
         if (book != null && reader != null && book.getReader() == null) {
@@ -48,13 +48,13 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public Collection<Book> findReaderBooks(long readerId) {
-        logger.info("Find reader " + readerId);
+        logger.debug("Find reader " + readerId);
         return bookRepository.findByReaderId(readerId);
     }
 
     @Override
     public Reader takeBookFromReader(long bookId, long readerId) {
-        logger.info("Take book " + bookId + " from reader " + readerId);
+        logger.trace("Take book " + bookId + " from reader " + readerId);
         Reader reader = setReaderService().findReader(readerId);
         Book book = setBookService().findBook(bookId);
         if (book != null && reader != null && reader.equals(book.getReader())) {
@@ -70,7 +70,7 @@ public class ManageServiceImpl implements ManageService {
         setBookService().editBook(book);
         reader.setBooks(findReaderBooks(reader.getId()));
         logger.info("Book " + book.getId() + " has been edited");
-        logger.info("Reader " + reader.getId() + " had been edited");
+        logger.trace("Reader " + reader.getId() + " had been edited");
         return reader;
     }
 }

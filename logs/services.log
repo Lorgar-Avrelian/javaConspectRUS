@@ -1,0 +1,5 @@
+2024-10-12 12:06:11 [http-nio-8080-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 3 book 6
+2024-10-12 12:06:11 [http-nio-8080-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-12 12:06:12 [http-nio-8080-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-12 12:06:12 [http-nio-8080-exec-2] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 6 has been edited
+2024-10-12 12:06:12 [http-nio-8080-exec-2] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 3 had been edited

@@ -1,0 +1,2 @@
+21099 [http-nio-8080-exec-2] DEBUG l.a.j.controllers.ManageController - Give to reader 3 book 6
+21396 [http-nio-8080-exec-2] INFO  l.a.j.controllers.ManageController - Give to reader 3 book 6 success

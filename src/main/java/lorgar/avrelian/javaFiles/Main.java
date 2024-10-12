@@ -1,4 +1,4 @@
-package lorgar.avrelian.files;
+package lorgar.avrelian.javaFiles;
 
 import java.io.IOException;
 import java.nio.file.Files;

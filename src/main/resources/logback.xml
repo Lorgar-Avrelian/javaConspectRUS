@@ -1,0 +1,86 @@
+<configuration>
+    <!--    Настройка вывода логов в терминал (консоль)-->
+    <conversionRule conversionWord="colorize" converterClass="org.tuxdude.logback.extensions.LogColorizer"/>
+    <!--    Настройка ConsoleAppender-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                <!--    Раскрашивание логов с помощью стандартной библиотеки                                   -->
+                %highlight(%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n)
+            </Pattern>
+        </layout>
+    </appender>
+    <!--    Настройка вывода логов в файл-->
+    <!--    Задание директории для лог-файлов-->
+    <property name="LOG_DIR" value="logs"/>
+    <!--    Настройка FileAppender-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <!--    Задание названия файла для сохранения логов-->
+        <file>${LOG_DIR}/services.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %m%n
+            </pattern>
+        </encoder>
+    </appender>
+    <!--    Настройка вывода логов в файл с прокруткой-->
+    <!--    Задание названий для лог-файлов-->
+    <property name="LOG_FILE_WEB" value="web"/>
+    <!--    Настройка RollingFileAppender-->
+    <appender name="ROLL-FILE-1" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--    Задание названия файла для сохранения логов-->
+        <file>${LOG_DIR}/${LOG_FILE_WEB}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- ежедневная прокрутка -->
+            <fileNamePattern>
+                ${LOG_FILE_WEB}.%d{yyyy-MM-dd}.gz
+            </fileNamePattern>
+            <!-- каждый из архивных файлов не больше 10МБ, общий объем истории за 30 дней должен быть ограничен 3 ГБ -->
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--    Настройка ещё одного вывода логов в файл с прокруткой-->
+    <property name="LOG_FILE_CONTROLLER" value="controller"/>
+    <appender name="ROLL-FILE-2" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${LOG_FILE_CONTROLLER}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${LOG_FILE_CONTROLLER}.%d{yyyy-MM-dd}.gz
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для всего приложения-->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+    <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для org.springframework.web-->
+    <logger name="org.springframework.web" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ROLL-FILE-1"/>
+    </logger>
+    <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для пакета-->
+    <logger name="lorgar.avrelian.javaconspectrus.services.implementations" level="TRACE" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для контроллеров-->
+    <logger name="lorgar.avrelian.javaconspectrus.controllers" level="TRACE" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ROLL-FILE-2"/>
+    </logger>
+
+</configuration>
