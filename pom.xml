@@ -96,6 +96,12 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.5.9</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.tuxdude.logback.extensions/logback-colorizer -->
+		<dependency>
+			<groupId>org.tuxdude.logback.extensions</groupId>
+			<artifactId>logback-colorizer</artifactId>
+			<version>1.0.1</version>
+		</dependency>
 
 
 		<!--		<dependency>-->

@@ -1,13 +1,19 @@
 <configuration>
     <!--    Настройка вывода логов в терминал (консоль)-->
+    <!--    Выбор цветовой схемы-->
+    <!--    <property scope="context" name="COLORIZER_COLORS" value="red@black,yellow@black,green@black,blue@black,magenta@black" />-->
+    <!--    ИЛИ-->
+    <property scope="context" name="COLORIZER_COLORS" value="red@,yellow@,green@,blue@,magenta@"/>
     <conversionRule conversionWord="colorize" converterClass="org.tuxdude.logback.extensions.LogColorizer"/>
     <!--    Настройка ConsoleAppender-->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <withJansi>true</withJansi>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
+                <!--    Раскрашивание логов с помощью "org.tuxdude.logback.extensions.LogColorizer"            -->
+                %colorize(%d{HH:mm:ss.SSS} [%t] %-4relative %-5level %logger{36} - %msg%n)
                 <!--    Раскрашивание логов с помощью стандартной библиотеки                                   -->
-                %highlight(%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n)
+                <!--                %highlight(%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n)-->
             </Pattern>
         </layout>
     </appender>
