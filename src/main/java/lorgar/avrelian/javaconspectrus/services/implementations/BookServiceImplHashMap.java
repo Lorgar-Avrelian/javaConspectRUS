@@ -2,11 +2,13 @@ package lorgar.avrelian.javaconspectrus.services.implementations;
 
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.services.BookService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@Profile("!test")
 public class BookServiceImplHashMap implements BookService {
     private final HashMap<Long, Book> books = new HashMap<>();
     private long lastId = 0;

@@ -74,6 +74,7 @@ class JavaConspectRusApplicationTests {
 ```java
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration(exclude = LiquibaseAutoConfiguration.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
 @DisplayName(value = "http://localhost:8080/readers")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

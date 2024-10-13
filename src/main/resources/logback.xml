@@ -1,4 +1,6 @@
 <configuration>
+    <!-- Stop output INFO at start -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
     <!--    Настройка вывода логов в терминал (консоль)-->
     <!--    Выбор цветовой схемы-->
     <!--    <property scope="context" name="COLORIZER_COLORS" value="red@black,yellow@black,green@black,blue@black,magenta@black" />-->
@@ -74,7 +76,7 @@
         <appender-ref ref="CONSOLE"/>
     </root>
     <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для org.springframework.web-->
-    <logger name="org.springframework.web" level="DEBUG" additivity="false">
+    <logger name="org.springframework.web" level="ERROR" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ROLL-FILE-1"/>
     </logger>
