@@ -1,0 +1,36 @@
+5432 [main] INFO  l.a.j.c.ReaderControllerTest - Starting ReaderControllerTest using Java 22.0.2 with PID 21328 (started by USER in C:\Users\USER\IdeaProjects\java-conspect\Java conspect RUS)
+5432 [main] DEBUG l.a.j.c.ReaderControllerTest - Running with Spring Boot v3.3.4, Spring v6.1.13
+5432 [main] INFO  l.a.j.c.ReaderControllerTest - No active profile set, falling back to 1 default profile: "default"
+6159 [main] INFO  l.a.j.c.ReaderControllerTest - Started ReaderControllerTest in 0.743 seconds (process running for 6.749)
+7382 [http-nio-auto-2-exec-9] DEBUG l.a.j.controllers.ManageController - Give to reader 6 book 1
+7392 [http-nio-auto-2-exec-9] INFO  l.a.j.controllers.ManageController - Give to reader 6 book 1 success
+7411 [http-nio-auto-2-exec-2] DEBUG l.a.j.controllers.ManageController - Give to reader 7 book 2
+7419 [http-nio-auto-2-exec-2] INFO  l.a.j.controllers.ManageController - Give to reader 7 book 2 success
+7444 [http-nio-auto-2-exec-5] DEBUG l.a.j.controllers.ManageController - Give to reader 8 book 3
+7450 [http-nio-auto-2-exec-5] INFO  l.a.j.controllers.ManageController - Give to reader 8 book 3 success
+7476 [http-nio-auto-2-exec-8] DEBUG l.a.j.controllers.ManageController - Give to reader 9 book 4
+7482 [http-nio-auto-2-exec-8] INFO  l.a.j.controllers.ManageController - Give to reader 9 book 4 success
+7568 [main] INFO  l.a.j.c.BooksControllerTest - Starting BooksControllerTest using Java 22.0.2 with PID 21328 (started by USER in C:\Users\USER\IdeaProjects\java-conspect\Java conspect RUS)
+7568 [main] DEBUG l.a.j.c.BooksControllerTest - Running with Spring Boot v3.3.4, Spring v6.1.13
+7568 [main] INFO  l.a.j.c.BooksControllerTest - No active profile set, falling back to 1 default profile: "default"
+8376 [main] INFO  l.a.j.c.BooksControllerTest - Started BooksControllerTest in 0.826 seconds (process running for 8.966)
+1285 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Starting BooksControllerTestWithProfile using Java 22.0.2 with PID 10204 (started by USER in C:\Users\USER\IdeaProjects\java-conspect\Java conspect RUS)
+1285 [main] DEBUG l.a.j.c.BooksControllerTestWithProfile - Running with Spring Boot v3.3.4, Spring v6.1.13
+1286 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - The following 1 profile is active: "test"
+3039 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Started BooksControllerTestWithProfile in 2.038 seconds (process running for 3.47)
+1321 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Starting BooksControllerTestWithProfile using Java 22.0.2 with PID 6208 (started by USER in C:\Users\USER\IdeaProjects\java-conspect\Java conspect RUS)
+1321 [main] DEBUG l.a.j.c.BooksControllerTestWithProfile - Running with Spring Boot v3.3.4, Spring v6.1.13
+1322 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - The following 1 profile is active: "test"
+3112 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Started BooksControllerTestWithProfile in 2.088 seconds (process running for 3.542)
+1402 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Starting BooksControllerTestWithProfile using Java 22.0.2 with PID 5844 (started by USER in C:\Users\USER\IdeaProjects\java-conspect\Java conspect RUS)
+1402 [main] DEBUG l.a.j.c.BooksControllerTestWithProfile - Running with Spring Boot v3.3.4, Spring v6.1.13
+1403 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - The following 1 profile is active: "test"
+2912 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Started BooksControllerTestWithProfile in 1.819 seconds (process running for 3.668)
+1425 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Starting BooksControllerTestWithProfile using Java 22.0.2 with PID 2964 (started by USER in C:\Users\USER\IdeaProjects\java-conspect\Java conspect RUS)
+1426 [main] DEBUG l.a.j.c.BooksControllerTestWithProfile - Running with Spring Boot v3.3.4, Spring v6.1.13
+1426 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - The following 1 profile is active: "test"
+2883 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Started BooksControllerTestWithProfile in 1.764 seconds (process running for 3.447)
+1435 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Starting BooksControllerTestWithProfile using Java 22.0.2 with PID 12256 (started by USER in C:\Users\USER\IdeaProjects\java-conspect\Java conspect RUS)
+1436 [main] DEBUG l.a.j.c.BooksControllerTestWithProfile - Running with Spring Boot v3.3.4, Spring v6.1.13
+1436 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - The following 1 profile is active: "test"
+2949 [main] INFO  l.a.j.c.BooksControllerTestWithProfile - Started BooksControllerTestWithProfile in 1.829 seconds (process running for 3.44)

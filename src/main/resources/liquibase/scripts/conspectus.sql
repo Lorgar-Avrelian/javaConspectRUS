@@ -3,11 +3,11 @@
 -- changeset tokovenko:1
 CREATE TABLE expense
 (
-    id       SERIAL  NOT NULL,
-    title    TEXT    NOT NULL,
-    date     DATE    NOT NULL,
+    id       SERIAL NOT NULL,
+    title    TEXT   NOT NULL,
+    date     DATE   NOT NULL,
     category TEXT,
-    amount   INTEGER NOT NULL
+    amount   FLOAT  NOT NULL
 );
 
 -- changeset tokovenko:2
@@ -28,7 +28,7 @@ CREATE INDEX category_index ON expense (category);
 -- changeset tokovenko:4
 CREATE TABLE reader
 (
-    id              SERIAL,
+    id              BIGSERIAL,
     name            VARCHAR(12) NOT NULL,
     second_name     VARCHAR(16) NOT NULL,
     surname         VARCHAR(30) NOT NULL,
@@ -46,11 +46,11 @@ VALUES (1, 'Иван', 'Иванович', 'Иванов', 10),
 -- changeset tokovenko:6
 CREATE TABLE book
 (
-    id        SERIAL,
+    id        BIGSERIAL,
     author    VARCHAR(30) NOT NULL,
     title     VARCHAR(30) NOT NULL,
     year      SMALLINT CHECK ( year > 1970 ),
-    reader_id INTEGER,
+    reader_id BIGINT,
     PRIMARY KEY (id),
     FOREIGN KEY (reader_id) REFERENCES reader (id)
 );
@@ -58,12 +58,12 @@ CREATE TABLE book
 -- changeset tokovenko:7
 CREATE TABLE book_cover
 (
-    id            SERIAL,
+    id            BIGSERIAL,
     file_path     VARCHAR(255) NOT NULL,
     file_size     INTEGER      NOT NULL,
     image_preview oid          NOT NULL,
     media_type    VARCHAR(30)  NOT NULL,
-    book_id       INTEGER,
+    book_id       BIGINT,
     PRIMARY KEY (id),
     FOREIGN KEY (book_id) REFERENCES book (id)
 );
@@ -89,3 +89,16 @@ CREATE INDEX reader_index ON book (reader_id);
 
 -- changeset tokovenko:10
 CREATE INDEX book_index ON book_cover (book_id);
+
+-- changeset tokovenko:11
+CREATE TABLE city
+(
+    id          BIGSERIAL,
+    name        VARCHAR(255)    NOT NULL,
+    latitude    NUMERIC(16, 13) NOT NULL,
+    longitude   NUMERIC(16, 13) NOT NULL,
+    country     VARCHAR(30)     NOT NULL,
+    state       VARCHAR(30)     NOT NULL,
+    local_names TEXT            NOT NULL,
+    PRIMARY KEY (id)
+);

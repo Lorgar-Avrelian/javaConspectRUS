@@ -23,7 +23,7 @@ public class Book {
     private String author;
     @Schema(title = "Год", description = "Год публикации книги", defaultValue = "1986", required = true, minimum = "1970")
     @Column(name = "year", nullable = false)
-    private int year;
+    private short year;
     @Schema(title = "ID читателя", description = "ID читателя", defaultValue = "null", minimum = "1", maximum = "9223372036854775807")
     @ManyToOne
     @JoinColumn(name = "reader_id")
@@ -32,7 +32,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(long id, String title, String author, int year, Reader reader) {
+    public Book(long id, String title, String author, short year, Reader reader) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -64,11 +64,11 @@ public class Book {
         this.author = author;
     }
 
-    public int getYear() {
+    public short getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(short year) {
         this.year = year;
     }
 
