@@ -1,11 +1,14 @@
 package lorgar.avrelian.javaconspectrus.services;
 
 import lorgar.avrelian.javaconspectrus.dao.City;
+import lorgar.avrelian.javaconspectrus.dto.Whether;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collection;
 
 @Service
 public interface WhetherService {
-    List<City> getCityInfo(String city);
+    Collection<City> getCityInfo(String city);
+
+    Collection<Whether> getWhether(String city, String country);
 }

@@ -82,7 +82,7 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Reader> readReader(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class)) long id) {
+    public ResponseEntity<Reader> readReader(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Reader findedReader = readerService.findReader(id);
         if (findedReader != null) {
             return ResponseEntity.ok(findedReader);
@@ -146,7 +146,7 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Reader> deleteBook(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class)) long id) {
+    public ResponseEntity<Reader> deleteBook(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Reader deletedReader = readerService.deleteReader(id);
         if (deletedReader != null) {
             return ResponseEntity.ok(deletedReader);
@@ -178,7 +178,7 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Reader>> getAllReaders(@RequestParam(required = false) @Parameter(description = "Часть ФИО читателя", schema = @Schema(implementation = String.class)) String partOfNameSecondNameOrSurname) {
+    public ResponseEntity<Collection<Reader>> getAllReaders(@RequestParam(required = false) @Parameter(description = "Часть ФИО читателя", schema = @Schema(implementation = String.class), example = "Иван") String partOfNameSecondNameOrSurname) {
         Collection<Reader> readers;
         if (partOfNameSecondNameOrSurname == null) {
             readers = readerService.getAllReaders();
@@ -215,7 +215,7 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Reader>> getReadersByName(@RequestParam @Parameter(description = "Часть имени читателя", schema = @Schema(implementation = String.class)) String partOfName) {
+    public ResponseEntity<Collection<Reader>> getReadersByName(@RequestParam @Parameter(description = "Часть имени читателя", schema = @Schema(implementation = String.class), example = "Иван") String partOfName) {
         Collection<Reader> readers = readerService.getReaderByName(partOfName);
         if (!readers.isEmpty()) {
             return ResponseEntity.status(200).body(readers);
@@ -247,7 +247,7 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Reader>> getReadersBySecondName(@RequestParam @Parameter(description = "Часть отчества читателя", schema = @Schema(implementation = String.class)) String partOfSecondName) {
+    public ResponseEntity<Collection<Reader>> getReadersBySecondName(@RequestParam @Parameter(description = "Часть отчества читателя", schema = @Schema(implementation = String.class), example = "Иванович") String partOfSecondName) {
         Collection<Reader> readers = readerService.getReaderBySecondName(partOfSecondName);
         if (!readers.isEmpty()) {
             return ResponseEntity.status(200).body(readers);
@@ -279,7 +279,7 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Reader>> getReadersBySurname(@RequestParam @Parameter(description = "Часть фамилии читателя", schema = @Schema(implementation = String.class)) String partOfSurname) {
+    public ResponseEntity<Collection<Reader>> getReadersBySurname(@RequestParam @Parameter(description = "Часть фамилии читателя", schema = @Schema(implementation = String.class), example = "Иванов") String partOfSurname) {
         Collection<Reader> readers = readerService.getReaderBySurname(partOfSurname);
         if (!readers.isEmpty()) {
             return ResponseEntity.status(200).body(readers);
@@ -311,7 +311,7 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Book>> getReaderBooks(@RequestParam @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class)) long id) {
+    public ResponseEntity<Collection<Book>> getReaderBooks(@RequestParam @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Collection<Book> books = readerService.getReaderBooks(id);
         if (!books.isEmpty()) {
             return ResponseEntity.status(200).body(books);

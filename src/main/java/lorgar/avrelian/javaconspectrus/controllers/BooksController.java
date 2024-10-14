@@ -88,7 +88,7 @@ public class BooksController {
                     )
             }
     )
-    public ResponseEntity<Book> readBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class)) long id) {
+    public ResponseEntity<Book> readBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Book findedBook = bookService.findBook(id);
         if (findedBook != null) {
             return ResponseEntity.ok(findedBook);
@@ -152,7 +152,7 @@ public class BooksController {
                     )
             }
     )
-    public ResponseEntity<Book> deleteBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class)) long id) {
+    public ResponseEntity<Book> deleteBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Book deletedBook = bookService.deleteBook(id);
         if (deletedBook != null) {
             return ResponseEntity.ok(deletedBook);
@@ -184,7 +184,7 @@ public class BooksController {
                     )
             }
     )
-    public ResponseEntity<Collection<Book>> getAllBooks(@RequestParam(required = false) @Parameter(description = "Часть ФИО автора или названия книги", schema = @Schema(implementation = String.class)) String authorOrTitle) {
+    public ResponseEntity<Collection<Book>> getAllBooks(@RequestParam(required = false) @Parameter(description = "Часть ФИО автора или названия книги", schema = @Schema(implementation = String.class), example = "Пушкин") String authorOrTitle) {
         Collection<Book> books;
         if (authorOrTitle == null) {
             books = bookService.getAllBooks();
@@ -263,7 +263,7 @@ public class BooksController {
                     )
             }
     )
-    public ResponseEntity<byte[]> downloadCover(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class)) long id) {
+    public ResponseEntity<byte[]> downloadCover(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         BookCover bookCover = bookCoverService.getBookCover(id);
         return getCover(bookCover);
     }
@@ -310,7 +310,7 @@ public class BooksController {
                     )
             }
     )
-    public void downloadCover(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class)) long id, HttpServletResponse response) {
+    public void downloadCover(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id, HttpServletResponse response) {
         bookCoverService.downloadCover(id, response);
     }
 }

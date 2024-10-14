@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lorgar.avrelian.javaconspectrus.dao.City;
 import lorgar.avrelian.javaconspectrus.dto.CityDTO;
+import lorgar.avrelian.javaconspectrus.dto.Whether;
+import lorgar.avrelian.javaconspectrus.dto.WhetherDTO;
 import lorgar.avrelian.javaconspectrus.repository.CityRepository;
 import lorgar.avrelian.javaconspectrus.services.WhetherService;
 import org.slf4j.Logger;
@@ -17,6 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +32,8 @@ public class WhetherServiceImpl implements WhetherService {
     private String apiKey;
     @Value("${whether.geo.url}")
     private String geoUrl;
+    @Value("${whether.current.url}")
+    private String currentWhetherUrl;
     @Value("${whether.geo.result.count}")
     private int resultCount;
     @Autowired
@@ -39,7 +47,7 @@ public class WhetherServiceImpl implements WhetherService {
     }
 
     @Override
-    public List<City> getCityInfo(String city) {
+    public Collection<City> getCityInfo(String city) {
         String uri = geoUrl + "?q=" + city + "&limit=" + resultCount + "&appid=" + apiKey;
         List<City> citiesList = cityRepository.findByLocalNamesContainsIgnoreCase(city);
         if (citiesList.isEmpty()) {
@@ -96,5 +104,42 @@ public class WhetherServiceImpl implements WhetherService {
         } else {
             return citiesList;
         }
+    }
+
+    @Override
+    public Collection<Whether> getWhether(String city, String country) {
+        Collection<City> cities = getCityInfo(city);
+        if (cities.isEmpty()) {
+            return null;
+        }
+        cities = cityRepository.findByLocalNamesContainsIgnoreCaseAndCountryEqualsIgnoreCase(city, country);
+        if (cities.isEmpty()) {
+            return null;
+        }
+        BigDecimal lat;
+        BigDecimal lon;
+        List<Whether> whethers = new ArrayList<>();
+        Whether whether = new Whether();
+        for (City city1 : cities) {
+            lat = city1.getLat();
+            lon = city1.getLon();
+            String uri = currentWhetherUrl + "?units=metric&lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
+            WhetherDTO whetherDTO = restTemplate.getForObject(uri, WhetherDTO.class);
+            if (whetherDTO != null) {
+                whether.setTemperature(whetherDTO.getMain().getTemp());
+                whether.setFeels_like(whetherDTO.getMain().getFeels_like());
+                whether.setTemp_min(whetherDTO.getMain().getTemp_min());
+                whether.setTemp_max(whetherDTO.getMain().getTemp_max());
+                whether.setPressure(whetherDTO.getMain().getPressure().multiply(BigDecimal.valueOf(0.7500615758456601)));
+                whether.setHumidity(whetherDTO.getMain().getHumidity());
+                whether.setVisibility(whetherDTO.getVisibility());
+                whether.setWind_speed(whetherDTO.getWind().getSpeed());
+                whether.setWind_deg(whetherDTO.getWind().getDeg());
+                whether.setSunrise(new Time(whetherDTO.getSys().getSunrise() * 1000));
+                whether.setSunset(new Time(whetherDTO.getSys().getSunset() * 1000));
+                whethers.add(whether);
+            }
+        }
+        return whethers;
     }
 }

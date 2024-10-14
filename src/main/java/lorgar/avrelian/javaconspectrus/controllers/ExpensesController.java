@@ -1,6 +1,7 @@
 package lorgar.avrelian.javaconspectrus.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -54,7 +55,7 @@ public class ExpensesController {
                     )
             }
     )
-    public ResponseEntity<Collection<Expense>> getExpenses(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+    public ResponseEntity<Collection<Expense>> getExpenses(@RequestParam(required = false) @Parameter(description = "Номер страницы", required = true, schema = @Schema(implementation = Long.class), example = "1") Integer page, @RequestParam(required = false) @Parameter(description = "Размер страницы", required = true, schema = @Schema(implementation = Long.class), example = "4") Integer size) {
         Collection<Expense> expenses;
         if (page == null && size == null) {
             expenses = expenseService.getAllExpenses();
@@ -93,7 +94,7 @@ public class ExpensesController {
                     )
             }
     )
-    public ResponseEntity<Expense> getExpenseById(@PathVariable("id") int id) {
+    public ResponseEntity<Expense> getExpenseById(@PathVariable("id") @Parameter(description = "ID записи о затратах", required = true, schema = @Schema(implementation = Long.class), example = "1") int id) {
         Expense expense = expenseService.getExpense(id);
         if (expense == null) {
             return ResponseEntity.notFound().build();

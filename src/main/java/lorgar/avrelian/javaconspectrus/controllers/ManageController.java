@@ -49,7 +49,7 @@ public class ManageController {
                     )
             }
     )
-    public ResponseEntity<Reader> giveBook(@RequestParam long bookId, @RequestParam long readerId) {
+    public ResponseEntity<Reader> giveBook(@RequestParam @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long bookId, @RequestParam @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long readerId) {
         logger.debug("Give to reader " + readerId + " book " + bookId);
         Reader reader = manageService.giveBookToReader(bookId, readerId);
         if (reader == null) {
@@ -84,7 +84,7 @@ public class ManageController {
                     )
             }
     )
-    public ResponseEntity<Reader> takeBook(@RequestParam(name = "book") @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class)) long bookId, @RequestParam(name = "reader") @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class)) long readerId) {
+    public ResponseEntity<Reader> takeBook(@RequestParam(name = "book") @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long bookId, @RequestParam(name = "reader") @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long readerId) {
         logger.debug("Take from reader " + readerId + " book " + bookId);
         Reader reader = manageService.takeBookFromReader(bookId, readerId);
         if (reader == null) {
