@@ -555,6 +555,14 @@
 [***3.8 Spring REST Clients***](/conspect/3.md/#38-spring-rest-clients)  
 
 > [**3.8.1 RestTemplate**](/conspect/3.md/#381-resttemplate)  
+> > [_3.8.1.1 getForObject()_](/conspect/3.md/#3811-getforobject)  
+> > [_3.8.1.2 getForEntity()_](/conspect/3.md/#3812-getforentity)  
+> > [_3.8.1.3 postForObject()_](/conspect/3.md/#3813-postforobject)  
+> > [_3.8.1.4 postForEntity()_](/conspect/3.md/#3814-postforentity)  
+> > [_3.8.1.5 put()_](/conspect/3.md/#3815-put)  
+> > [_3.8.1.6 patchForObject()_](/conspect/3.md/#3816-patchforobject)  
+> > [_3.8.1.7 delete()_](/conspect/3.md/#3817-delete)  
+> > [_3.8.1.8 exchange()_](/conspect/3.md/#3818-exchange)  
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 4 REST
@@ -911,6 +919,7 @@
 1. [**Настройка сохранения логов в файл с помощью _Log4J2_**](/conspect/10.md/#1015-log4j2)
 1. [**Настройка сохранения логов в файл с помощью _Logback_**](/conspect/10.md/#1014-logback)
 1. [**Ошибка _503_ в _Swagger UI_ (не может прочитать схему)**](/conspect/7.md/#711-подключение-swagger)
+1. [**Отправка запросов на сторонний ресурс с использованием _RestTemplate_**](/conspect/example_11.md/#пример-1)
 1. [**Перегрузка конструктора**](/conspect/1.md/#193-конструктор)
 1. [**Передача изображения из директории**](/conspect/example_1.md/#пример-2)
 1. [**Передача параметров метода в _HTTP_-запросе**](/conspect/3.md/#332-передача-параметров-метода-в-запросе)
