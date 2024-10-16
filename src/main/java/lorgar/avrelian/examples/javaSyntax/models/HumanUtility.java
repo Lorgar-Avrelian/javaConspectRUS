@@ -1,4 +1,4 @@
-package lorgar.avrelian.javaSyntax.models;
+package lorgar.avrelian.examples.javaSyntax.models;
 
 public class HumanUtility {
     private HumanUtility() {
