@@ -431,8 +431,13 @@
 > [**2.9.2 Потоки-демоны**](/conspect/2.md/#292-потоки-демоны)  
 
 > [**2.9.3 Синхронизация потоков**](/conspect/2.md/#293-синхронизация-потоков)  
-> > [_2.9.3.1 Deadlock_](/conspect/2.md/#2931-deadlock)  
+> > [_2.9.3.1 **Deadlock**_](/conspect/2.md/#2931-deadlock)  
 > > [_2.9.3.2 Синхронизаторы_](/conspect/2.md/#2932-синхронизаторы)  
+> > > [2.9.3.2.1 **Semaphore**](/conspect/2.md/#29321-semaphore)  
+> > > [2.9.3.2.2 **CountDownLatch**](/conspect/2.md/#29322-countdownlatch)  
+> > > [2.9.3.2.3 **CyclicBarrier**](/conspect/2.md/#29323-cyclicbarrier)  
+> > > [2.9.3.2.4 **Exchanger**](/conspect/2.md/#29324-exchanger)  
+> > > [2.9.3.2.5 **Phaser**](/conspect/2.md/#29325-phaser)  
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 3 Spring Framework

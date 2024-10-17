@@ -1,12 +1,27 @@
 package lorgar.avrelian.examples.threads;
 
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 
 public class Main {
     static int counter = 0;
     static final Object lock = new Object();
     static final Object lock_1 = new Object();
     static final Object lock_2 = new Object();
+    // устанавливаем ограничение на количество одновременно выполняемых потоков
+    // устанавливаем флаг "справедливый" на true
+    // метод aсquire() будет раздавать разрешения в порядке очереди
+    private static final Semaphore semaphore = new Semaphore(2, true);
+    //Создаём CountDownLatch на 2 условия
+    private static final CountDownLatch countDownLatch = new CountDownLatch(2);
+    // Инициализируем барьер на 2 потока и задачей, которая будет выполняться,
+    // когда у барьера соберётся 2 потока, после чего они будут освобождены
+    private static final CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
+    // Создаём обменник, который будет обмениваться типом Integer
+    private static final Exchanger<Integer> exchanger = new Exchanger<>();
+    // Создаём фазер. При создании экземпляра Phaser из основного потока
+    // передаём в качестве аргумента 1 - это эквивалентно вызову метода
+    // register() из текущего потока
+    private static final Phaser phaser = new Phaser(1);
 
     public static void main(String[] args) {
 //        example1();
@@ -19,94 +34,209 @@ public class Main {
 //        deadLockExample();
 //        example();
 //        exampleJoin();
-        semaphoreExample();
+//        semaphoreExample();
+//        exampleCountDownLatch();
+//        exampleCyclicBarrier();
+//        exchangerExample();
+        phaserExample();
     }
 
-    private static void semaphoreExample() {
-        // устанавливаем ограничение на количество одновременно выполняемых потоков
-        // устанавливаем флаг "справедливый" на true
-        // метод aсquire() будет раздавать разрешения в порядке очереди
-        final Semaphore semaphore = new Semaphore(2, true);
-        //
-        doOperation(0);
-        //
+    private static void phaserExample() {
+        doPhaserOperation(0);
         Thread thread_1 = new Thread() {
             @Override
             public void run() {
-                try {
-                    //acquire() запрашивает доступ к следующему за вызовом этого метода блоку кода,
-                    //если доступ не разрешен, поток вызвавший этот метод блокируется до тех пор,
-                    //пока семафор не разрешит доступ
-                    semaphore.acquire();
-                    doOperation(1);
-                    //release(), напротив, освобождает ресурс
-                    semaphore.release();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    semaphore.acquire();
-                    doOperation(2);
-                    semaphore.release();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    semaphore.acquire();
-                    doOperation(3);
-                    semaphore.release();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                // Регистрируем этот поток с помощью метода register()
+                phaser.register();
+                // Приостанавливаем выполнение потока, пока все
+                // потоки-участники не выполнят данную фазу
+                phaser.arriveAndAwaitAdvance();
+                doPhaserOperation(1);
+                doPhaserOperation(2);
+                doPhaserOperation(3);
+                // Снимаем поток с регистрации методом arriveAndDeregister()
+                phaser.arriveAndDeregister();
             }
         };
         thread_1.start();
         //
         new Thread(() -> {
-            try {
-                semaphore.acquire();
-                doOperation(4);
-                semaphore.release();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                semaphore.acquire();
-                doOperation(5);
-                semaphore.release();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                semaphore.acquire();
-                doOperation(6);
-                semaphore.release();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            // Регистрируем этот поток с помощью метода register()
+            phaser.register();
+            // Приостанавливаем выполнение потока, пока все
+            // потоки-участники не выполнят данную фазу
+            phaser.arriveAndAwaitAdvance();
+            doPhaserOperation(4);
+            doPhaserOperation(5);
+            doPhaserOperation(6);
+            // Снимаем поток с регистрации методом arriveAndDeregister()
+            phaser.arriveAndDeregister();
         }).start();
         //
+        // Приостанавливаем выполнение потока, пока все
+        // потоки-участники не выполнят данную фазу
+        phaser.arriveAndAwaitAdvance();
+        doPhaserOperation(7);
+        doPhaserOperation(8);
+        doPhaserOperation(9);
+        // Снимаем поток с регистрации методом arriveAndDeregister()
+        phaser.arriveAndDeregister();
+    }
+
+    private static void doPhaserOperation(int i) {
+        System.out.println("Operation " + i);
+        // Сообщаем, что поток выполнил ещё одну фазу
+        phaser.arrive();
+        String s = "";
+        // Приостанавливаем выполнение потока, пока все
+        // потоки-участники не выполнят данную фазу
+        phaser.arriveAndAwaitAdvance();
+        for (int j = 0; j < 100_000; j++) {
+            s += j + " ";
+        }
+        // Приостанавливаем выполнение потока, пока все
+        // потоки-участники не выполнят данную фазу
+        phaser.arriveAndAwaitAdvance();
+    }
+
+    private static void exchangerExample() {
+        Thread thread_1 = new Thread() {
+            @Override
+            public void run() {
+                doExchangerOperation(1);
+                doExchangerOperation(2);
+                doExchangerOperation(3);
+            }
+        };
+        thread_1.start();
+        //
+        new Thread(() -> {
+            doExchangerOperation(4);
+            doExchangerOperation(5);
+            doExchangerOperation(6);
+        }).start();
+        //
+        doExchangerOperation(0);
+        doExchangerOperation(7);
+        doExchangerOperation(8);
+        doExchangerOperation(9);
+    }
+
+    private static void doExchangerOperation(int i) {
+        Integer result = Integer.valueOf(i);
+        String s = "";
+        for (int j = 0; j < 100_000; j++) {
+            s += j + " ";
+        }
         try {
-            semaphore.acquire();
-            doOperation(7);
-            semaphore.release();
+            result = exchanger.exchange(result);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("Operation " + i + " Got value from operation " + result);
+    }
+
+    private static void exampleCyclicBarrier() {
+        Thread thread_1 = new Thread() {
+            @Override
+            public void run() {
+                doCyclicBarrierOperation(1);
+                doCyclicBarrierOperation(2);
+                doCyclicBarrierOperation(3);
+            }
+        };
+        thread_1.start();
+        //
+        new Thread(() -> {
+            doCyclicBarrierOperation(4);
+            doCyclicBarrierOperation(5);
+            doCyclicBarrierOperation(6);
+        }).start();
+        //
+        doCyclicBarrierOperation(0);
+        doCyclicBarrierOperation(7);
+        doCyclicBarrierOperation(8);
+        doCyclicBarrierOperation(9);
+    }
+
+    private static void doCyclicBarrierOperation(int i) {
+        // Для указания потоку о том что он достиг барьера, нужно вызвать метод await()
+        // После этого данный поток блокируется, и ждет пока остальные потоки достигнут барьера
+        try {
+            cyclicBarrier.await();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Operation " + i);
+        String s = "";
+        for (int j = 0; j < 100_000; j++) {
+            s += j + " ";
+        }
+    }
+
+    private static void exampleCountDownLatch() {
+        doCountDownLatchOperation(0);
+        Thread thread_1 = new Thread() {
+            @Override
+            public void run() {
+                doCountDownLatchOperation(1);
+                doCountDownLatchOperation(2);
+                doCountDownLatchOperation(3);
+            }
+        };
+        thread_1.start();
+        //
+        new Thread(() -> {
+            doCountDownLatchOperation(4);
+            doCountDownLatchOperation(5);
+            doCountDownLatchOperation(6);
+        }).start();
+        //
+        doCountDownLatchOperation(7);
+        doCountDownLatchOperation(8);
+        doCountDownLatchOperation(9);
+    }
+
+    private static void semaphoreExample() {
+        doSemaphoreOperation(0);
+        //
+        Thread thread_1 = new Thread() {
+            @Override
+            public void run() {
+                doSemaphoreOperation(1);
+                doSemaphoreOperation(2);
+                doSemaphoreOperation(3);
+            }
+        };
+        thread_1.start();
+        //
+        new Thread(() -> {
+            doSemaphoreOperation(4);
+            doSemaphoreOperation(5);
+            doSemaphoreOperation(6);
+        }).start();
+        //
+        doSemaphoreOperation(7);
+        doSemaphoreOperation(8);
+        doSemaphoreOperation(9);
+    }
+
+    private static void doSemaphoreOperation(int i) {
+        //acquire() запрашивает доступ к следующему за вызовом этого метода блоку кода,
+        //если доступ не разрешен, поток вызвавший этот метод блокируется до тех пор,
+        //пока семафор не разрешит доступ
         try {
             semaphore.acquire();
-            doOperation(8);
-            semaphore.release();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        try {
-            semaphore.acquire();
-            doOperation(9);
-            semaphore.release();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        System.out.println("Operation " + i);
+        String s = "";
+        for (int j = 0; j < 100_000; j++) {
+            s += j + " ";
         }
+        //release(), напротив, освобождает ресурс
+        semaphore.release();
     }
 
     private static void exampleJoin() {
@@ -413,6 +543,25 @@ public class Main {
         }
 //        System.out.println(s);
 //        System.out.println(sb);
+    }
+
+    private static void doCountDownLatchOperation(int i) {
+        countDownLatch.countDown(); // команда уменьшает счётчик на 1
+        System.out.println("Operation " + i);
+        String s = "";
+        for (int j = 0; j < 100_000; j++) {
+            s += j + " ";
+        }
+        countDownLatch.countDown(); // команда уменьшает счётчик на 1
+        // счётчик становится равным нулю, и все ожидающие потоки одновременно разблокируются
+        //
+        // метод await() блокирует поток, вызвавший его, до тех пор, пока
+        // счётчик CountDownLatch не станет равен 0
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private static synchronized void doSynchronizedCounterOperation(int i) {
