@@ -1,5 +1,7 @@
 package lorgar.avrelian.examples.threads;
 
+import java.util.concurrent.Semaphore;
+
 public class Main {
     static int counter = 0;
     static final Object lock = new Object();
@@ -17,6 +19,94 @@ public class Main {
 //        deadLockExample();
 //        example();
 //        exampleJoin();
+        semaphoreExample();
+    }
+
+    private static void semaphoreExample() {
+        // устанавливаем ограничение на количество одновременно выполняемых потоков
+        // устанавливаем флаг "справедливый" на true
+        // метод aсquire() будет раздавать разрешения в порядке очереди
+        final Semaphore semaphore = new Semaphore(2, true);
+        //
+        doOperation(0);
+        //
+        Thread thread_1 = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    //acquire() запрашивает доступ к следующему за вызовом этого метода блоку кода,
+                    //если доступ не разрешен, поток вызвавший этот метод блокируется до тех пор,
+                    //пока семафор не разрешит доступ
+                    semaphore.acquire();
+                    doOperation(1);
+                    //release(), напротив, освобождает ресурс
+                    semaphore.release();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    semaphore.acquire();
+                    doOperation(2);
+                    semaphore.release();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    semaphore.acquire();
+                    doOperation(3);
+                    semaphore.release();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread_1.start();
+        //
+        new Thread(() -> {
+            try {
+                semaphore.acquire();
+                doOperation(4);
+                semaphore.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                semaphore.acquire();
+                doOperation(5);
+                semaphore.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                semaphore.acquire();
+                doOperation(6);
+                semaphore.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        //
+        try {
+            semaphore.acquire();
+            doOperation(7);
+            semaphore.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            semaphore.acquire();
+            doOperation(8);
+            semaphore.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            semaphore.acquire();
+            doOperation(9);
+            semaphore.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void exampleJoin() {
