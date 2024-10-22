@@ -102,6 +102,12 @@
 			<artifactId>logback-colorizer</artifactId>
 			<version>1.0.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.telegram/telegrambots -->
+		<dependency>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots</artifactId>
+			<version>6.9.7.1</version>
+		</dependency>
 
 
 		<!--		<dependency>-->
