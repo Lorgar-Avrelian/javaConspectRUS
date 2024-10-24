@@ -86,6 +86,17 @@
             <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>
     </appender>
+    <!--    Настройка ещё одного вывода логов в файл -->
+    <property name="LOG_FILE_TELEGRAM" value="telegram-bot"/>
+    <appender name="TELEGRAM" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_DIR}/${LOG_FILE_TELEGRAM}.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %m%n
+            </pattern>
+        </encoder>
+    </appender>
 
     <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для всего приложения-->
     <root level="INFO">
@@ -107,9 +118,14 @@
         <appender-ref ref="ROLL-FILE-2"/>
     </logger>
     <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для конфигураций-->
-    <logger name="lorgar.avrelian.javaconspectrus.controllers" level="INFO" additivity="false">
+    <logger name="lorgar.avrelian.javaconspectrus.configurations" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ROLL-FILE-3"/>
+    </logger>
+    <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для телеграм-бота-->
+    <logger name="lorgar.avrelian.javaconspectrus.telegramBot" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="TELEGRAM"/>
     </logger>
 
 </configuration>

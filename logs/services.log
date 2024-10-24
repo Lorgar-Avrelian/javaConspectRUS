@@ -3,3 +3,107 @@
 2024-10-12 12:06:12 [http-nio-8080-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
 2024-10-12 12:06:12 [http-nio-8080-exec-2] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 6 has been edited
 2024-10-12 12:06:12 [http-nio-8080-exec-2] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 3 had been edited
+2024-10-24 09:46:09 [http-nio-8080-exec-1] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 18 book 18
+2024-10-24 09:46:09 [http-nio-8080-exec-1] ERROR l.a.j.s.i.ManageServiceImpl:43 - Book 18 or reader 18 not found
+2024-10-24 11:06:31 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:06:31 [http-nio-auto-1-exec-10] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:06:31 [http-nio-auto-1-exec-1] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:06:31 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:06:31 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:06:32 [http-nio-auto-1-exec-6] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:06:32 [http-nio-auto-1-exec-7] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:06:32 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:06:32 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:06:32 [http-nio-auto-1-exec-10] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:06:32 [http-nio-auto-1-exec-1] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:06:32 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:06:32 [http-nio-auto-1-exec-3] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:06:32 [http-nio-auto-1-exec-4] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:06:32 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:06:32 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:06:32 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:06:32 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:06:32 [http-nio-auto-1-exec-3] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:06:32 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:06:32 [http-nio-auto-1-exec-6] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:06:32 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:06:32 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:06:32 [http-nio-auto-1-exec-10] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 6
+2024-10-24 11:06:32 [http-nio-auto-1-exec-1] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 7
+2024-10-24 11:06:32 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 8
+2024-10-24 11:06:32 [http-nio-auto-1-exec-3] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 9
+2024-10-24 11:06:32 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 6 book 1
+2024-10-24 11:06:32 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 6
+2024-10-24 11:06:32 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 6
+2024-10-24 11:06:32 [http-nio-auto-1-exec-9] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 1 has been edited
+2024-10-24 11:06:32 [http-nio-auto-1-exec-9] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 6 had been edited
+2024-10-24 11:06:32 [http-nio-auto-1-exec-1] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 6
+2024-10-24 11:06:32 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 7 book 2
+2024-10-24 11:06:32 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 7
+2024-10-24 11:06:32 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 7
+2024-10-24 11:06:32 [http-nio-auto-1-exec-2] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 2 has been edited
+2024-10-24 11:06:32 [http-nio-auto-1-exec-2] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 7 had been edited
+2024-10-24 11:06:32 [http-nio-auto-1-exec-4] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 7
+2024-10-24 11:06:32 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 8 book 3
+2024-10-24 11:06:32 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 8
+2024-10-24 11:06:32 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 8
+2024-10-24 11:06:32 [http-nio-auto-1-exec-5] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 3 has been edited
+2024-10-24 11:06:32 [http-nio-auto-1-exec-5] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 8 had been edited
+2024-10-24 11:06:32 [http-nio-auto-1-exec-7] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 8
+2024-10-24 11:06:32 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 9 book 4
+2024-10-24 11:06:32 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 9
+2024-10-24 11:06:32 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 9
+2024-10-24 11:06:32 [http-nio-auto-1-exec-8] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 4 has been edited
+2024-10-24 11:06:32 [http-nio-auto-1-exec-8] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 9 had been edited
+2024-10-24 11:06:32 [http-nio-auto-1-exec-10] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 9
+2024-10-24 11:22:28 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:22:28 [http-nio-auto-1-exec-10] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:22:28 [http-nio-auto-1-exec-1] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:22:28 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:22:28 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:22:28 [http-nio-auto-1-exec-6] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:22:28 [http-nio-auto-1-exec-7] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:22:28 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:22:28 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:22:28 [http-nio-auto-1-exec-10] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:22:28 [http-nio-auto-1-exec-1] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:22:28 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:22:28 [http-nio-auto-1-exec-3] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:22:28 [http-nio-auto-1-exec-4] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:22:28 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:22:28 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:22:28 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 1
+2024-10-24 11:22:28 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:22:28 [http-nio-auto-1-exec-3] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-24 11:22:28 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:22:28 [http-nio-auto-1-exec-6] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 3
+2024-10-24 11:22:28 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:22:28 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-24 11:22:28 [http-nio-auto-1-exec-10] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 6
+2024-10-24 11:22:28 [http-nio-auto-1-exec-1] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 7
+2024-10-24 11:22:28 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 8
+2024-10-24 11:22:28 [http-nio-auto-1-exec-3] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 9
+2024-10-24 11:22:29 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 6 book 1
+2024-10-24 11:22:29 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 6
+2024-10-24 11:22:29 [http-nio-auto-1-exec-9] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 6
+2024-10-24 11:22:29 [http-nio-auto-1-exec-9] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 1 has been edited
+2024-10-24 11:22:29 [http-nio-auto-1-exec-9] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 6 had been edited
+2024-10-24 11:22:29 [http-nio-auto-1-exec-1] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 6
+2024-10-24 11:22:29 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 7 book 2
+2024-10-24 11:22:29 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 7
+2024-10-24 11:22:29 [http-nio-auto-1-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 7
+2024-10-24 11:22:29 [http-nio-auto-1-exec-2] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 2 has been edited
+2024-10-24 11:22:29 [http-nio-auto-1-exec-2] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 7 had been edited
+2024-10-24 11:22:29 [http-nio-auto-1-exec-4] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 7
+2024-10-24 11:22:29 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 8 book 3
+2024-10-24 11:22:29 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 8
+2024-10-24 11:22:29 [http-nio-auto-1-exec-5] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 8
+2024-10-24 11:22:29 [http-nio-auto-1-exec-5] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 3 has been edited
+2024-10-24 11:22:29 [http-nio-auto-1-exec-5] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 8 had been edited
+2024-10-24 11:22:29 [http-nio-auto-1-exec-7] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 8
+2024-10-24 11:22:29 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 9 book 4
+2024-10-24 11:22:29 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 9
+2024-10-24 11:22:29 [http-nio-auto-1-exec-8] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 9
+2024-10-24 11:22:29 [http-nio-auto-1-exec-8] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 4 has been edited
+2024-10-24 11:22:29 [http-nio-auto-1-exec-8] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 9 had been edited
+2024-10-24 11:22:29 [http-nio-auto-1-exec-10] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 9

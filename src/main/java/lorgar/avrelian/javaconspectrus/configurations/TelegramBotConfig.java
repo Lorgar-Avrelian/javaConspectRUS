@@ -29,12 +29,14 @@ public class TelegramBotConfig {
     // Инициализация телеграм-ботов.
     // В случае, если в приложении не один бот, то должны быть проинициализированы все
     public void init() {
+        // Создание и инициализация API Telegram
         TelegramBotsApi telegramBotsApi = null;
         try {
             telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         } catch (TelegramApiException e) {
             logger.error("TelegramBotsApi threw exception: {}", e.getMessage());
         }
+        // Регистрация телеграм-бота на сервере Telegram (вход в Telegram)
         if (telegramBotsApi != null) {
             try {
                 telegramBotsApi.registerBot((LongPollingBot) bot);
