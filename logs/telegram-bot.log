@@ -16,3 +16,8 @@
 2024-10-24 11:23:54 [main] ERROR l.a.j.t.JavaConspectusBot:40 - Bot menu is not created: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [404] Not Found
 2024-10-24 11:25:50 [main] ERROR l.a.j.t.JavaConspectusBot:40 - Bot menu is not created: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [404] Not Found
 2024-10-24 11:26:16 [main] ERROR l.a.j.t.JavaConspectusBot:40 - Bot menu is not created: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [404] Not Found
+2024-10-24 17:06:11 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:136 - Error sending message to user Victor14244 : Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: text must be non-empty
+2024-10-24 17:06:22 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:136 - Error sending message to user Victor14244 : Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: text must be non-empty
+2024-10-24 17:07:34 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:136 - Error sending message to user Victor14244 : Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: text must be non-empty
+2024-10-24 17:24:30 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:136 - Error sending message to user Victor14244 : Keyboard parameter can't be null
+2024-10-24 17:24:49 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:136 - Error sending message to user Victor14244 : Keyboard parameter can't be null
