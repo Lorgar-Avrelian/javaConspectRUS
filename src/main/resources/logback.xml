@@ -70,6 +70,22 @@
             <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>
     </appender>
+    <!--    Настройка ещё одного вывода логов в файл с прокруткой-->
+    <property name="LOG_FILE_CONFIG" value="configuration"/>
+    <appender name="ROLL-FILE-3" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${LOG_FILE_CONFIG}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${LOG_FILE_CONFIG}.%d{yyyy-MM-dd}.gz
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
     <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для всего приложения-->
     <root level="INFO">
@@ -89,6 +105,11 @@
     <logger name="lorgar.avrelian.javaconspectrus.controllers" level="TRACE" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ROLL-FILE-2"/>
+    </logger>
+    <!--    Задание уровня логирования и конкретной реализации интерфейса Appenders для конфигураций-->
+    <logger name="lorgar.avrelian.javaconspectrus.controllers" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ROLL-FILE-3"/>
     </logger>
 
 </configuration>
