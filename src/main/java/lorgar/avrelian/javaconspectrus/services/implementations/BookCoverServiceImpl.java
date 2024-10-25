@@ -90,33 +90,40 @@ public class BookCoverServiceImpl implements BookCoverService {
         return bookCoverRepository.findByBookId(id).orElse(new BookCover());
     }
 
-    private byte[] generatePreview(Path path) {
+    @Override
+    public byte[] generatePreview(Path path) {
         try (
                 InputStream inputStream = Files.newInputStream(path);
                 BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()
         ) {
             BufferedImage bufferedImage = ImageIO.read(bufferedInputStream);
-            int height = bufferedImage.getHeight();
-            int width = bufferedImage.getWidth();
-            BufferedImage preview;
-            if (height > width) {
-                height = bufferedImage.getHeight() / (bufferedImage.getWidth() / 100);
-                preview = new BufferedImage(100, height, bufferedImage.getType());
-                width = 100;
-            } else {
-                width = bufferedImage.getWidth() / (bufferedImage.getHeight() / 100);
-                preview = new BufferedImage(width, 100, bufferedImage.getType());
-                height = 100;
-            }
-            Graphics2D graphics2D = preview.createGraphics();
-            graphics2D.drawImage(bufferedImage, 0, 0, width, height, null);
-            graphics2D.dispose();
+            BufferedImage preview = getPreview(bufferedImage);
             ImageIO.write(preview, getExtension(path.getFileName().toString()), byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
             return null;
         }
+    }
+
+    @Override
+    public BufferedImage getPreview(BufferedImage bufferedImage) {
+        int height = bufferedImage.getHeight();
+        int width = bufferedImage.getWidth();
+        BufferedImage preview;
+        if (height > width) {
+            height = bufferedImage.getHeight() / (bufferedImage.getWidth() / 200);
+            preview = new BufferedImage(200, height, bufferedImage.getType());
+            width = 200;
+        } else {
+            width = bufferedImage.getWidth() / (bufferedImage.getHeight() / 200);
+            preview = new BufferedImage(width, 200, bufferedImage.getType());
+            height = 200;
+        }
+        Graphics2D graphics2D = preview.createGraphics();
+        graphics2D.drawImage(bufferedImage, 0, 0, width, height, null);
+        graphics2D.dispose();
+        return preview;
     }
 
     @Override
@@ -140,5 +147,10 @@ public class BookCoverServiceImpl implements BookCoverService {
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
+    }
+
+    @Override
+    public BookCover saveBookCover(BookCover bookCover) {
+        return bookCoverRepository.save(bookCover);
     }
 }

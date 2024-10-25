@@ -11,12 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -26,10 +29,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 @Component
 // Bean-компонент с названием "javaConspectusBot" - телеграм-бот
@@ -50,6 +53,9 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
     private final static String READERS = "/readers/";
     private static final HashMap<Long, Long> giveMap = new HashMap<>();
     private static final HashMap<Long, Long> takeMap = new HashMap<>();
+    @Value("${books.covers.dir.path}")
+    private String coversDir;
+    private static final Set<Long> bookAdd = new HashSet<>();
 
     public JavaConspectusBot(@Value("${telegram.bot.token}") String botToken,
                              @Qualifier("bookServiceImplDB") BookService bookService,
@@ -151,8 +157,10 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                 case "Принять" -> commandTake(update, sendMessage);
                 // Информационное сообщение
                 case "Управление" -> sendMessage.setText("Используйте команды управления 'Принять' или 'Выдать'!");
+                // Запуск алгоритма добавления новой книги
+                case "Добавить книгу" -> bookAddInit(chatId, sendMessage);
                 // Анализ вводимых сообщений и действия по умолчанию
-                default -> analyzeMessage(chatId, message, sendMessage);
+                default -> analyzeTextMessage(chatId, message, sendMessage);
             }
             // Отправка ответа SendMessage
             try {
@@ -161,6 +169,118 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                 logger.error("Error sending message to user {} : {}", update.getMessage().getChat().getUserName(), e.getMessage());
             }
         }
+        if (update.hasMessage() && update.getMessage().hasPhoto()) {
+            // Создание сущности ответа SendMessage
+            SendMessage sendMessage = new SendMessage();
+            analyzePhotoMessage(update, sendMessage);
+            // Отправка ответа SendMessage
+            try {
+                this.sendApiMethod(sendMessage);
+            } catch (TelegramApiException e) {
+                logger.error("Error sending message to user {} : {}", update.getMessage().getChat().getUserName(), e.getMessage());
+            }
+        }
+    }
+
+    private void analyzePhotoMessage(Update update, SendMessage sendMessage) {
+        long chatId = update.getMessage().getChatId();
+        String message = update.getMessage().getCaption();
+        sendMessage.setChatId(chatId);
+        if (bookAdd.contains(chatId)) {
+            String title;
+            String author;
+            short year;
+            Book book;
+            BookCover bookCover;
+            if (message == null || message.isEmpty()) {
+                bookAdd.remove(chatId);
+                sendMessage.setText("Команда не распознана!");
+                return;
+            }
+            String[] split = message.split(", ");
+            if (split.length != 3) {
+                bookAddInit(chatId, sendMessage);
+            }
+            title = split[0];
+            author = split[1];
+            try {
+                year = Short.parseShort(split[2]);
+            } catch (NumberFormatException e) {
+                bookAdd.remove(chatId);
+                sendMessage.setText("Команда не распознана!");
+                return;
+            }
+            book = new Book();
+            book.setTitle(title);
+            book.setAuthor(author);
+            book.setYear(year);
+            book = bookService.createBook(book);
+            List<PhotoSize> photos = update.getMessage().getPhoto();
+            GetFile getFile = new GetFile(photos.getFirst().getFileId());
+            org.telegram.telegrambots.meta.api.objects.File file;
+            byte[] fileData;
+            String extension;
+            try {
+                file = execute(getFile);
+                fileData = file.getFileId().getBytes();
+                extension = getExtension(file.getFileUrl(getBotToken()));
+            } catch (TelegramApiException e) {
+                bookAdd.remove(chatId);
+                sendMessage.setText("Ошибка при загрузке обложки книги!");
+                return;
+            }
+            Path filePath = Path.of(coversDir, book.getId() + "." + extension);
+            try {
+                downloadFile(file.getFilePath(), new File(String.valueOf(filePath)));
+            } catch (TelegramApiException e) {
+                bookService.deleteBook(book.getId());
+                bookAdd.remove(chatId);
+                sendMessage.setText("Ошибка при загрузке обложки книги!");
+                logger.error("Error creating new file: {}", e.getMessage());
+                return;
+            }
+            bookCover = createBookCover(book, filePath, file, extension, fileData);
+            System.out.println(bookCover);
+            if (bookCover != null) {
+                bookCoverService.saveBookCover(bookCover);
+            } else {
+                bookAdd.remove(chatId);
+                sendMessage.setText("Ошибка при загрузке обложки книги!");
+                logger.error("Error creating photo preview");
+                return;
+            }
+            bookCover = bookCoverService.getBookCover(book.getId());
+            if (bookCover.getId() == 0) {
+                bookService.deleteBook(book.getId());
+                try {
+                    Files.deleteIfExists(filePath);
+                } catch (IOException e) {
+                    bookAdd.remove(chatId);
+                    logger.error("IOException when deleting file", e);
+                }
+                sendMessage.setText("Ошибка при загрузке обложки книги!");
+            } else {
+                sendMessage.setText("Книга успешно добавлена!");
+            }
+        } else {
+            sendMessage.setText("Команда не распознана!");
+        }
+    }
+
+    private BookCover createBookCover(Book newBook, Path filePath, org.telegram.telegrambots.meta.api.objects.File file, String extension, byte[] fileData) {
+        BookCover bookCover = bookCoverService.getBookCover(newBook.getId());
+        bookCover.setId(newBook.getId());
+        bookCover.setFilePath(filePath.toString());
+        bookCover.setFileSize(file.getFileSize().intValue());
+        bookCover.setMediaType(MediaType.parseMediaType("image/" + extension).toString());
+        byte[] preview = bookCoverService.generatePreview(filePath);
+        if (preview != null) {
+            bookCover.setImagePreview(preview);
+        } else {
+            return null;
+        }
+        bookCover.setBook(newBook);
+        return bookCover;
     }
 
     private void commandTake(Update update, SendMessage sendMessage) {
@@ -177,6 +297,11 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         long chatId = update.getMessage().getChatId();
         sendMessage.setText("Введите ID книги");
         return chatId;
+    }
+
+    private static void bookAddInit(long chatId, SendMessage sendMessage) {
+        bookAdd.add(chatId);
+        sendMessage.setText("Введите данные о книге в формате:\n[Название книги] , [Автор книги] , [Год издания]\n Также приложите фото обложки книги!");
     }
 
     // Метод, обрабатывающий ответы на команды, получаемые при нажатии кнопок
@@ -376,10 +501,10 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         sendMessage.setText("Список зарегистрированных читателей");
     }
 
-    private void analyzeMessage(long chatId, String message, SendMessage sendMessage) {
+    private void analyzeTextMessage(long chatId, String message, SendMessage sendMessage) {
         long bookId;
         long readerId;
-        if (takeMap.containsKey(chatId) || giveMap.containsKey(chatId)) {
+        if (takeMap.containsKey(chatId) || giveMap.containsKey(chatId) && !bookAdd.contains(chatId)) {
             if (takeMap.get(chatId) == null && giveMap.get(chatId) == null) {
                 try {
                     bookId = Long.parseLong(message);
@@ -424,7 +549,7 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                     sendMessage.setText("Книга находится у другого читателя!");
                 }
                 takeMap.remove(chatId);
-            } else {
+            } else if (giveMap.get(chatId) != null) {
                 try {
                     readerId = Long.parseLong(message);
                 } catch (NumberFormatException e) {
@@ -445,9 +570,17 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                     sendMessage.setText("Книга находится у другого читателя!");
                 }
                 giveMap.remove(chatId);
+            } else {
+                sendMessage.setText("Команда не распознана!");
             }
+        } else if (bookAdd.contains(chatId)) {
+            bookAddInit(chatId, sendMessage);
         } else {
             sendMessage.setText("Команда не распознана!");
         }
+    }
+
+    private String getExtension(String filename) {
+        return filename.substring(filename.lastIndexOf(".") + 1);
     }
 }
