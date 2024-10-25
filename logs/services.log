@@ -107,3 +107,28 @@
 2024-10-24 11:22:29 [http-nio-auto-1-exec-8] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 4 has been edited
 2024-10-24 11:22:29 [http-nio-auto-1-exec-8] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 9 had been edited
 2024-10-24 11:22:29 [http-nio-auto-1-exec-10] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 9
+2024-10-25 08:40:59 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:40:59 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:41:14 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:41:14 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 4 book 0
+2024-10-25 08:41:14 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:41:14 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.s.i.ManageServiceImpl:43 - Book 0 or reader 4 not found
+2024-10-25 08:44:36 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:44:36 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:37 - Give to reader 4 book 4
+2024-10-25 08:44:36 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:44:36 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:44:36 [conspectus_RUS_bot Telegram Executor] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 4 has been edited
+2024-10-25 08:44:36 [conspectus_RUS_bot Telegram Executor] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 4 had been edited
+2024-10-25 08:44:46 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:44:46 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:45:11 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:45:11 [conspectus_RUS_bot Telegram Executor] TRACE l.a.j.s.i.ManageServiceImpl:57 - Take book 4 from reader 4
+2024-10-25 08:45:11 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:45:11 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:45:11 [conspectus_RUS_bot Telegram Executor] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 4 has been edited
+2024-10-25 08:45:11 [conspectus_RUS_bot Telegram Executor] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 4 had been edited
+2024-10-25 08:45:19 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:45:19 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
+2024-10-25 08:46:58 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-25 08:46:58 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 2
+2024-10-25 08:47:13 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4

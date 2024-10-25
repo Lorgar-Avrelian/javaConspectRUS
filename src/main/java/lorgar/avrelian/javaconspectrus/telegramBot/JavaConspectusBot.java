@@ -25,9 +25,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -47,6 +48,8 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
     private final ManageService manageService;
     private final static String BOOKS = "/books/";
     private final static String READERS = "/readers/";
+    private static final HashMap<Long, Long> giveMap = new HashMap<>();
+    private static final HashMap<Long, Long> takeMap = new HashMap<>();
 
     public JavaConspectusBot(@Value("${telegram.bot.token}") String botToken,
                              @Qualifier("bookServiceImplDB") BookService bookService,
@@ -82,8 +85,8 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         // Метод, создающий меню бота с помощью стандартного метода (класса) телеграм-бота (BotApiMethod):
         // SetMyCommands
         botMenu();
-        // Метод, формирующий ответ бота с помощью стандартного метода (класса) телеграм-бота (BotApiMethod):
-        // SendMessage
+        // Метод, формирующий ответ бота, добавляющий подстрочное меню и кнопки управления с помощью
+        // стандартного метода (класса) телеграм-бота (BotApiMethod): SendMessage
         botAnswer(update);
     }
 
@@ -108,16 +111,16 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         }
     }
 
-    // Метод, формирующий ответ бота с помощью стандартного метода (класса) телеграм-бота (BotApiMethod):
-    // SendMessage
+    // Метод, формирующий ответ бота, добавляющий подстрочное меню и кнопки управления с помощью
+    // стандартного метода (класса) телеграм-бота (BotApiMethod): SendMessage
     private void botAnswer(Update update) {
-        // Метод, обрабатывающий ответы на ручные команды
+        // Метод, обрабатывающий ответы на ручные команды и добавляющий подстрочное меню
         commandsAnswer(update);
         // Метод, обрабатывающий ответы на команды, получаемые при нажатии кнопок
         buttonCallbackAnswer(update);
     }
 
-    // Метод, обрабатывающий ответы на ручные команды
+    // Метод, обрабатывающий ответы на ручные команды и добавляющий подстрочное меню
     private void commandsAnswer(Update update) {
         // Проверка наличия текста сообщения
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -142,13 +145,14 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                 case "/books" -> commandBooks(sendMessage);
                 // Формирование списка кнопок с читателями при получении команды /readers
                 case "/readers" -> commandReaders(sendMessage);
-                case "Выдать" -> {
-                    commandGive(update, sendMessage);
-                }
-                case "Принять" -> {
-                    commandTake(update, sendMessage);
-                }
-                default -> sendMessage.setText("Команда не распознана");
+                // Запуск алгоритма выдачи книги
+                case "Выдать" -> commandGive(update, sendMessage);
+                // Запуск алгоритма приёма книги
+                case "Принять" -> commandTake(update, sendMessage);
+                // Информационное сообщение
+                case "Управление" -> sendMessage.setText("Используйте команды управления 'Принять' или 'Выдать'!");
+                // Анализ вводимых сообщений и действия по умолчанию
+                default -> analyzeMessage(chatId, message, sendMessage);
             }
             // Отправка ответа SendMessage
             try {
@@ -160,9 +164,19 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
     }
 
     private void commandTake(Update update, SendMessage sendMessage) {
+        long chatId = giveTakeBookStart(update, sendMessage);
+        takeMap.put(chatId, null);
     }
 
     private void commandGive(Update update, SendMessage sendMessage) {
+        long chatId = giveTakeBookStart(update, sendMessage);
+        giveMap.put(chatId, null);
+    }
+
+    private static long giveTakeBookStart(Update update, SendMessage sendMessage) {
+        long chatId = update.getMessage().getChatId();
+        sendMessage.setText("Введите ID книги");
+        return chatId;
     }
 
     // Метод, обрабатывающий ответы на команды, получаемые при нажатии кнопок
@@ -187,9 +201,9 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                 sendPhoto.setChatId(chatId);
                 // Добавление текста к фото
                 sendPhoto.setCaption(book.getTitle() + " - " + book.getAuthor() + " - ID: " + book.getId());
-                // Прикрепление фото к сообщению (выбрано preview для ускорения отправки),
-                // можно отправлять файл напрямую, используя new InputFile(new File(Path.of(bookCover.getFilePath())));
-                InputFile inputFile = new InputFile(new ByteArrayInputStream(bookCover.getImagePreview()), book.getTitle());
+                // Прикрепление фото к сообщению (выбрана отправка напрямую),
+                // можно отправлять preview, используя new InputFile(new ByteArrayInputStream(bookCover.getImagePreview()), book.getTitle());
+                InputFile inputFile = new InputFile(new File(bookCover.getFilePath()));
                 sendPhoto.setPhoto(inputFile);
                 // Отправка ответа SendPhoto
                 try {
@@ -270,6 +284,12 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         keyboardRow.add(1, "Принять");
         // Добавление 2-го ряда подстрочного меню в подстрочное меню
         keyboardRows.add(1, keyboardRow);
+        // Создание 3-го ряда подстрочного меню
+        keyboardRow = new KeyboardRow();
+        // Добавление кнопки управления в 0-ую позицию 3-го ряда подстрочного меню
+        keyboardRow.add(0, "Добавить книгу");
+        // Добавление 3-го ряда подстрочного меню в подстрочное меню
+        keyboardRows.add(2, keyboardRow);
         // Добавление рядов подстрочного меню в подстрочное меню
         replyKeyboardMarkup.setKeyboard(keyboardRows);
         // Настройка автоматического выравнивания подстрочного меню
@@ -354,5 +374,80 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         // Изменение текста сообщения
         sendMessage.setText("Список зарегистрированных читателей");
+    }
+
+    private void analyzeMessage(long chatId, String message, SendMessage sendMessage) {
+        long bookId;
+        long readerId;
+        if (takeMap.containsKey(chatId) || giveMap.containsKey(chatId)) {
+            if (takeMap.get(chatId) == null && giveMap.get(chatId) == null) {
+                try {
+                    bookId = Long.parseLong(message);
+                } catch (NumberFormatException e) {
+                    giveMap.remove(chatId);
+                    takeMap.remove(chatId);
+                    sendMessage.setText("Команда не распознана!");
+                    return;
+                }
+                Book book = bookService.findBook(bookId);
+                if (book != null) {
+                    if (giveMap.containsKey(chatId)) {
+                        giveMap.put(chatId, bookId);
+                    }
+                    if (takeMap.containsKey(chatId)) {
+                        takeMap.put(chatId, bookId);
+                    }
+                    sendMessage.setText("Введите ID читателя!");
+                } else {
+                    giveMap.remove(chatId);
+                    takeMap.remove(chatId);
+                    sendMessage.setText("Такой книги нет в наличии!");
+                }
+            } else if (takeMap.get(chatId) != null) {
+                try {
+                    readerId = Long.parseLong(message);
+                } catch (NumberFormatException e) {
+                    giveMap.remove(chatId);
+                    takeMap.remove(chatId);
+                    sendMessage.setText("Команда не распознана!");
+                    return;
+                }
+                bookId = takeMap.get(chatId);
+                Book book = bookService.findBook(takeMap.get(chatId));
+                Reader reader = readerService.findReader(readerId);
+                if (reader != null && book.getReader().equals(reader)) {
+                    manageService.takeBookFromReader(bookId, readerId);
+                    sendMessage.setText("Книга с ID " + bookId + " получена от читателя с ID " + readerId);
+                } else if (reader == null) {
+                    sendMessage.setText("Такого читателя не зарегистрировано!");
+                } else {
+                    sendMessage.setText("Книга находится у другого читателя!");
+                }
+                takeMap.remove(chatId);
+            } else {
+                try {
+                    readerId = Long.parseLong(message);
+                } catch (NumberFormatException e) {
+                    giveMap.remove(chatId);
+                    takeMap.remove(chatId);
+                    sendMessage.setText("Команда не распознана!");
+                    return;
+                }
+                bookId = giveMap.get(chatId);
+                Book book = bookService.findBook(giveMap.get(chatId));
+                Reader reader = readerService.findReader(readerId);
+                if (reader != null && book.getReader() == null) {
+                    manageService.giveBookToReader(bookId, readerId);
+                    sendMessage.setText("Книга с ID " + bookId + " выдана читателю с ID " + readerId);
+                } else if (reader == null) {
+                    sendMessage.setText("Такого читателя не зарегистрировано!");
+                } else {
+                    sendMessage.setText("Книга находится у другого читателя!");
+                }
+                giveMap.remove(chatId);
+            }
+        } else {
+            sendMessage.setText("Команда не распознана!");
+        }
     }
 }
