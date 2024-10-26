@@ -21,3 +21,10 @@
 2024-10-24 17:07:34 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:136 - Error sending message to user Victor14244 : Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: text must be non-empty
 2024-10-24 17:24:30 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:136 - Error sending message to user Victor14244 : Keyboard parameter can't be null
 2024-10-24 17:24:49 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:136 - Error sending message to user Victor14244 : Keyboard parameter can't be null
+2024-10-26 09:54:46 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:230 - Error creating new file: photos\file_5.jpg
+2024-10-26 09:55:47 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:230 - Error creating new file: photos\file_5.jpg
+2024-10-26 11:31:23 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:259 - Error creating photo preview
+2024-10-26 11:33:17 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:258 - Error creating photo preview
+2024-10-26 11:35:41 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:258 - Error creating photo preview
+2024-10-26 12:59:29 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:261 - Error creating preview: Can't read input file!
+2024-10-26 13:00:50 [conspectus_RUS_bot Telegram Executor] ERROR l.a.j.t.JavaConspectusBot:261 - Error creating preview: Can't read input file!

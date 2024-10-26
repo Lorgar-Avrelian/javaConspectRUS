@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.meta.generics.TelegramBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-@Configuration
+//@Configuration
 // Конфигурационный файл для bean-компонента с названием "javaConspectusBot" (телеграм-бота)
 public class TelegramBotConfig {
     // Добавляем логгер к конфигурации телеграм-бота

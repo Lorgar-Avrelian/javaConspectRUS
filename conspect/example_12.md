@@ -1,43 +1,97 @@
-package lorgar.avrelian.javaconspectrus.telegramBot;
+## Пример 1:
 
-import lorgar.avrelian.javaconspectrus.models.Book;
-import lorgar.avrelian.javaconspectrus.models.BookCover;
-import lorgar.avrelian.javaconspectrus.models.Reader;
-import lorgar.avrelian.javaconspectrus.services.BookCoverService;
-import lorgar.avrelian.javaconspectrus.services.BookService;
-import lorgar.avrelian.javaconspectrus.services.ManageService;
-import lorgar.avrelian.javaconspectrus.services.ReaderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.GetFile;
-import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+> [[_оглавление_]](../README.md/#111-telegram)
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.*;
+> [**[11.1 Telegram]**](/conspect/11.md/#111-telegram)
 
-//@Component
+- добавление токена и названия бота в файл _application.properties_:
+
+```properties
+# Application properties
+spring.application.name=Java conspectus RUS
+server.port=8080
+# Specific parameter for RandomizeConfig class
+rand.diapazon=1000
+# Specific parameter for BookCoverService implementations
+books.covers.dir.path=books/covers
+# Specific parameter for WhetherService implementations
+whether.current.url=https://api.openweathermap.org/data/2.5/weather
+whether.geo.url=http://api.openweathermap.org/geo/1.0/direct
+whether.geo.result.count=10
+whether.api.key=c2bdc9ea4264d25b8b06326de0ea9591
+# Spring Data JPA parameters for DB connection
+spring.datasource.url=jdbc:postgresql://localhost:5432/library
+spring.datasource.username=library_user
+spring.datasource.password=123
+# Hibernate settings
+# Hibernate ddl auto (create, create-drop, validate, update)
+spring.jpa.hibernate.ddl-auto=validate
+# Settings of showing SQL-requests Spring Data JPA
+spring.jpa.show-sql=false
+# Liquibase change-log settings
+spring.liquibase.change-log=classpath:liquibase/changelog-master.yml
+# Telegram bot token
+telegram.bot.name=conspectus_RUS_bot
+telegram.bot.token=8069507794:AAHfv855XmPqiLPUwdmTTPbGJ8HEwjSPrkU
+```
+
+- добавление зависимости в файл _pom.xml_:
+
+```xml
+
+<dependency>
+    <groupId>org.telegram</groupId>
+    <artifactId>telegrambots</artifactId>
+    <version>6.9.7.1</version>
+</dependency>
+```
+
+- добавление конфигурации телеграм-бота:
+
+```java
+
+@Configuration
+// Конфигурационный файл для bean-компонента с названием "javaConspectusBot" (телеграм-бота)
+public class TelegramBotConfig {
+    // Добавляем логгер к конфигурации телеграм-бота
+    private Logger logger = LoggerFactory.getLogger(TelegramBotConfig.class);
+    // Внедряем телеграм-бота в конфигурацию
+    private final TelegramBot bot;
+
+    // Телеграм-бот в приложении может быть не один, поэтому в конструкторе необходимо определить наименование
+    // конкретного бота
+    public TelegramBotConfig(@Qualifier("javaConspectusBot") TelegramBot bot) {
+        this.bot = bot;
+    }
+
+    @PostConstruct
+    // Инициализация телеграм-ботов.
+    // В случае, если в приложении не один бот, то должны быть проинициализированы все
+    public void init() {
+        // Создание и инициализация API Telegram
+        TelegramBotsApi telegramBotsApi = null;
+        try {
+            telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+        } catch (TelegramApiException e) {
+            logger.error("TelegramBotsApi threw exception: {}", e.getMessage());
+        }
+        // Регистрация телеграм-бота на сервере Telegram (вход в Telegram)
+        if (telegramBotsApi != null) {
+            try {
+                telegramBotsApi.registerBot((LongPollingBot) bot);
+            } catch (TelegramApiException e) {
+                logger.error("TelegramBot is not registered: {}", e.getMessage());
+            }
+        }
+    }
+}
+```
+
+- создание телеграм-бота и добавление ему функциональности:
+
+```java
+
+@Component
 // Bean-компонент с названием "javaConspectusBot" - телеграм-бот
 public class JavaConspectusBot extends TelegramLongPollingBot {
     // Добавляем логгер к телеграм-боту
@@ -637,3 +691,4 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         return filename.substring(filename.lastIndexOf(".") + 1);
     }
 }
+```
