@@ -969,6 +969,7 @@
 
 -----------------------------------------------------------------------------------------------------------------------
 1. [**_Comparator_**](/conspect/2.md/#263111-sort)
+1. [**_Intellij IDEA_ горячие клавиши**](/conspect/7.md/#75-intellij-idea)
 1. [**_Scanner_**](/conspect/1.md/#17-класс-scanner)
 1. [**_StringBuilder_**](/conspect/1.md/#16-изменяемые-строки-stringbuilder)
 1. [**_Utility_-класс / _private_-конструктор**](/conspect/1.md/#193-конструктор)
