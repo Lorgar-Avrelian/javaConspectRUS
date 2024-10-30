@@ -2,6 +2,7 @@ package lorgar.avrelian.examples.javaSyntax;
 
 import lorgar.avrelian.examples.javaSyntax.models.Human;
 import lorgar.avrelian.examples.javaSyntax.models.HumanUtility;
+import lorgar.avrelian.examples.javaSyntax.models.Role;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,19 +11,33 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        switchMethod(2);
-        dayOfWeek(4);
-        ternarOperator(1, 2);
-        forExample();
-        whileExample();
-        doWhileExample();
-        forEachExample();
-        arraysExample();
-        textFromBytes();
-        scannerExample();
-        scannerUseDelimiterExample();
-        returnInVoidMethodExample(8);
-        utilityClassUsingExample();
+//        switchMethod(2);
+//        dayOfWeek(4);
+//        ternarOperator(1, 2);
+//        forExample();
+//        whileExample();
+//        doWhileExample();
+//        forEachExample();
+//        arraysExample();
+//        textFromBytes();
+//        scannerExample();
+//        scannerUseDelimiterExample();
+//        returnInVoidMethodExample(8);
+//        utilityClassUsingExample();
+        enumExample();
+    }
+
+    private static void enumExample() {
+        Role[] values = Role.values();
+        System.out.println(Arrays.toString(values));
+        Role role = Role.valueOf("USER");
+        System.out.println(role);
+        int ordinal = Role.USER.ordinal();
+        System.out.println(ordinal);
+        int i = Role.GUEST.compareTo(Role.ADMIN);
+        System.out.println(i);
+        String name = Role.GUEST.name();
+        System.out.println(name);
     }
 
     private static void utilityClassUsingExample() {
