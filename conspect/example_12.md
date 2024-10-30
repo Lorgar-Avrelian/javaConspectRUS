@@ -244,7 +244,7 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         }
     }
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 1000)
     private void generateBookCover() {
         for (Map.Entry<Path, Book> pathBookEntry : bookCovers.entrySet()) {
             byte[] fileInBytes;
@@ -329,7 +329,6 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         // чтобы сообщение под изображением было не пустым
         if (!bookAdd.contains(chatId) || message == null || message.isEmpty()) {
             bookAdd.remove(chatId);
-            sendMessage.setText("Команда не распознана!");
             return null;
         }
         // Проверка формата текста под изображением,
@@ -346,7 +345,6 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
             year = Short.parseShort(split[2]);
         } catch (NumberFormatException e) {
             bookAdd.remove(chatId);
-            sendMessage.setText("Команда не распознана!");
             return null;
         }
         Book book = new Book();
@@ -356,9 +354,20 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         // Сохранение новой сущности книги
         book = bookService.createBook(book);
         //
-        // Получение изображения обложки книги из сообщения
+        // Получение версий изображения обложки книги из сообщения
         List<PhotoSize> photos = update.getMessage().getPhoto();
-        GetFile getFile = new GetFile(photos.getFirst().getFileId());
+        // Получение версии изображения обложки книги из сообщения в максимальном разрешении
+        PhotoSize photoSize = photos.stream()
+                                    .max(Comparator.comparing(PhotoSize::getFileSize))
+                                    .get();
+        // Получение файла изображения из сообщения
+        GetFile getFile = new GetFile(photoSize.getFileId());
+        // Проверка разрешения файла - не менее 200 пикселей по высоте и ширине
+        if (photoSize.getHeight() <= 200 || photoSize.getWidth() <= 200) {
+            bookService.deleteBook(book.getId());
+            bookAdd.remove(chatId);
+            return null;
+        }
         // Инициализация загрузки файла
         org.telegram.telegrambots.meta.api.objects.File file;
         String extension;
@@ -376,7 +385,6 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         } catch (TelegramApiException | IOException e) {
             bookService.deleteBook(book.getId());
             bookAdd.remove(chatId);
-            sendMessage.setText("Ошибка при загрузке обложки книги!");
             logger.error("Error creating new file: {}", e.getMessage());
             return null;
         }
