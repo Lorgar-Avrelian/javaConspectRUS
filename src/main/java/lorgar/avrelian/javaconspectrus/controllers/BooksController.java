@@ -13,6 +13,9 @@ import lorgar.avrelian.javaconspectrus.models.BookCover;
 import lorgar.avrelian.javaconspectrus.services.BookCoverService;
 import lorgar.avrelian.javaconspectrus.services.BookService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,7 @@ import java.util.Collection;
 @RestController
 @RequestMapping(path = "/books")
 @Tag(name = "Контроллер для книг", description = "Контроллер для работы с книгами")
+@CacheConfig(cacheNames = "book")
 public class BooksController {
     private final BookService bookService;
     private final BookCoverService bookCoverService;
@@ -58,6 +62,7 @@ public class BooksController {
                     )
             }
     )
+    @Cacheable(value = "book", key = "#result.body.id")
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         try {
             return ResponseEntity.ok(bookService.createBook(book));
@@ -122,6 +127,7 @@ public class BooksController {
                     )
             }
     )
+    @CachePut(value = "book", key = "#book.id", unless = "#result.body.id > 100")
     public ResponseEntity<Book> updateBook(@RequestBody Book book) {
         Book updatedBook = bookService.editBook(book);
         if (updatedBook != null) {
@@ -154,6 +160,7 @@ public class BooksController {
                     )
             }
     )
+    @CacheEvict(value = "book")
     public ResponseEntity<Book> deleteBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Book deletedBook = bookService.deleteBook(id);
         if (deletedBook != null) {
