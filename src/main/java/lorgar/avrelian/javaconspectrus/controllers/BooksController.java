@@ -13,6 +13,7 @@ import lorgar.avrelian.javaconspectrus.models.BookCover;
 import lorgar.avrelian.javaconspectrus.services.BookCoverService;
 import lorgar.avrelian.javaconspectrus.services.BookService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -88,6 +89,7 @@ public class BooksController {
                     )
             }
     )
+    @Cacheable(value = "book")
     public ResponseEntity<Book> readBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Book findedBook = bookService.findBook(id);
         if (findedBook != null) {
