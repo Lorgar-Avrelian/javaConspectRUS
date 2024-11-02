@@ -1,7 +1,6 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.BookCover;
 import lorgar.avrelian.javaconspectrus.repository.BookCoverRepository;
@@ -10,6 +9,8 @@ import lorgar.avrelian.javaconspectrus.services.BookService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -21,7 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 @Service
-@Transactional
+@Transactional(isolation = Isolation.READ_COMMITTED)
 public class BookCoverServiceImpl implements BookCoverService {
     @Value("${books.covers.dir.path}")
     private String coversDir;
