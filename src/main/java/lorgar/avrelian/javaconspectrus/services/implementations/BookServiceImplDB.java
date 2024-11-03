@@ -1,6 +1,7 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
-import lorgar.avrelian.javaconspectrus.models.Book;
+import lorgar.avrelian.javaconspectrus.dto.BookDTO;
+import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;import lorgar.avrelian.javaconspectrus.mappers.BookMapper;import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.repository.BookRepository;
 import lorgar.avrelian.javaconspectrus.services.BookService;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,23 +20,25 @@ import java.util.Collection;
 @Service
 public class BookServiceImplDB implements BookService {
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
-    public BookServiceImplDB(BookRepository bookRepository) {
+    public BookServiceImplDB(BookRepository bookRepository, BookMapper bookMapper) {
         this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
     }
 
     /**
      * Method is saving new {@link Book} to DB and returning entity of the saved {@link Book} from DB.<br>
      * Using {@link JpaRepository#save(Object)} method
      *
-     * @param book that should be saved
+     * @param newBookDTO that should be saved
      * @return {@code book} - that is saved
      * @throws RuntimeException when DB is not accessible
      * @see JpaRepository#save(Object)
      */
     @Override
-    public Book createBook(Book book) {
-        book.setId(0);
+    public Book createBook(NewBookDTO newBookDTO) {
+        Book book = bookMapper.newBookDTOtoBook(newBookDTO);
         return bookRepository.save(book);
     }
 
@@ -62,9 +65,12 @@ public class BookServiceImplDB implements BookService {
      * @see JpaRepository#existsById(Object)
      */
     @Override
-    public Book editBook(Book book) {
+    public Book editBook(BookDTO book) {
         if (bookRepository.existsById(book.getId())) {
-            return bookRepository.save(book);
+            Book dbBook = bookRepository.findById(book.getId()).get();
+            Book editedBook = bookMapper.bookDTOToBook(book);
+            editedBook.setReader(dbBook.getReader());
+            return bookRepository.save(editedBook);
         } else {
             return null;
         }

@@ -1,5 +1,6 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
+import lorgar.avrelian.javaconspectrus.mappers.BookMapper;
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import lorgar.avrelian.javaconspectrus.repository.BookRepository;
@@ -14,13 +15,15 @@ import java.util.Collection;
 public class ReaderServiceImpl implements ReaderService {
     private final ReaderRepository readerRepository;
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
-    public ReaderServiceImpl(ReaderRepository readerRepository, BookRepository bookRepository) {
+    public ReaderServiceImpl(ReaderRepository readerRepository, BookRepository bookRepository, BookMapper bookMapper) {
         this.readerRepository = readerRepository;
         this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
     }
     private ManageService setManageService() {
-        return new ManageServiceImpl(bookRepository, readerRepository);
+        return new ManageServiceImpl(bookRepository, readerRepository, bookMapper);
     }
 
     @Override

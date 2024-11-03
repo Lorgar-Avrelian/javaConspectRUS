@@ -1,5 +1,6 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
+import lorgar.avrelian.javaconspectrus.mappers.BookMapper;
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import lorgar.avrelian.javaconspectrus.repository.BookRepository;
@@ -18,18 +19,20 @@ public class ManageServiceImpl implements ManageService {
     private Logger logger = LoggerFactory.getLogger(ManageServiceImpl.class);
     private final BookRepository bookRepository;
     private final ReaderRepository readerRepository;
+    private final BookMapper bookMapper;
 
-    public ManageServiceImpl(BookRepository bookRepository, ReaderRepository readerRepository) {
+    public ManageServiceImpl(BookRepository bookRepository, ReaderRepository readerRepository, BookMapper bookMapper) {
         this.bookRepository = bookRepository;
         this.readerRepository = readerRepository;
+        this.bookMapper = bookMapper;
     }
 
     private ReaderService setReaderService() {
-        return new ReaderServiceImpl(readerRepository, bookRepository);
+        return new ReaderServiceImpl(readerRepository, bookRepository, bookMapper);
     }
 
     private BookService setBookService() {
-        return new BookServiceImplDB(bookRepository);
+        return new BookServiceImplDB(bookRepository, bookMapper);
     }
 
     @Override
@@ -67,7 +70,7 @@ public class ManageServiceImpl implements ManageService {
     }
 
     private Reader setReaderBooks(Book book, Reader reader) {
-        setBookService().editBook(book);
+        setBookService().editBook(bookMapper.bookToBookDTO(book));
         reader.setBooks(findReaderBooks(reader.getId()));
         logger.info("Book " + book.getId() + " has been edited");
         logger.trace("Reader " + reader.getId() + " had been edited");

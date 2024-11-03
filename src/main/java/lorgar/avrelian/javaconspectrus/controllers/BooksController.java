@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import lorgar.avrelian.javaconspectrus.models.Book;
+import lorgar.avrelian.javaconspectrus.dto.BookDTO;import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;import lorgar.avrelian.javaconspectrus.mappers.BookMapper;import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.BookCover;
 import lorgar.avrelian.javaconspectrus.services.BookCoverService;
 import lorgar.avrelian.javaconspectrus.services.BookService;
@@ -33,10 +33,12 @@ import java.util.Collection;
 public class BooksController {
     private final BookService bookService;
     private final BookCoverService bookCoverService;
+    private final BookMapper bookMapper;
 
-    public BooksController(@Qualifier("bookServiceImplDB") BookService bookService, @Qualifier("bookCoverServiceImpl") BookCoverService bookCoverService) {
+    public BooksController(@Qualifier("bookServiceImplDB") BookService bookService, @Qualifier("bookCoverServiceImpl") BookCoverService bookCoverService, BookMapper bookMapper) {
         this.bookService = bookService;
         this.bookCoverService = bookCoverService;
+        this.bookMapper = bookMapper;
     }
 
     @PostMapping                    // http://localhost:8080/books      C - create
@@ -50,7 +52,7 @@ public class BooksController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Book.class)
+                                    schema = @Schema(implementation = BookDTO.class)
                             )
                     ),
                     @ApiResponse(
@@ -62,10 +64,9 @@ public class BooksController {
                     )
             }
     )
-    @Cacheable(value = "book", key = "#result.body.id")
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+    public ResponseEntity<BookDTO> createBook(@RequestBody NewBookDTO book) {
         try {
-            return ResponseEntity.ok(bookService.createBook(book));
+            return ResponseEntity.ok(bookMapper.bookToBookDTO(bookService.createBook(book)));
         } catch (RuntimeException e) {
             return ResponseEntity.status(405).build();
         }
@@ -82,7 +83,7 @@ public class BooksController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Book.class)
+                                    schema = @Schema(implementation = BookDTO.class)
                             )
                     ),
                     @ApiResponse(
@@ -95,10 +96,10 @@ public class BooksController {
             }
     )
     @Cacheable(value = "book")
-    public ResponseEntity<Book> readBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
+    public ResponseEntity<BookDTO> readBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Book findedBook = bookService.findBook(id);
         if (findedBook != null) {
-            return ResponseEntity.ok(findedBook);
+            return ResponseEntity.ok(bookMapper.bookToBookDTO(findedBook));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -115,7 +116,7 @@ public class BooksController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Book.class)
+                                    schema = @Schema(implementation = BookDTO.class)
                             )
                     ),
                     @ApiResponse(
@@ -128,10 +129,10 @@ public class BooksController {
             }
     )
     @CachePut(value = "book", key = "#book.id", unless = "#result.body.id > 100")
-    public ResponseEntity<Book> updateBook(@RequestBody Book book) {
+    public ResponseEntity<BookDTO> updateBook(@RequestBody BookDTO book) {
         Book updatedBook = bookService.editBook(book);
         if (updatedBook != null) {
-            return ResponseEntity.ok(updatedBook);
+            return ResponseEntity.ok(bookMapper.bookToBookDTO(updatedBook));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -148,7 +149,7 @@ public class BooksController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Book.class)
+                                    schema = @Schema(implementation = BookDTO.class)
                             )
                     ),
                     @ApiResponse(
@@ -161,10 +162,10 @@ public class BooksController {
             }
     )
     @CacheEvict(value = "book")
-    public ResponseEntity<Book> deleteBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
+    public ResponseEntity<BookDTO> deleteBook(@PathVariable @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Book deletedBook = bookService.deleteBook(id);
         if (deletedBook != null) {
-            return ResponseEntity.ok(deletedBook);
+            return ResponseEntity.ok(bookMapper.bookToBookDTO(deletedBook));
         } else {
             return ResponseEntity.status(403).build();
         }
@@ -181,7 +182,7 @@ public class BooksController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Book.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = BookDTO.class))
                             )
                     ),
                     @ApiResponse(
@@ -193,7 +194,7 @@ public class BooksController {
                     )
             }
     )
-    public ResponseEntity<Collection<Book>> getAllBooks(@RequestParam(required = false) @Parameter(description = "Часть ФИО автора или названия книги", schema = @Schema(implementation = String.class), example = "Пушкин") String authorOrTitle) {
+    public ResponseEntity<Collection<BookDTO>> getAllBooks(@RequestParam(required = false) @Parameter(description = "Часть ФИО автора или названия книги", schema = @Schema(implementation = String.class), example = "Пушкин") String authorOrTitle) {
         Collection<Book> books;
         if (authorOrTitle == null) {
             books = bookService.getAllBooks();
@@ -201,7 +202,7 @@ public class BooksController {
             books = bookService.getAllBooks(authorOrTitle);
         }
         if (!books.isEmpty()) {
-            return ResponseEntity.status(200).body(books);
+            return ResponseEntity.status(200).body(bookMapper.booksListToBookDTOList(books));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

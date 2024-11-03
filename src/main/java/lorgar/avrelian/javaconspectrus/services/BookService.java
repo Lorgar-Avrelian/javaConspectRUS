@@ -1,6 +1,7 @@
 package lorgar.avrelian.javaconspectrus.services;
 
-import lorgar.avrelian.javaconspectrus.models.Book;
+import lorgar.avrelian.javaconspectrus.dto.BookDTO;
+import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.services.implementations.BookServiceImplDB;
 import lorgar.avrelian.javaconspectrus.services.implementations.BookServiceImplHashMap;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,13 +22,13 @@ public interface BookService {
     /**
      * Method is saving new {@link Book} to DB and returning entity of the saved {@link Book}.
      *
-     * @param book that should be saved
+     * @param newBookDTO that should be saved
      * @return {@code book} - that is saved
      * @throws RuntimeException when error received
-     * @see BookServiceImplDB#createBook(Book)
-     * @see BookServiceImplHashMap#createBook(Book)
+     * @see BookServiceImplDB#createBook(NewBookDTO)
+     * @see BookServiceImplHashMap#createBook(NewBookDTO)
      */
-    Book createBook(Book book);
+    Book createBook(NewBookDTO newBookDTO);
 
     /**
      * Method is returning entity of the {@link Book} by its ID.
@@ -40,14 +41,14 @@ public interface BookService {
     Book findBook(long id);
 
     /**
-     * Method is saving edited {@link Book} and returning entity of the saved {@link Book}.
+     * Method is saving edited {@link BookDTO} and returning entity of the saved {@link Book}.
      *
      * @param book that should be edited
      * @return {@code book} - that is saved or {@link null} if {@link Book} is not founded
-     * @see BookServiceImplDB#editBook(Book)
-     * @see BookServiceImplHashMap#editBook(Book)
+     * @see BookServiceImplDB#editBook(BookDTO)
+     * @see BookServiceImplHashMap#editBook(BookDTO)
      */
-    Book editBook(Book book);
+    Book editBook(BookDTO book);
 
     /**
      * Method is deleting {@link Book} and returning entity of the deleted {@link Book}.

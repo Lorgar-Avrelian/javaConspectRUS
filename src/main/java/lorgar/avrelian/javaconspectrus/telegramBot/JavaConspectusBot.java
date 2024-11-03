@@ -1,6 +1,6 @@
 package lorgar.avrelian.javaconspectrus.telegramBot;
 
-import lorgar.avrelian.javaconspectrus.models.Book;
+import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.BookCover;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import lorgar.avrelian.javaconspectrus.services.BookCoverService;
@@ -293,12 +293,12 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
             bookAdd.remove(chatId);
             return null;
         }
-        Book book = new Book();
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setYear(year);
+        NewBookDTO newBookDTO = new NewBookDTO();
+        newBookDTO.setTitle(title);
+        newBookDTO.setAuthorFIO(author);
+        newBookDTO.setYear(year);
         // Сохранение новой сущности книги
-        book = bookService.createBook(book);
+        Book book = bookService.createBook(newBookDTO);
         //
         // Получение версий изображения обложки книги из сообщения
         List<PhotoSize> photos = update.getMessage().getPhoto();

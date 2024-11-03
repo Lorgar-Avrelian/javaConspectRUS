@@ -1,6 +1,7 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
-import lorgar.avrelian.javaconspectrus.models.Book;
+import lorgar.avrelian.javaconspectrus.dto.BookDTO;
+import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;import lorgar.avrelian.javaconspectrus.mappers.BookMapper;import lorgar.avrelian.javaconspectrus.mappers.BookMapperImpl;import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.services.BookService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,15 @@ import java.util.*;
 public class BookServiceImplHashMap implements BookService {
     private final HashMap<Long, Book> books = new HashMap<>();
     private long lastId = 0;
+    private final BookMapper bookMapper;
+
+    public BookServiceImplHashMap(BookMapper bookMapper) {
+        this.bookMapper = bookMapper;
+    }
 
     @Override
-    public Book createBook(Book book) {
+    public Book createBook(NewBookDTO newBookDTO) {
+        Book book = bookMapper.newBookDTOtoBook(newBookDTO);
         book.setId(++lastId);
         books.put(lastId, book);
         return book;
@@ -26,10 +33,10 @@ public class BookServiceImplHashMap implements BookService {
     }
 
     @Override
-    public Book editBook(Book book) {
+    public Book editBook(BookDTO book) {
         if (books.get(book.getId()) != null) {
-            books.put(book.getId(), book);
-            return book;
+            books.put(book.getId(), bookMapper.bookDTOToBook(book));
+            return bookMapper.bookDTOToBook(book);
         } else {
             return null;
         }

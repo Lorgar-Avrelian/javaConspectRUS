@@ -1,5 +1,6 @@
 package lorgar.avrelian.javaconspectrus.controllers;
 
+import lorgar.avrelian.javaconspectrus.mappers.BookMapper;
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.BookCover;
 import lorgar.avrelian.javaconspectrus.repository.BookCoverRepository;
@@ -65,9 +66,11 @@ class BooksControllerTestWithProfile {
 
     @TestConfiguration
     public static class BooksControllerTestConfiguration {
+        @Autowired
+        BookMapper bookMapper;
         @Bean(name = "bookServiceImplDB")
         public BookService bookService(BookRepository bookRepository) {
-            return new BookServiceImplDB(bookRepository);
+            return new BookServiceImplDB(bookRepository, bookMapper);
         }
 
         @Bean(name = "bookCoverServiceImpl")
