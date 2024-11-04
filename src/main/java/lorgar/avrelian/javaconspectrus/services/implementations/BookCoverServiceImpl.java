@@ -1,6 +1,7 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.java.Log;
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.BookCover;
 import lorgar.avrelian.javaconspectrus.repository.BookCoverRepository;
@@ -23,6 +24,7 @@ import java.nio.file.StandardOpenOption;
 
 @Service
 @Transactional(isolation = Isolation.READ_COMMITTED)
+@Log
 public class BookCoverServiceImpl implements BookCoverService {
     @Value("${books.covers.dir.path}")
     private String coversDir;

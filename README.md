@@ -859,6 +859,18 @@
 > [**7.7.1 MapStruct**](/conspect/7.md/#771-mapstruct)  
 
 > [**7.7.2 Lombok**](/conspect/7.md/#772-lombok)  
+> > [_7.7.2.1 @Getter и @Setter_](/conspect/7.md/#7721-getter-и-setter)  
+> > [_7.7.2.2 @NoArgsConstructor, @RequiredArgsConstructor и @AllArgsConstructor_](/conspect/7.md/#7722-noargsconstructor-requiredargsconstructor-и-allargsconstructor)  
+> > [_7.7.2.3 @ToString_](/conspect/7.md/#7723-tostring)  
+> > [_7.7.2.4 @EqualsAndHashCode_](/conspect/7.md/#7724-equalsandhashcode)  
+> > [_7.7.2.5 @NonNull_](/conspect/7.md/#7725-nonnull)  
+> > [_7.7.2.6 @Data_](/conspect/7.md/#7726-data)  
+> > [_7.7.2.7 @Value_](/conspect/7.md/#7727-value)  
+> > [_7.7.2.8 @Cleanup_](/conspect/7.md/#7728-cleanup)  
+> > [_7.7.2.9 @Synchronized_](/conspect/7.md/#7729-synchronized)  
+> > [_7.7.2.10 @SneakyThrows_](/conspect/7.md/#77210-sneakythrows)  
+> > [_7.7.2.11 @Builder_](/conspect/7.md/#77211-builder)  
+> > [_7.7.2.12 @Log_](/conspect/7.md/#77212-log)  
 -----------------------------------------------------------------------------------------------------------------------
 
 ###### 8 Базы данных
@@ -1021,6 +1033,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 1. [**_Comparator_**](/conspect/2.md/#263111-sort)
 1. [**_Intellij IDEA_ горячие клавиши**](/conspect/7.md/#75-intellij-idea)
+1. [**_Lombok_**](/conspect/7.md/#772-lombok)
 1. [**_Mapstruct_**](/conspect/7.md/#771-mapstruct)
 1. [**_Scanner_**](/conspect/1.md/#17-класс-scanner)
 1. [**_StringBuilder_**](/conspect/1.md/#16-изменяемые-строки-stringbuilder)
