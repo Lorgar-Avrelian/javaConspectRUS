@@ -102,3 +102,13 @@ CREATE TABLE city
     local_names TEXT            NOT NULL,
     PRIMARY KEY (id)
 );
+
+-- changeset tokovenko:12
+CREATE TABLE login
+(
+    id       BIGSERIAL,
+    login    VARCHAR(30) NOT NULL UNIQUE,
+    password TEXT        NOT NULL,
+    role     SMALLINT    NOT NULL,
+    PRIMARY KEY (id)
+);
