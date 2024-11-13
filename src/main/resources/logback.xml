@@ -127,5 +127,8 @@
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="TELEGRAM"/>
     </logger>
+    <logger name="org.springframework.security" level="TRACE" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
 
 </configuration>
