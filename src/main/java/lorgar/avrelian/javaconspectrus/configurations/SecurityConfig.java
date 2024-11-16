@@ -64,7 +64,17 @@ public class SecurityConfig {
                         .sessionAuthenticationStrategy(new CsrfAuthenticationStrategy(csrfTokenRepository))
                         // настройка адресов, по которым НЕ должна
                         // осуществляться защита от CSRF-атак
-                        .ignoringRequestMatchers(new AntPathRequestMatcher("/random", "/whether/**"))
+                        .ignoringRequestMatchers(
+                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/login"),
+                                new AntPathRequestMatcher("/error"),
+                                new AntPathRequestMatcher("/register"),
+                                new AntPathRequestMatcher("/whether/**"),
+                                new AntPathRequestMatcher("/swagger-resources/**"),
+                                new AntPathRequestMatcher("/swagger-ui.html"),
+                                new AntPathRequestMatcher("/v3/api-docs"),
+                                new AntPathRequestMatcher("/webjars/**")
+                                )
                         // настройка адресов, по которым ОБЯЗАТЕЛЬНО должна
                         // осуществляться защита от CSRF-атак
                         .requireCsrfProtectionMatcher(new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON))
@@ -102,8 +112,33 @@ public class SecurityConfig {
                 // разрешить доступ только для аутентифицированных пользователей
                 .authorizeHttpRequests(
                         requests -> requests
-                                .requestMatchers("/error").permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers(
+                                        "/",
+                                        "/login",
+                                        "/error",
+                                        "/register",
+                                        "/whether/**",
+                                        "/swagger-resources/**",
+                                        "/swagger-ui.html",
+                                        "/v3/api-docs",
+                                        "/webjars/**"
+                                                )
+                                .permitAll()
+                                .requestMatchers(
+                                        "/logout",
+                                        "/users",
+                                        "/set-role",
+                                        "/set-password",
+                                        "/delete",
+                                        "/books/**",
+                                        "/expenses/**",
+                                        "/manage/**",
+                                        "/random",
+                                        "/readers/**",
+                                        "/counter/**",
+                                        "/user/**"
+                                                )
+                                .authenticated()
                                       )
                 // включить поддержку формы входа
                 .formLogin(Customizer.withDefaults())
@@ -124,7 +159,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(
                                 (request, response, authenticationException) -> {
                                     authenticationException.printStackTrace();
-                                    response.sendError(403);
+                                    response.sendRedirect("http://localhost:8080/index.html");
                                     return;
                                 }
                                                  ))
