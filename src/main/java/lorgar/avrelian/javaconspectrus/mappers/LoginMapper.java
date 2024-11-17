@@ -12,7 +12,7 @@ import java.util.List;
 public interface LoginMapper {
     LoginDTO loginToLoginDTO(Login login);
     Login loginDTOToLogin(LoginDTO loginDTO);
-    List<LoginDTO> loginDTOListToLoginDTOList(List<Login> loginList);
+    List<LoginDTO> loginListToLoginDTOList(List<Login> loginList);
 
     default Login registerDTOToLogin(RegisterDTO registerDTO) {
         Login login = new Login();

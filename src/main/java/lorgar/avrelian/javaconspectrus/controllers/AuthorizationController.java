@@ -7,16 +7,21 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.java.Log;
+import lorgar.avrelian.javaconspectrus.dao.Login;
 import lorgar.avrelian.javaconspectrus.dto.BasicAuthDTO;
 import lorgar.avrelian.javaconspectrus.dto.LoginDTO;
 import lorgar.avrelian.javaconspectrus.dto.RegisterDTO;
 import lorgar.avrelian.javaconspectrus.models.Role;
 import lorgar.avrelian.javaconspectrus.services.AuthorizationService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -56,9 +61,11 @@ public class AuthorizationController {
             }
     )
     public ResponseEntity<?> login(@RequestBody @Parameter(description = "Логин и пароль", required = true, schema = @Schema(implementation = BasicAuthDTO.class)) BasicAuthDTO basicAuthDTO) {
-        LoginDTO loginDTO = authorizationService.login(basicAuthDTO);
-        if (loginDTO != null) {
-            return ResponseEntity.ok().build();
+        Login login = authorizationService.login(basicAuthDTO);
+        if (login != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth(login.getLogin(), login.getPassword());
+            return ResponseEntity.ok().headers(headers).build();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -87,9 +94,11 @@ public class AuthorizationController {
             }
     )
     public ResponseEntity<?> register(@RequestBody @Parameter(description = "Логин, пароль и подтверждение пароля", required = true, schema = @Schema(implementation = RegisterDTO.class)) RegisterDTO registerDTO) {
-        LoginDTO loginDTO = authorizationService.register(registerDTO);
-        if (loginDTO != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+        Login login = authorizationService.register(registerDTO);
+        if (login != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth(login.getLogin(), login.getPassword());
+            return ResponseEntity.status(HttpStatus.CREATED).headers(headers).build();
         } else {
             return ResponseEntity.status(400).build();
         }
@@ -117,8 +126,15 @@ public class AuthorizationController {
                     )
             }
     )
-    public ResponseEntity<?> logout(@AuthenticationPrincipal @Parameter(description = "Учётные данные пользователя", schema = @Schema(implementation = UserDetails.class)) UserDetails userDetails) {
-        return null;
+    public ResponseEntity<?> logout(Authentication authentication,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
+        LoginDTO loginDTO = authorizationService.logout(request, response, authentication);
+        if (loginDTO != null) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping(path = "/users")                     // http://localhost:8080/users
@@ -133,88 +149,6 @@ public class AuthorizationController {
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     array = @ArraySchema(schema = @Schema(implementation = LoginDTO.class))
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "403",
-                            description = "Forbidden",
-                            content = @Content(
-                                    schema = @Schema(implementation = Void.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<Collection<LoginDTO>> getUsers() {
-        return null;
-    }
-
-    @PatchMapping(path = "/set-role")                // http://localhost:8080/set-role
-    @Operation(
-            summary = "Права",
-            description = "Смена прав для зарегистрированного пользователя",
-            tags = "Безопасность",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Ok",
-                            content = @Content(
-                                    schema = @Schema(implementation = Void.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "403",
-                            description = "Forbidden",
-                            content = @Content(
-                                    schema = @Schema(implementation = Void.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<?> setRole(@AuthenticationPrincipal @Parameter(description = "Учётные данные пользователя", required = true, schema = @Schema(implementation = UserDetails.class)) UserDetails userDetails,
-                                     @RequestParam @Parameter(description = "ID пользователя", required = true, schema = @Schema(implementation = Long.class)) long id,
-                                     @RequestParam @Parameter(description = "Новая роль пользователя", required = true, schema = @Schema(implementation = Role.class)) Role role) {
-        return null;
-    }
-
-    @PatchMapping(path = "/set-password")            // http://localhost:8080/set-password
-    @Operation(
-            summary = "Пароль",
-            description = "Смена пароля для зарегистрированного пользователя",
-            tags = "Безопасность",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Ok",
-                            content = @Content(
-                                    schema = @Schema(implementation = Void.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "403",
-                            description = "Forbidden",
-                            content = @Content(
-                                    schema = @Schema(implementation = Void.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<?> setPassword(@AuthenticationPrincipal @Parameter(description = "Учётные данные пользователя", required = true, schema = @Schema(implementation = UserDetails.class)) UserDetails userDetails,
-                                         @RequestParam @Parameter(description = "ID пользователя", schema = @Schema(implementation = Long.class)) long id,
-                                         @RequestParam @Parameter(description = "Новая роль пользователя", required = true, schema = @Schema(implementation = String.class)) String password) {
-        return null;
-    }
-
-    @DeleteMapping(path = "/delete")                   // http://localhost:8080/delete
-    @Operation(
-            summary = "Удалить",
-            description = "Удалить пользователя",
-            tags = "Безопасность",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Ok",
-                            content = @Content(
-                                    schema = @Schema(implementation = Void.class)
                             )
                     ),
                     @ApiResponse(
@@ -233,8 +167,154 @@ public class AuthorizationController {
                     )
             }
     )
-    public ResponseEntity<?> delete(@AuthenticationPrincipal @Parameter(description = "Учётные данные пользователя", required = true, schema = @Schema(implementation = UserDetails.class)) UserDetails userDetails,
+    public ResponseEntity<Collection<LoginDTO>> getUsers(@RequestParam(required = false) @Parameter(description = "Номер страницы", schema = @Schema(implementation = Integer.class)) Integer page,
+                                                         @RequestParam(required = false) @Parameter(description = "Количество пользователей на странице", schema = @Schema(implementation = Integer.class)) Integer size) {
+        Collection<LoginDTO> users;
+        if (page == null && size == null) {
+            users = authorizationService.getAllUsers();
+        } else if (page != null && size != null && size > 0 && page > 0) {
+            users = authorizationService.getAllUsers(page, size);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+        if (users.isEmpty()) {
+            return ResponseEntity.status(403).build();
+        } else {
+            return ResponseEntity.ok(users);
+        }
+    }
+
+    @PatchMapping(path = "/set-role")                // http://localhost:8080/set-role
+    @Operation(
+            summary = "Права",
+            description = "Смена прав для зарегистрированного пользователя",
+            tags = "Безопасность",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Ok",
+                            content = @Content(
+                                    schema = @Schema(implementation = LoginDTO.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbidden",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<LoginDTO> setRole(@AuthenticationPrincipal @Parameter(description = "Учётные данные пользователя", required = true, schema = @Schema(implementation = UserDetails.class)) UserDetails userDetails,
+                                            @RequestParam @Parameter(description = "ID пользователя", required = true, schema = @Schema(implementation = Long.class)) long id,
+                                            @RequestParam @Parameter(description = "Новая роль пользователя", required = true, schema = @Schema(implementation = Role.class)) Role role) {
+        LoginDTO loginDTO;
+        try {
+            loginDTO = authorizationService.setRole(userDetails, id, role);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+        if (loginDTO != null) {
+            return ResponseEntity.ok(loginDTO);
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    @PatchMapping(path = "/set-password")            // http://localhost:8080/set-password
+    @Operation(
+            summary = "Пароль",
+            description = "Смена пароля для зарегистрированного пользователя",
+            tags = "Безопасность",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Ok",
+                            content = @Content(
+                                    schema = @Schema(implementation = LoginDTO.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbidden",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<LoginDTO> setPassword(@AuthenticationPrincipal @Parameter(description = "Учётные данные пользователя", required = true, schema = @Schema(implementation = UserDetails.class)) UserDetails userDetails,
+                                                @RequestParam @Parameter(description = "ID пользователя", schema = @Schema(implementation = Long.class)) long id,
+                                                @RequestParam @Parameter(description = "Новая роль пользователя", required = true, schema = @Schema(implementation = String.class)) String password) {
+        LoginDTO loginDTO;
+        try {
+            loginDTO = authorizationService.setPassword(userDetails, id, password);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+        if (loginDTO != null) {
+            return ResponseEntity.ok(loginDTO);
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    @DeleteMapping(path = "/delete")                   // http://localhost:8080/delete
+    @Operation(
+            summary = "Удалить",
+            description = "Удалить пользователя",
+            tags = "Безопасность",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Ok",
+                            content = @Content(
+                                    schema = @Schema(implementation = LoginDTO.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad Request",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbidden",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<LoginDTO> delete(@AuthenticationPrincipal @Parameter(description = "Учётные данные пользователя", required = true, schema = @Schema(implementation = UserDetails.class)) UserDetails userDetails,
                                     @RequestParam @Parameter(description = "ID пользователя", required = true, schema = @Schema(implementation = Long.class)) long id) {
-        return null;
+        LoginDTO loginDTO;
+        try {
+            loginDTO = authorizationService.delete(userDetails, id);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+        if (loginDTO != null) {
+            return ResponseEntity.ok(loginDTO);
+        } else {
+            return ResponseEntity.status(403).build();
+        }
     }
 }

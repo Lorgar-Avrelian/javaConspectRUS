@@ -16,10 +16,12 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.csrf.CsrfAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -41,6 +43,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // репозиторий CSRF-токена
         CsrfTokenRepository csrfTokenRepository = new HttpSessionCsrfTokenRepository();
+        // настройка очистки файлов Cookies и заголовков при выходе
+        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter());
         // стандартные настройки цепочки безопасности
         return http
                 // настройка CSRF
@@ -166,6 +170,11 @@ public class SecurityConfig {
                 // Включение созданного фильтра BasicAuthCorsFilter в цепочку
                 // фильтров перед фильтром UsernamePasswordAuthenticationFilter
                 .addFilterBefore(new BasicAuthCorsFilter(), UsernamePasswordAuthenticationFilter.class)
+                // настройка выхода
+                .logout(logout -> logout
+                        .addLogoutHandler(clearSiteData)
+                        .clearAuthentication(true)
+                       )
                 // собрать цепочку фильтров
                 .build();
     }
