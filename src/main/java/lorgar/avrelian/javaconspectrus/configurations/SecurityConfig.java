@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
@@ -242,20 +243,30 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
+    // Кодировщик паролей в приложении
     public PasswordEncoder passwordEncoder() {
+        // задание реализации DelegatingPasswordEncoder с помощью класса PasswordEncoderFactories
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    // Провайдер аутентификации, осуществляющий логику аутентификации пользователя
+    public AuthenticationProvider authenticationProvider() {
+        // провайдер для работы с базами данных
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        // определение реализации интерфейса UserDetailsService,
+        // которая загружает данные о пользователях из БД
         authProvider.setUserDetailsService(userDetailsService);
+        // задание кодировщика паролей
         authProvider.setPasswordEncoder(passwordEncoder());
+        // возврат значения
         return authProvider;
+    }
+
+    @Bean
+    // Менеджер аутентификации
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        // возвращение менеджера аутентификации с текущими настройками безопасности
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
