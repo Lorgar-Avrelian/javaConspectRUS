@@ -1,5 +1,7 @@
 package lorgar.avrelian.javaconspectrus.configurations;
 
+import jakarta.servlet.DispatcherType;
+import lorgar.avrelian.javaconspectrus.models.Role;
 import lorgar.avrelian.javaconspectrus.securityFilters.BasicAuthCorsFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -7,8 +9,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -47,6 +52,94 @@ public class SecurityConfig {
         HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter());
         // стандартные настройки цепочки безопасности
         return http
+                // настройка авторизации
+                .authorizeHttpRequests(
+                        requests -> requests
+                                // разрешить доступ при перенаправлении
+                                .dispatcherTypeMatchers(DispatcherType.ERROR, DispatcherType.FORWARD).permitAll()
+                                // запретить доступ всем пользователям к указанным ресурсам
+                                .requestMatchers("/counter/**").denyAll()
+                                .requestMatchers(HttpMethod.TRACE).denyAll()
+                                .requestMatchers(HttpMethod.DELETE, "/logout").denyAll()
+                                // разрешить доступ только анонимным пользователям к указанным ресурсам
+                                .requestMatchers(
+                                        "/",
+                                        "/login",
+                                        "/register"
+                                                ).anonymous()
+                                // разрешить доступ только аутентифицированным пользователям к указанным ресурсам
+                                .requestMatchers(
+                                        "/logout",
+                                        "/users",
+                                        "/set-role",
+                                        "/set-password",
+                                        "/delete",
+                                        "/books/**",
+                                        "/expenses/**",
+                                        "/manage/**",
+                                        "/random",
+                                        "/readers/**",
+                                        "/user/**"
+                                                ).authenticated()
+                                // разрешить доступ всем пользователям к указанным ресурсам
+                                .requestMatchers(
+                                        "/error",
+                                        "/whether/**",
+                                        "/swagger-resources/**",
+                                        "/swagger-ui.html",
+                                        "/v3/api-docs",
+                                        "/webjars/**"
+                                                ).permitAll()
+                                // разрешить доступ пользователям с долгоживущей сессией к указанным ресурсам
+                                .requestMatchers(
+                                        "/whether/**",
+                                        "/swagger-resources/**",
+                                        "/swagger-ui.html",
+                                        "/v3/api-docs",
+                                        "/webjars/**"
+                                                ).rememberMe()
+                                // разрешить доступ пользователям, прошедшим полную аутентификацию,
+                                // а не из восстановленной сессии, к указанным ресурсам
+                                .requestMatchers(
+                                        "/logout",
+                                        "/users",
+                                        "/set-role",
+                                        "/set-password",
+                                        "/delete",
+                                        "/books/**",
+                                        "/expenses/**",
+                                        "/manage/**",
+                                        "/random",
+                                        "/readers/**",
+                                        "/user/**"
+                                                ).fullyAuthenticated()
+                                // разрешить доступ только пользователям, имеющим заданные права, к указанным ресурсам
+                                .requestMatchers(
+                                        "/manage/**"
+                                                ).hasAuthority(Role.ROLE_USER.getAuthority())
+                                // разрешить доступ пользователям, имеющим любое из заданных прав, к указанным ресурсам
+                                .requestMatchers(
+                                        "/set-role",
+                                        "/set-password",
+                                        "/delete"
+                                                ).hasAnyAuthority(Role.ROLE_OWNER.getAuthority(),
+                                                                  Role.ROLE_ADMIN.getAuthority())
+                                // разрешить доступ только пользователям, имеющим заданную роль, к указанным ресурсам
+                                .requestMatchers(
+                                        "/random"
+                                                ).hasRole("ROLE_ADMIN")
+                                // разрешить доступ пользователям, имеющим любую из заданных ролей, к указанным ресурсам
+                                .requestMatchers(
+                                        "/users"
+                                                ).hasAnyRole("ROLE_OWNER", "ROLE_ADMIN")
+                                .requestMatchers(
+                                        "/expenses/**"
+                                                ).access((authentication, object) -> {
+                                    return new AuthorizationDecision(Role.ROLE_USER.name().equals(authentication.get().getName()));
+                                })
+                                // запретить все другие запросы
+                                .anyRequest().denyAll()
+                                      )
                 // настройка CSRF
                 .csrf(csrf -> csrf
                         // обработчик запроса, обрабатываемого в целях защиты от CSRF-атаки:
@@ -78,7 +171,7 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/swagger-ui.html"),
                                 new AntPathRequestMatcher("/v3/api-docs"),
                                 new AntPathRequestMatcher("/webjars/**")
-                                )
+                                                )
                         // настройка адресов, по которым ОБЯЗАТЕЛЬНО должна
                         // осуществляться защита от CSRF-атак
                         .requireCsrfProtectionMatcher(new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON))
@@ -113,37 +206,6 @@ public class SecurityConfig {
                     // Возврат настроенного фильтра
                     configurer.configurationSource(source);
                 })
-                // разрешить доступ только для аутентифицированных пользователей
-                .authorizeHttpRequests(
-                        requests -> requests
-                                .requestMatchers(
-                                        "/",
-                                        "/login",
-                                        "/error",
-                                        "/register",
-                                        "/whether/**",
-                                        "/swagger-resources/**",
-                                        "/swagger-ui.html",
-                                        "/v3/api-docs",
-                                        "/webjars/**"
-                                                )
-                                .permitAll()
-                                .requestMatchers(
-                                        "/logout",
-                                        "/users",
-                                        "/set-role",
-                                        "/set-password",
-                                        "/delete",
-                                        "/books/**",
-                                        "/expenses/**",
-                                        "/manage/**",
-                                        "/random",
-                                        "/readers/**",
-                                        "/counter/**",
-                                        "/user/**"
-                                                )
-                                .authenticated()
-                                      )
                 // включить поддержку формы входа
                 .formLogin(Customizer.withDefaults())
                 // включить поддержку Basic-аутентификации
@@ -177,6 +239,11 @@ public class SecurityConfig {
                        )
                 // собрать цепочку фильтров
                 .build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean

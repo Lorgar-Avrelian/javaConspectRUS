@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -90,6 +92,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public LoginDTO logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Login login = loginRepository.findByLoginEqualsIgnoreCase(authentication.getName()).orElse(null);
         try {
@@ -107,6 +110,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
+    @Secured({"ROLE_ADMIN", "ROLE_OWNER"})
     public List<LoginDTO> getAllUsers(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         Page<Login> logins = loginRepository.findAll(pageRequest);
@@ -114,6 +118,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
     public LoginDTO setRole(UserDetails userDetails, long id, Role role) throws IllegalArgumentException {
         if (role == Role.ROLE_OWNER) {
             throw new IllegalArgumentException("Should be only one of ROLE_OWNER");
@@ -135,6 +140,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
+    @Secured({"ROLE_ADMIN", "ROLE_OWNER"})
     public LoginDTO setPassword(UserDetails userDetails, long id, String password) throws IllegalArgumentException {
         boolean rights = checkCredentials(userDetails);
         if (rights) {
@@ -157,6 +163,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
     public LoginDTO delete(UserDetails userDetails, long id) throws IllegalArgumentException {
         if (id == 1) {
             log.info("User " + userDetails.getUsername() + " tried to delete owner!");

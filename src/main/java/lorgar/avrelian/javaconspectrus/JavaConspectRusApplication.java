@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @SpringBootApplication
 @OpenAPIDefinition(
@@ -21,6 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 		)
 )
 @EnableScheduling
+@EnableMethodSecurity(securedEnabled = true)
 public class JavaConspectRusApplication {
 
 	public static void main(String[] args) {
