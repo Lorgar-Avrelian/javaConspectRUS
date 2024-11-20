@@ -20,7 +20,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/readers")
-@Tag(name = "Контроллер для читателей", description = "Контроллер для работы с читателями")
+@Tag(name = "3 Читатели", description = "Контроллер для работы с читателями")
 public class ReaderController {
     private final ReaderService readerService;
 
@@ -146,7 +146,7 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Reader> deleteBook(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
+    public ResponseEntity<Reader> deleteReader(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
         Reader deletedReader = readerService.deleteReader(id);
         if (deletedReader != null) {
             return ResponseEntity.ok(deletedReader);

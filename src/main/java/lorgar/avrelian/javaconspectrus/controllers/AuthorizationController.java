@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@Tag(name = "Контроллер авторизации", description = "Контроллер для авторизации пользователей")
+@Tag(name = "1 Авторизация", description = "Контроллер для авторизации пользователей")
 @Log
 public class AuthorizationController {
     private final AuthorizationService authorizationService;

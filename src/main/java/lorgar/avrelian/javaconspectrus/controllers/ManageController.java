@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/manage")
-@Tag(name = "Контроллер приёма/выдачи", description = "Контроллер для приёма/выдачи книг")
+@Tag(name = "4 Приём/выдача книг", description = "Контроллер для приёма/выдачи книг")
 public class ManageController {
     private Logger logger = LoggerFactory.getLogger(ManageController.class);
     private final ManageService manageService;

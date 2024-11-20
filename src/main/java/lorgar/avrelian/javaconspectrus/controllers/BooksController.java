@@ -28,7 +28,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/books")
-@Tag(name = "Контроллер для книг", description = "Контроллер для работы с книгами")
+@Tag(name = "2 Книги", description = "Контроллер для работы с книгами")
 @CacheConfig(cacheNames = "book")
 public class BooksController {
     private final BookService bookService;

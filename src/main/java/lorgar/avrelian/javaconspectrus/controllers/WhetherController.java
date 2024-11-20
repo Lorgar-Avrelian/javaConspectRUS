@@ -22,7 +22,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/whether")
-@Tag(name = "Контроллер погоды", description = "Контроллер для получения прогнозов погоды")
+@Tag(name = "5 Погода", description = "Контроллер для получения прогнозов погоды")
 public class WhetherController {
     private final WhetherService whetherService;
 
