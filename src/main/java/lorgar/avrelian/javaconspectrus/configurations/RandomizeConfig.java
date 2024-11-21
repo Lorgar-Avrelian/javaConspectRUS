@@ -10,7 +10,7 @@ import java.util.Random;
 
 @Configuration
 public class RandomizeConfig {
-    @Value("${rand.diapazon}")
+    @Value("${rand.diapason}")
     private long seed;
 
     @Bean

@@ -28,14 +28,11 @@
 	</scm>
 	<properties>
 		<java.version>23</java.version>
-		<org.mapstruct.version>1.6.2</org.mapstruct.version>
-		<org.lombok.version>1.18.34</org.lombok.version>
+		<org.mapstruct.version>1.6.3</org.mapstruct.version>
+		<org.lombok.version>1.18.36</org.lombok.version>
+		<ch.qos.logback.version>1.5.12</ch.qos.logback.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -54,8 +51,12 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
-			<version>5.11.0</version>
+			<version>5.11.3</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
@@ -79,7 +80,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>1.5.9</version>
+			<version>${ch.qos.logback.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
 		<dependency>
@@ -91,7 +92,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.5.9</version>
+			<version>${ch.qos.logback.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.tuxdude.logback.extensions/logback-colorizer -->
 		<dependency>
