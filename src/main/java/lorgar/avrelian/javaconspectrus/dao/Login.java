@@ -9,8 +9,8 @@ import lorgar.avrelian.javaconspectrus.models.Role;
 @Schema(title = "Логин", description = "Сущность логина пользователя")
 @Entity
 @Table(name = "login")
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 public class Login {
     @Schema(title = "ID", description = "ID пользователя", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
     @Id

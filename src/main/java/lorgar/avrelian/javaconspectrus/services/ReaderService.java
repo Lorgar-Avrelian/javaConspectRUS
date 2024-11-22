@@ -1,5 +1,7 @@
 package lorgar.avrelian.javaconspectrus.services;
 
+import lorgar.avrelian.javaconspectrus.dto.NewReaderDTO;
+import lorgar.avrelian.javaconspectrus.dto.ReaderNoBooksDTO;
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import org.springframework.stereotype.Service;
@@ -8,7 +10,7 @@ import java.util.Collection;
 
 @Service
 public interface ReaderService {
-    Reader createReader(Reader reader);
+    ReaderNoBooksDTO createReader(NewReaderDTO newReader);
 
     Reader findReader(long id);
 

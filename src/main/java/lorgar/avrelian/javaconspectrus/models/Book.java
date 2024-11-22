@@ -3,12 +3,14 @@ package lorgar.avrelian.javaconspectrus.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-
-import java.util.Objects;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Schema(title = "Книга", description = "Сущность книги")
 @Entity
 @Table(name = "book")
+@Data
+@NoArgsConstructor
 public class Book {
     @Schema(title = "ID", description = "ID книги", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
     @Id
@@ -26,82 +28,7 @@ public class Book {
     private short year;
     @Schema(title = "ID читателя", description = "ID читателя", defaultValue = "null", minimum = "1", maximum = "9223372036854775807")
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "reader_id")
     private Reader reader;
-
-    public Book() {
-    }
-
-    public Book(long id, String title, String author, short year, Reader reader) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.year = year;
-        this.reader = reader;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public short getYear() {
-        return year;
-    }
-
-    public void setYear(short year) {
-        this.year = year;
-    }
-
-    @JsonBackReference
-    public Reader getReader() {
-        return reader;
-    }
-
-    public void setReader(Reader reader) {
-        this.reader = reader;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return id == book.id && year == book.year && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(reader, book.reader);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, author, year, reader);
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", year=" + year +
-                ", reader=" + reader +
-                '}';
-    }
 }

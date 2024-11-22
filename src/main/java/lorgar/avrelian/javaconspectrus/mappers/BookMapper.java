@@ -7,7 +7,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface BookMapper {
@@ -16,7 +18,15 @@ public interface BookMapper {
     @Mapping(target = "author", source = "newBookDTO.authorFIO")
     Book newBookDTOtoBook(NewBookDTO newBookDTO);
 
-    Collection<BookDTO> booksListToBookDTOList(Collection<Book> books);
+    default Collection<BookDTO> booksListToBookDTOList(Collection<Book> books) {
+        Collection<BookDTO> booksDTO = new ArrayList<>();
+        for (Book book : books) {
+            booksDTO.add(bookToBookDTO(book));
+        }
+        return booksDTO.stream()
+                .sorted(Comparator.comparing(BookDTO::getId))
+                .toList();
+    }
 
     BookDTO bookToBookDTO(Book book);
 

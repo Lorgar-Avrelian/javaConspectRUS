@@ -5,6 +5,7 @@ import lorgar.avrelian.javaconspectrus.models.Role;
 import lorgar.avrelian.javaconspectrus.securityFilters.BasicAuthCorsFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.time.Duration;
 import java.util.List;
 
+//@Configuration
 // Включает поддержку Spring Security
 @EnableWebSecurity
 public class SecurityConfig {
@@ -50,7 +52,11 @@ public class SecurityConfig {
         // репозиторий CSRF-токена
         CsrfTokenRepository csrfTokenRepository = new HttpSessionCsrfTokenRepository();
         // настройка очистки файлов Cookies и заголовков при выходе
-        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter());
+        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(
+                ClearSiteDataHeaderWriter.Directive.CACHE,
+                ClearSiteDataHeaderWriter.Directive.COOKIES,
+                ClearSiteDataHeaderWriter.Directive.STORAGE
+        ));
         // стандартные настройки цепочки безопасности
         return http
                 // настройка авторизации
@@ -128,11 +134,11 @@ public class SecurityConfig {
                                 // разрешить доступ только пользователям, имеющим заданную роль, к указанным ресурсам
                                 .requestMatchers(
                                         "/random"
-                                                ).hasRole("ROLE_ADMIN")
+                                                ).hasRole("ADMIN")
                                 // разрешить доступ пользователям, имеющим любую из заданных ролей, к указанным ресурсам
                                 .requestMatchers(
                                         "/users"
-                                                ).hasAnyRole("ROLE_OWNER", "ROLE_ADMIN")
+                                                ).hasAnyRole("OWNER", "ADMIN")
                                 .requestMatchers(
                                         "/expenses/**"
                                                 ).access((authentication, object) -> {
@@ -178,16 +184,16 @@ public class SecurityConfig {
                         .requireCsrfProtectionMatcher(new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON))
                      )
                 .cors(configurer -> {
-                    // Источник конфигураций CORS
+                    // источник конфигураций CORS
                     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                    // Конфигурация CORS
+                    // конфигурация CORS
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    // Разрешаются CORS-запросы:
+                    // разрешаются CORS-запросы:
                     // - с сайта http://localhost:8080
                     corsConfiguration.addAllowedOrigin("http://localhost:8080");
-                    // - с нестандартными заголовками Authorization и X-CUSTOM-HEADER
+                    // - с нестандартными заголовками Authorization и X-CSRF-TOKEN
                     corsConfiguration.addAllowedHeader(HttpHeaders.AUTHORIZATION);
-                    corsConfiguration.addAllowedHeader("X-CUSTOM-HEADER");
+                    corsConfiguration.addAllowedHeader("X-CSRF-TOKEN");
                     // - с передачей учётных данных
                     corsConfiguration.setAllowCredentials(true);
                     // - с методами GET, POST, PUT, PATCH и DELETE
@@ -198,13 +204,13 @@ public class SecurityConfig {
                             HttpMethod.PATCH.name(),
                             HttpMethod.DELETE.name()
                                                                ));
-                    // JavaScript может обращаться к заголовку X-OTHER-CUSTOM-HEADER ответа
-                    corsConfiguration.setExposedHeaders(List.of("X-OTHER-CUSTOM-HEADER"));
-                    // Браузер может кешировать настройки CORS на 10 секунд
+                    // JavaScript может обращаться к заголовку X-CSRF-TOKEN ответа
+                    corsConfiguration.setExposedHeaders(List.of("X-CSRF-TOKEN"));
+                    // браузер может кешировать настройки CORS на 10 секунд
                     corsConfiguration.setMaxAge(Duration.ofSeconds(10));
-                    // Использование конфигурации CORS для всех запросов
+                    // использование конфигурации CORS для всех запросов
                     source.registerCorsConfiguration("/**", corsConfiguration);
-                    // Возврат настроенного фильтра
+                    // возврат настроенного фильтра
                     configurer.configurationSource(source);
                 })
                 // включить поддержку формы входа
@@ -230,7 +236,7 @@ public class SecurityConfig {
                                     return;
                                 }
                                                  ))
-                // Включение созданного фильтра BasicAuthCorsFilter в цепочку
+                // включение созданного фильтра BasicAuthCorsFilter в цепочку
                 // фильтров перед фильтром UsernamePasswordAuthenticationFilter
                 .addFilterBefore(new BasicAuthCorsFilter(), UsernamePasswordAuthenticationFilter.class)
                 // настройка выхода

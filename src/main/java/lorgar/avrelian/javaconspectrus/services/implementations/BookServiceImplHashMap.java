@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Service
-@Profile("!test")
+//@Service
+//@Profile("!test")
 public class BookServiceImplHashMap implements BookService {
     private final HashMap<Long, Book> books = new HashMap<>();
     private long lastId = 0;

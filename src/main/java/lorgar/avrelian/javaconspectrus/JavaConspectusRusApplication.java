@@ -23,9 +23,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 )
 @EnableScheduling
 @EnableMethodSecurity(securedEnabled = true)
-public class JavaConspectRusApplication {
+public class JavaConspectusRusApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(JavaConspectRusApplication.class, args);
+		SpringApplication.run(JavaConspectusRusApplication.class, args);
 	}
 }

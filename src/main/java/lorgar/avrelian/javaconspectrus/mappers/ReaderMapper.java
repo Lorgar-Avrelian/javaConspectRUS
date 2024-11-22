@@ -1,0 +1,25 @@
+package lorgar.avrelian.javaconspectrus.mappers;
+
+import lorgar.avrelian.javaconspectrus.dto.NewReaderDTO;
+import lorgar.avrelian.javaconspectrus.dto.ReaderNoBooksDTO;
+import lorgar.avrelian.javaconspectrus.models.Reader;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface ReaderMapper {
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "name", source = "newReaderDTO.name")
+    @Mapping(target = "secondName", source = "newReaderDTO.secondName")
+    @Mapping(target = "surname", source = "newReaderDTO.surname")
+    @Mapping(target = "personalNumber", source = "newReaderDTO.personalNumber")
+    Reader newReaderDTOtoReader(NewReaderDTO newReaderDTO);
+
+    @Mapping(target = "id", source = "reader.id")
+    @Mapping(target = "name", source = "reader.name")
+    @Mapping(target = "secondName", source = "reader.secondName")
+    @Mapping(target = "surname", source = "reader.surname")
+    @Mapping(target = "personalNumber", source = "reader.personalNumber")
+    ReaderNoBooksDTO readerToNoBooksDTO(Reader reader);
+}

@@ -18,6 +18,7 @@ public class RandomizeConfig {
     public Random myRandomInstance() {
         return new Random(seed);
     }
+
     @Bean
     @Primary
     @Scope(value = "singleton")

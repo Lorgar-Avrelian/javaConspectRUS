@@ -1,6 +1,9 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
+import lorgar.avrelian.javaconspectrus.dto.NewReaderDTO;
+import lorgar.avrelian.javaconspectrus.dto.ReaderNoBooksDTO;
 import lorgar.avrelian.javaconspectrus.mappers.BookMapper;
+import lorgar.avrelian.javaconspectrus.mappers.ReaderMapper;
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import lorgar.avrelian.javaconspectrus.repository.BookRepository;
@@ -16,20 +19,23 @@ public class ReaderServiceImpl implements ReaderService {
     private final ReaderRepository readerRepository;
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final ReaderMapper readerMapper;
 
-    public ReaderServiceImpl(ReaderRepository readerRepository, BookRepository bookRepository, BookMapper bookMapper) {
+    public ReaderServiceImpl(ReaderRepository readerRepository, BookRepository bookRepository, BookMapper bookMapper, ReaderMapper readerMapper) {
         this.readerRepository = readerRepository;
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
+        this.readerMapper = readerMapper;
     }
+
     private ManageService setManageService() {
-        return new ManageServiceImpl(bookRepository, readerRepository, bookMapper);
+        return new ManageServiceImpl(bookRepository, readerRepository, bookMapper, readerMapper);
     }
 
     @Override
-    public Reader createReader(Reader reader) {
-        reader.setId(0);
-        return readerRepository.save(reader);
+    public ReaderNoBooksDTO createReader(NewReaderDTO newReader) {
+        Reader reader = readerMapper.newReaderDTOtoReader(newReader);
+        return readerMapper.readerToNoBooksDTO(readerRepository.save(reader));
     }
 
     @Override

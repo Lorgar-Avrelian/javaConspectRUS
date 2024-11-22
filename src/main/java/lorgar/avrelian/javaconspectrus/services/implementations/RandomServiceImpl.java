@@ -12,6 +12,7 @@ public class RandomServiceImpl implements RandomService {
     public RandomServiceImpl(Random random) {
         this.random = random;
     }
+
     @Override
     public Integer getRandomNextInt() {
         return random.nextInt();

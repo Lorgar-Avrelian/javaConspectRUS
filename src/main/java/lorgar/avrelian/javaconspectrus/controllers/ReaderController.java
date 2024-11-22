@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lorgar.avrelian.javaconspectrus.dto.NewReaderDTO;
+import lorgar.avrelian.javaconspectrus.dto.ReaderNoBooksDTO;
 import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import lorgar.avrelian.javaconspectrus.services.ReaderService;
@@ -39,7 +41,7 @@ public class ReaderController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Reader.class)
+                                    schema = @Schema(implementation = ReaderNoBooksDTO.class)
                             )
                     ),
                     @ApiResponse(
@@ -51,7 +53,7 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Reader> createReader(@RequestBody Reader reader) {
+    public ResponseEntity<ReaderNoBooksDTO> createReader(@RequestBody NewReaderDTO reader) {
         try {
             return ResponseEntity.ok(readerService.createReader(reader));
         } catch (RuntimeException e) {
