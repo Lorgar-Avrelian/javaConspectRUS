@@ -28,8 +28,6 @@ public interface AuthorizationService {
 
     Login register(RegisterDTO registerDTO);
 
-    LoginDTO logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication);
-
     List<LoginDTO> getAllUsers();
 
     List<LoginDTO> getAllUsers(int page, int size);

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class BasicAuthDTO {
-    @Schema(title = "Логин", description = "Логин пользователя", defaultValue = "user@mail.ru", required = true, minLength = 3, maxLength = 30)
+    @Schema(title = "Логин", description = "Логин пользователя", defaultValue = "user", required = true, minLength = 3, maxLength = 30)
     private String login;
     @Schema(title = "Пароль", description = "Пароль пользователя", defaultValue = "123", required = true, minLength = 3)
     private String password;

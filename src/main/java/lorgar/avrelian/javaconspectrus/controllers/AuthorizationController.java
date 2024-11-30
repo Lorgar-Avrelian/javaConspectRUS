@@ -6,9 +6,8 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.java.Log;
 import lorgar.avrelian.javaconspectrus.dao.Login;
 import lorgar.avrelian.javaconspectrus.dto.BasicAuthDTO;
@@ -21,9 +20,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -31,6 +30,9 @@ import java.util.Collection;
 @RestController
 @Tag(name = "1 Авторизация", description = "Контроллер для авторизации пользователей")
 @Log
+// Включает поддержку базовой аутентификации
+// Swagger UI для методов данного контроллера
+@SecurityRequirement(name = "basicAuth")
 public class AuthorizationController {
     private final AuthorizationService authorizationService;
 
@@ -101,39 +103,6 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.CREATED).headers(headers).build();
         } else {
             return ResponseEntity.status(400).build();
-        }
-    }
-
-    @PostMapping(path = "/logout")                   // http://localhost:8080/logout
-    @Operation(
-            summary = "Выйти",
-            description = "Выйти из системы",
-            tags = "Безопасность",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Ok",
-                            content = @Content(
-                                    schema = @Schema(implementation = Void.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "403",
-                            description = "Forbidden",
-                            content = @Content(
-                                    schema = @Schema(implementation = Void.class)
-                            )
-                    )
-            }
-    )
-    public ResponseEntity<?> logout(Authentication authentication,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response) {
-        LoginDTO loginDTO = authorizationService.logout(request, response, authentication);
-        if (loginDTO != null) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
@@ -260,7 +229,7 @@ public class AuthorizationController {
     )
     public ResponseEntity<LoginDTO> setPassword(@AuthenticationPrincipal @Parameter(description = "Учётные данные пользователя", required = true, schema = @Schema(implementation = UserDetails.class)) UserDetails userDetails,
                                                 @RequestParam @Parameter(description = "ID пользователя", schema = @Schema(implementation = Long.class)) long id,
-                                                @RequestParam @Parameter(description = "Новая роль пользователя", required = true, schema = @Schema(implementation = String.class)) String password) {
+                                                @RequestParam @Parameter(description = "Новый пароль пользователя", required = true, schema = @Schema(implementation = String.class)) String password) {
         LoginDTO loginDTO;
         try {
             loginDTO = authorizationService.setPassword(userDetails, id, password);
@@ -304,7 +273,7 @@ public class AuthorizationController {
             }
     )
     public ResponseEntity<LoginDTO> delete(@AuthenticationPrincipal @Parameter(description = "Учётные данные пользователя", required = true, schema = @Schema(implementation = UserDetails.class)) UserDetails userDetails,
-                                    @RequestParam @Parameter(description = "ID пользователя", required = true, schema = @Schema(implementation = Long.class)) long id) {
+                                           @RequestParam @Parameter(description = "ID пользователя", required = true, schema = @Schema(implementation = Long.class)) long id) {
         LoginDTO loginDTO;
         try {
             loginDTO = authorizationService.delete(userDetails, id);
@@ -316,5 +285,24 @@ public class AuthorizationController {
         } else {
             return ResponseEntity.status(403).build();
         }
+    }
+
+    @GetMapping(path = "/csrf")                       // http://localhost:8080/csrf
+    @Operation(
+            summary = "CSRF-токен",
+            description = "Получить CSRF-токен",
+            tags = "Безопасность",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Ok",
+                            content = @Content(
+                                    schema = @Schema(implementation = CsrfToken.class)
+                            )
+                    )
+            }
+    )
+    public CsrfToken csrf(CsrfToken csrfToken) {
+        return csrfToken;
     }
 }

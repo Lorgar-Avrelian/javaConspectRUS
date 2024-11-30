@@ -1,7 +1,5 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.java.Log;
 import lorgar.avrelian.javaconspectrus.dao.Login;
 import lorgar.avrelian.javaconspectrus.dto.BasicAuthDTO;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -25,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -38,8 +36,6 @@ import java.util.List;
 @Transactional(isolation = Isolation.READ_COMMITTED)
 @Log
 public class AuthorizationServiceImpl implements AuthorizationService {
-    private final SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-    private static boolean initFlag;
     private final JpaUserDetailsServiceImpl userDetailsService;
     private final LoginRepository loginRepository;
     private final LoginMapper loginMapper;
@@ -59,7 +55,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public Login login(BasicAuthDTO basicAuthDTO) {
         Login login = loginRepository.findByLoginEqualsIgnoreCase(basicAuthDTO.getLogin()).orElse(null);
         if (login != null) {
-            if (passwordEncoder.matches(login.getPassword(), passwordEncoder.encode(basicAuthDTO.getPassword()))) {
+            if (passwordEncoder.matches(basicAuthDTO.getPassword(), login.getPassword())) {
                 userDetailsService.loadUserByUsername(basicAuthDTO.getLogin());
                 return login;
             } else {
@@ -78,39 +74,24 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         }
         login = loginMapper.registerDTOToLogin(registerDTO);
         login.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        if (!initFlag) {
-            long count = loginRepository.count();
-            if (count > 0) {
-                initFlag = true;
-            } else {
-                login.setRole(Role.ROLE_OWNER);
-            }
+        if (loginRepository.count() == 0) {
+            login.setRole(Role.ROLE_OWNER);
+        } else {
+            login.setRole(Role.ROLE_USER);
         }
-        login.setRole(Role.ROLE_USER);
         login = loginRepository.save(login);
         return login;
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
-    public LoginDTO logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Login login = loginRepository.findByLoginEqualsIgnoreCase(authentication.getName()).orElse(null);
-        try {
-            this.logoutHandler.logout(request, response, authentication);
-            return loginMapper.loginToLoginDTO(login);
-        } catch (Exception e) {
-            log.info("Logout error of user " + authentication.getName() + " : " + e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
     public List<LoginDTO> getAllUsers() {
-        return loginMapper.loginListToLoginDTOList(loginRepository.findAll());
+        return loginMapper.loginListToLoginDTOList(loginRepository.findAll()).stream()
+                .sorted(Comparator.comparing(LoginDTO::getId))
+                .toList();
     }
 
     @Override
-    @Secured({"ROLE_ADMIN", "ROLE_OWNER"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_OWNER"})
     public List<LoginDTO> getAllUsers(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         Page<Login> logins = loginRepository.findAll(pageRequest);
@@ -118,48 +99,35 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
+    @PreAuthorize("hasRole('OWNER')")
     public LoginDTO setRole(UserDetails userDetails, long id, Role role) throws IllegalArgumentException {
         if (role == Role.ROLE_OWNER) {
             throw new IllegalArgumentException("Should be only one of ROLE_OWNER");
         }
-        boolean rights = checkCredentials(userDetails);
-        if (rights) {
-            Login login = loginRepository.findById(id).orElse(null);
-            if (login != null) {
-                login.setRole(role);
-                login = loginRepository.save(login);
-                return loginMapper.loginToLoginDTO(login);
-            } else {
-                log.info("User with ID " + id + " is not found");
-                throw new IllegalArgumentException("User with ID " + id + " is not found");
-            }
+        Login login = loginRepository.findById(id).orElse(null);
+        if (login != null) {
+            login.setRole(role);
+            login = loginRepository.save(login);
+            return loginMapper.loginToLoginDTO(login);
         } else {
-            return null;
+            log.info("User with ID " + id + " is not found");
+            throw new IllegalArgumentException("User with ID " + id + " is not found");
         }
     }
 
     @Override
-    @Secured({"ROLE_ADMIN", "ROLE_OWNER"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_OWNER"})
     public LoginDTO setPassword(UserDetails userDetails, long id, String password) throws IllegalArgumentException {
-        boolean rights = checkCredentials(userDetails);
-        if (rights) {
-            Login login = loginRepository.findById(id).orElse(null);
-            if (login != null) {
-                login.setPassword(passwordEncoder.encode(password));
-                login = loginRepository.save(login);
-                return loginMapper.loginToLoginDTO(login);
-            } else {
-                log.info("User with ID " + id + " is not found");
-                throw new IllegalArgumentException("User with ID " + id + " is not found");
-            }
+        Login login = loginRepository.findById(id).orElse(null);
+        Login user = loginRepository.findByLoginEqualsIgnoreCase(userDetails.getUsername()).get();
+        if (login != null && (login.getLogin().equals(user.getLogin()) || user.getRole().compareTo(login.getRole()) > 0)) {
+            login.setPassword(passwordEncoder.encode(password));
+            login = loginRepository.save(login);
+            return loginMapper.loginToLoginDTO(login);
         } else {
-            return null;
+            log.info("User with ID " + id + " is not found");
+            throw new IllegalArgumentException("User with ID " + id + " is not found");
         }
-    }
-
-    private static boolean checkCredentials(UserDetails userDetails) {
-        return userDetails.getAuthorities().contains(Role.ROLE_OWNER) || userDetails.getAuthorities().contains(Role.ROLE_ADMIN);
     }
 
     @Override
@@ -169,13 +137,13 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             log.info("User " + userDetails.getUsername() + " tried to delete owner!");
             throw new IllegalArgumentException("Owner could not be deleted!");
         }
-        Login userLogin = loginRepository.findByLoginEqualsIgnoreCase(userDetails.getUsername()).get();
+        Login user = loginRepository.findByLoginEqualsIgnoreCase(userDetails.getUsername()).get();
         Login login = loginRepository.findById(id).orElse(null);
         if (login == null) {
             log.info("User with ID " + id + " is not found");
             throw new IllegalArgumentException("User with ID " + id + " is not found");
         }
-        if ((userLogin.getRole().compareTo(login.getRole())) > 0) {
+        if ((user.getRole().compareTo(login.getRole())) > 0) {
             loginRepository.deleteById(id);
             return loginMapper.loginToLoginDTO(login);
         } else {

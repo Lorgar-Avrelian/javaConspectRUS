@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lorgar.avrelian.javaconspectrus.dto.BookDTO;import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;import lorgar.avrelian.javaconspectrus.mappers.BookMapper;import lorgar.avrelian.javaconspectrus.models.Book;
@@ -30,6 +31,9 @@ import java.util.Collection;
 @RequestMapping(path = "/books")
 @Tag(name = "2 Книги", description = "Контроллер для работы с книгами")
 @CacheConfig(cacheNames = "book")
+// Включает поддержку базовой аутентификации
+// Swagger UI для методов данного контроллера
+@SecurityRequirement(name = "basicAuth")
 public class BooksController {
     private final BookService bookService;
     private final BookCoverService bookCoverService;

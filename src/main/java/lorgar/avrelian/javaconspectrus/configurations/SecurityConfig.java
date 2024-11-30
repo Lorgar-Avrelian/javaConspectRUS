@@ -1,45 +1,47 @@
 package lorgar.avrelian.javaconspectrus.configurations;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.servlet.DispatcherType;
-import lorgar.avrelian.javaconspectrus.models.Role;
 import lorgar.avrelian.javaconspectrus.securityFilters.BasicAuthCorsFilter;
+import lorgar.avrelian.javaconspectrus.securityFilters.CSRFTokenFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
-import org.springframework.security.web.csrf.CsrfAuthenticationStrategy;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.*;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.time.Duration;
 import java.util.List;
 
-//@Configuration
+@Configuration
 // Включает поддержку Spring Security
 @EnableWebSecurity
+// Включает поддержку Swagger UI для Spring Security
+@SecurityScheme(
+        type = SecuritySchemeType.HTTP,
+        name = "basicAuth",
+        scheme = "basic")
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
 
@@ -51,102 +53,202 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // репозиторий CSRF-токена
         CsrfTokenRepository csrfTokenRepository = new HttpSessionCsrfTokenRepository();
-        // настройка очистки файлов Cookies и заголовков при выходе
-        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(
-                ClearSiteDataHeaderWriter.Directive.CACHE,
-                ClearSiteDataHeaderWriter.Directive.COOKIES,
-                ClearSiteDataHeaderWriter.Directive.STORAGE
-        ));
         // стандартные настройки цепочки безопасности
         return http
+                // включение поддержки базовой аутентификации
+                .httpBasic(Customizer.withDefaults())
+                // отключение стандартной формы аутентификации
+                .formLogin(AbstractHttpConfigurer::disable)
+                // настройка формы выхода
+                .logout(logout -> logout
+                        // URL для выхода
+                        .logoutUrl("/logout")
+                        // адрес перенаправления после успешного выхода
+                        .logoutSuccessUrl("/")
+                        // удаление аутентификационных данных
+                        .clearAuthentication(true)
+                        // очистка сессионных данных
+                        .invalidateHttpSession(true)
+                        // очистка данных файлов Cookies
+                        .addLogoutHandler(
+                                new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(
+                                        ClearSiteDataHeaderWriter.Directive.CACHE,
+                                        ClearSiteDataHeaderWriter.Directive.COOKIES,
+                                        ClearSiteDataHeaderWriter.Directive.STORAGE
+                                ))
+                                         ))
                 // настройка авторизации
                 .authorizeHttpRequests(
-                        requests -> requests
-                                // разрешить доступ при перенаправлении
-                                .dispatcherTypeMatchers(DispatcherType.ERROR, DispatcherType.FORWARD).permitAll()
-                                // запретить доступ всем пользователям к указанным ресурсам
-                                .requestMatchers("/counter/**").denyAll()
-                                .requestMatchers(HttpMethod.TRACE).denyAll()
-                                .requestMatchers(HttpMethod.DELETE, "/logout").denyAll()
-                                // разрешить доступ только анонимным пользователям к указанным ресурсам
-                                .requestMatchers(
-                                        "/",
-                                        "/login",
-                                        "/register"
-                                                ).anonymous()
-                                // разрешить доступ только аутентифицированным пользователям к указанным ресурсам
-                                .requestMatchers(
-                                        "/logout",
-                                        "/users",
-                                        "/set-role",
-                                        "/set-password",
-                                        "/delete",
-                                        "/books/**",
-                                        "/expenses/**",
-                                        "/manage/**",
-                                        "/random",
-                                        "/readers/**",
-                                        "/user/**"
-                                                ).authenticated()
-                                // разрешить доступ всем пользователям к указанным ресурсам
-                                .requestMatchers(
-                                        "/error",
-                                        "/whether/**",
-                                        "/swagger-resources/**",
-                                        "/swagger-ui.html",
-                                        "/v3/api-docs",
-                                        "/webjars/**"
-                                                ).permitAll()
-                                // разрешить доступ пользователям с долгоживущей сессией к указанным ресурсам
-                                .requestMatchers(
-                                        "/whether/**",
-                                        "/swagger-resources/**",
-                                        "/swagger-ui.html",
-                                        "/v3/api-docs",
-                                        "/webjars/**"
-                                                ).rememberMe()
-                                // разрешить доступ пользователям, прошедшим полную аутентификацию,
-                                // а не из восстановленной сессии, к указанным ресурсам
-                                .requestMatchers(
-                                        "/logout",
-                                        "/users",
-                                        "/set-role",
-                                        "/set-password",
-                                        "/delete",
-                                        "/books/**",
-                                        "/expenses/**",
-                                        "/manage/**",
-                                        "/random",
-                                        "/readers/**",
-                                        "/user/**"
-                                                ).fullyAuthenticated()
-                                // разрешить доступ только пользователям, имеющим заданные права, к указанным ресурсам
-                                .requestMatchers(
-                                        "/manage/**"
-                                                ).hasAuthority(Role.ROLE_USER.getAuthority())
-                                // разрешить доступ пользователям, имеющим любое из заданных прав, к указанным ресурсам
-                                .requestMatchers(
-                                        "/set-role",
-                                        "/set-password",
-                                        "/delete"
-                                                ).hasAnyAuthority(Role.ROLE_OWNER.getAuthority(),
-                                                                  Role.ROLE_ADMIN.getAuthority())
-                                // разрешить доступ только пользователям, имеющим заданную роль, к указанным ресурсам
-                                .requestMatchers(
-                                        "/random"
-                                                ).hasRole("ADMIN")
-                                // разрешить доступ пользователям, имеющим любую из заданных ролей, к указанным ресурсам
-                                .requestMatchers(
-                                        "/users"
-                                                ).hasAnyRole("OWNER", "ADMIN")
-                                .requestMatchers(
-                                        "/expenses/**"
-                                                ).access((authentication, object) -> {
-                                    return new AuthorizationDecision(Role.ROLE_USER.name().equals(authentication.get().getName()));
-                                })
-                                // запретить все другие запросы
-                                .anyRequest().denyAll()
+                        authorization ->
+                                authorization
+                                        // разрешить доступ при перенаправлении
+                                        .dispatcherTypeMatchers(
+                                                DispatcherType.ERROR,
+                                                DispatcherType.FORWARD
+                                                               )
+                                        .permitAll()
+                                        // точки доступа для
+                                        // всех пользователей
+                                        .requestMatchers(
+                                                // HelloController
+                                                "/",
+                                                // AuthorizationController
+                                                "/login*",
+                                                "/csrf",
+                                                // стандартный адрес вывода сообщений об ошибке
+                                                "/error*",
+                                                // стандартные адреса разметки HTML-страниц
+                                                "/css/**",
+                                                "/js/**",
+                                                // адреса Swagger UI
+                                                "/swagger-resources/**",
+                                                "/swagger-ui/**",
+                                                "/v3/api-docs/**",
+                                                "/webjars/**",
+                                                "/favicon**",
+                                                "/v3/api-docs.yaml"
+                                                        )
+                                        .permitAll()
+                                        // точки доступа для
+                                        // анонимных пользователей
+                                        .requestMatchers(
+                                                HttpMethod.POST,
+                                                // AuthorizationController
+                                                "/register*"
+                                                        )
+                                        .anonymous()
+                                        // точки доступа для полностью
+                                        // авторизованных пользователей
+                                        .requestMatchers(
+                                                // адрес, назначенный для формы выхода
+                                                "/logout"
+                                                        ).fullyAuthenticated()
+                                        // точки доступа для пользователей,
+                                        // имеющих авторизацию USER, ADMIN и OWNER
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                // AuthorizationController
+                                                "/users"
+                                                        )
+                                        .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN", "ROLE_OWNER")
+                                        // точки доступа для пользователей,
+                                        // имеющих авторизацию OWNER
+                                        .requestMatchers(
+                                                HttpMethod.PATCH,
+                                                // AuthorizationController
+                                                "/set-role"
+                                                        )
+                                        .hasAuthority("ROLE_OWNER")
+                                        // точки доступа для пользователей,
+                                        // имеющих роли USER, ADMIN и OWNER
+                                        .requestMatchers(
+                                                HttpMethod.PATCH,
+                                                // AuthorizationController
+                                                "/set-password"
+                                                        )
+                                        .hasAnyRole("USER", "ADMIN", "OWNER")
+                                        // точки доступа для пользователей,
+                                        // имеющих роли ADMIN и OWNER
+                                        .requestMatchers(
+                                                HttpMethod.DELETE,
+                                                // AuthorizationController
+                                                "/delete"
+                                                        )
+                                        .hasAnyRole("ADMIN", "OWNER")
+                                        // разрешить доступ
+                                        // всем пользователям
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                // BooksController
+                                                "/books",
+                                                "/books/*/cover",
+                                                "/books/*/cover/preview"
+                                                        )
+                                        .permitAll()
+                                        // разрешить доступ
+                                        // только авторизованным пользователям
+                                        .requestMatchers(
+                                                HttpMethod.POST,
+                                                // BooksController
+                                                "/books/**",
+                                                // ReaderController
+                                                "/readers",
+                                                // ManageController
+                                                "/manage",
+                                                // ExpensesController
+                                                "/expenses"
+                                                        )
+                                        .authenticated()
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                // BooksController
+                                                "/books/*",
+                                                // ReaderController
+                                                "/readers/**",
+                                                // ManageController
+                                                "/manage",
+                                                // WhetherController
+                                                "/whether/**",
+                                                // ExpensesController
+                                                "/expenses/**",
+                                                // CounterController
+                                                "/counter/**",
+                                                // RandomizeController
+                                                "/random"
+                                                        )
+                                        .authenticated()
+                                        .requestMatchers(
+                                                HttpMethod.PUT,
+                                                // BooksController
+                                                "/books",
+                                                // ReaderController
+                                                "/readers"
+                                                        )
+                                        .authenticated()
+                                        .requestMatchers(
+                                                HttpMethod.DELETE,
+                                                // BooksController
+                                                "/books/*",
+                                                // ReaderController
+                                                "/readers/*"
+                                                        )
+                                        .authenticated()
+                                        // запретить другие запросы
+                                        .anyRequest().denyAll()
                                       )
+                // настройка CORS
+                .cors(cors -> {
+                    // Источник конфигураций CORS
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    // Конфигурация CORS
+                    CorsConfiguration corsConfiguration = new CorsConfiguration();
+                    // Разрешаются CORS-запросы:
+                    // - с сайта http://localhost:8080
+                    corsConfiguration.addAllowedOrigin("http://localhost:8080");
+                    // - с заголовками Authorization и X-CSRF-TOKEN
+                    corsConfiguration.addAllowedHeader(HttpHeaders.AUTHORIZATION);
+                    corsConfiguration.addAllowedHeader("X-CSRF-TOKEN");
+                    corsConfiguration.addAllowedHeader("X-XSRF-TOKEN");
+                    // - с передачей учётных данных
+                    corsConfiguration.setAllowCredentials(true);
+                    // - с методами GET, POST, PUT, PATCH и DELETE
+                    corsConfiguration.setAllowedMethods(List.of(
+                            HttpMethod.GET.name(),
+                            HttpMethod.POST.name(),
+                            HttpMethod.PUT.name(),
+                            HttpMethod.PATCH.name(),
+                            HttpMethod.DELETE.name()
+                                                               ));
+                    // JavaScript может обращаться к заголовку X-CSRF-TOKEN ответа
+                    corsConfiguration.setExposedHeaders(List.of("X-CSRF-TOKEN"));
+                    corsConfiguration.setExposedHeaders(List.of("X-XSRF-TOKEN"));
+                    // Браузер может кешировать настройки CORS на 10 секунд
+                    corsConfiguration.setMaxAge(Duration.ofSeconds(10));
+                    // Использование конфигурации CORS для всех запросов
+                    source.registerCorsConfiguration("/**", corsConfiguration);
+                    // Возврат настроенного фильтра
+                    cors.configurationSource(source);
+                })
                 // настройка CSRF
                 .csrf(csrf -> csrf
                         // обработчик запроса, обрабатываемого в целях защиты от CSRF-атаки:
@@ -169,54 +271,32 @@ public class SecurityConfig {
                         // настройка адресов, по которым НЕ должна
                         // осуществляться защита от CSRF-атак
                         .ignoringRequestMatchers(
-                                new AntPathRequestMatcher("/"),
-                                new AntPathRequestMatcher("/login"),
-                                new AntPathRequestMatcher("/error"),
-                                new AntPathRequestMatcher("/register"),
-                                new AntPathRequestMatcher("/whether/**"),
-                                new AntPathRequestMatcher("/swagger-resources/**"),
-                                new AntPathRequestMatcher("/swagger-ui.html"),
-                                new AntPathRequestMatcher("/v3/api-docs"),
-                                new AntPathRequestMatcher("/webjars/**")
+                                // HelloController
+                                new AntPathRequestMatcher("/", HttpMethod.GET.name()),
+                                // AuthorizationController
+                                new AntPathRequestMatcher("/login*", HttpMethod.POST.name()),
+                                new AntPathRequestMatcher("/csrf*", HttpMethod.GET.name()),
+                                // стандартный адрес вывода сообщений об ошибке
+                                new AntPathRequestMatcher("/error*", HttpMethod.GET.name()),
+                                // стандартные адреса разметки HTML-страниц
+                                new AntPathRequestMatcher("/css/**", HttpMethod.GET.name()),
+                                new AntPathRequestMatcher("/js/**", HttpMethod.GET.name()),
+                                // адреса Swagger UI
+                                new AntPathRequestMatcher("/swagger-resources/**", HttpMethod.GET.name()),
+                                new AntPathRequestMatcher("/swagger-ui/**", HttpMethod.GET.name()),
+                                new AntPathRequestMatcher("/v3/api-docs/**", HttpMethod.GET.name()),
+                                new AntPathRequestMatcher("/webjars/**", HttpMethod.GET.name()),
+                                new AntPathRequestMatcher("/favicon**", HttpMethod.GET.name()),
+                                new AntPathRequestMatcher("/v3/api-docs.yaml", HttpMethod.GET.name()),
+                                // BooksController
+                                new AntPathRequestMatcher("/books", HttpMethod.GET.name())
                                                 )
-                        // настройка адресов, по которым ОБЯЗАТЕЛЬНО должна
-                        // осуществляться защита от CSRF-атак
-                        .requireCsrfProtectionMatcher(new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON))
+                        // настройка запросов, по которым ОБЯЗАТЕЛЬНО должна
+                        // осуществляться защита от CSRF-атак (API для
+                        // GET, HEAD, OPTIONS и TRACE запросов, которые
+                        // необходимо защитить от CSRF-атак)
+                        .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/**", HttpMethod.GET.name()))
                      )
-                .cors(configurer -> {
-                    // источник конфигураций CORS
-                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                    // конфигурация CORS
-                    CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    // разрешаются CORS-запросы:
-                    // - с сайта http://localhost:8080
-                    corsConfiguration.addAllowedOrigin("http://localhost:8080");
-                    // - с нестандартными заголовками Authorization и X-CSRF-TOKEN
-                    corsConfiguration.addAllowedHeader(HttpHeaders.AUTHORIZATION);
-                    corsConfiguration.addAllowedHeader("X-CSRF-TOKEN");
-                    // - с передачей учётных данных
-                    corsConfiguration.setAllowCredentials(true);
-                    // - с методами GET, POST, PUT, PATCH и DELETE
-                    corsConfiguration.setAllowedMethods(List.of(
-                            HttpMethod.GET.name(),
-                            HttpMethod.POST.name(),
-                            HttpMethod.PUT.name(),
-                            HttpMethod.PATCH.name(),
-                            HttpMethod.DELETE.name()
-                                                               ));
-                    // JavaScript может обращаться к заголовку X-CSRF-TOKEN ответа
-                    corsConfiguration.setExposedHeaders(List.of("X-CSRF-TOKEN"));
-                    // браузер может кешировать настройки CORS на 10 секунд
-                    corsConfiguration.setMaxAge(Duration.ofSeconds(10));
-                    // использование конфигурации CORS для всех запросов
-                    source.registerCorsConfiguration("/**", corsConfiguration);
-                    // возврат настроенного фильтра
-                    configurer.configurationSource(source);
-                })
-                // включить поддержку формы входа
-                .formLogin(Customizer.withDefaults())
-                // включить поддержку Basic-аутентификации
-                .httpBasic(Customizer.withDefaults())
                 // включить вывод в терминал текста ошибки,
                 // возникшей при выполнении обработки запроса
                 .exceptionHandling(exceptionHandling -> exceptionHandling
@@ -232,18 +312,17 @@ public class SecurityConfig {
                         .authenticationEntryPoint(
                                 (request, response, authenticationException) -> {
                                     authenticationException.printStackTrace();
-                                    response.sendRedirect("http://localhost:8080/index.html");
+                                    response.sendError(403);
                                     return;
                                 }
                                                  ))
-                // включение созданного фильтра BasicAuthCorsFilter в цепочку
+                // Включение созданного фильтра BasicAuthCorsFilter в цепочку
                 // фильтров перед фильтром UsernamePasswordAuthenticationFilter
                 .addFilterBefore(new BasicAuthCorsFilter(), UsernamePasswordAuthenticationFilter.class)
-                // настройка выхода
-                .logout(logout -> logout
-                        .addLogoutHandler(clearSiteData)
-                        .clearAuthentication(true)
-                       )
+                // Включение созданного фильтра CSRFTokenFilter в цепочку
+                // фильтров после фильтра CsrfFilter, добавляющего CSRF-токен
+                // в заголовок запроса (необходим для тестирования через Postman)
+                .addFilterAfter(new CSRFTokenFilter(), CsrfFilter.class)
                 // собрать цепочку фильтров
                 .build();
     }

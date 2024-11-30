@@ -6,10 +6,11 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lorgar.avrelian.javaconspectrus.dto.BookDTO;
 import lorgar.avrelian.javaconspectrus.dto.NewReaderDTO;
 import lorgar.avrelian.javaconspectrus.dto.ReaderNoBooksDTO;
-import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import lorgar.avrelian.javaconspectrus.services.ReaderService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +24,9 @@ import java.util.Collection;
 @RestController
 @RequestMapping(path = "/readers")
 @Tag(name = "3 Читатели", description = "Контроллер для работы с читателями")
+// Включает поддержку базовой аутентификации
+// Swagger UI для методов данного контроллера
+@SecurityRequirement(name = "basicAuth")
 public class ReaderController {
     private final ReaderService readerService;
 
@@ -72,7 +76,7 @@ public class ReaderController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Reader.class)
+                                    schema = @Schema(implementation = ReaderNoBooksDTO.class)
                             )
                     ),
                     @ApiResponse(
@@ -84,8 +88,8 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Reader> readReader(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
-        Reader findedReader = readerService.findReader(id);
+    public ResponseEntity<ReaderNoBooksDTO> readReader(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
+        ReaderNoBooksDTO findedReader = readerService.findReader(id);
         if (findedReader != null) {
             return ResponseEntity.ok(findedReader);
         } else {
@@ -104,7 +108,7 @@ public class ReaderController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Reader.class)
+                                    schema = @Schema(implementation = ReaderNoBooksDTO.class)
                             )
                     ),
                     @ApiResponse(
@@ -116,8 +120,8 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Reader> updateReader(@RequestBody Reader reader) {
-        Reader updatedReader = readerService.editReader(reader);
+    public ResponseEntity<ReaderNoBooksDTO> updateReader(@RequestBody Reader reader) {
+        ReaderNoBooksDTO updatedReader = readerService.editReader(reader);
         if (updatedReader != null) {
             return ResponseEntity.ok(updatedReader);
         } else {
@@ -136,7 +140,7 @@ public class ReaderController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Reader.class)
+                                    schema = @Schema(implementation = ReaderNoBooksDTO.class)
                             )
                     ),
                     @ApiResponse(
@@ -148,8 +152,8 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Reader> deleteReader(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
-        Reader deletedReader = readerService.deleteReader(id);
+    public ResponseEntity<ReaderNoBooksDTO> deleteReader(@PathVariable @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
+        ReaderNoBooksDTO deletedReader = readerService.deleteReader(id);
         if (deletedReader != null) {
             return ResponseEntity.ok(deletedReader);
         } else {
@@ -168,7 +172,7 @@ public class ReaderController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Reader.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = ReaderNoBooksDTO.class))
                             )
                     ),
                     @ApiResponse(
@@ -180,8 +184,8 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Reader>> getAllReaders(@RequestParam(required = false) @Parameter(description = "Часть ФИО читателя", schema = @Schema(implementation = String.class), example = "Иван") String partOfNameSecondNameOrSurname) {
-        Collection<Reader> readers;
+    public ResponseEntity<Collection<ReaderNoBooksDTO>> getAllReaders(@RequestParam(required = false) @Parameter(description = "Часть ФИО читателя", schema = @Schema(implementation = String.class), example = "Иван") String partOfNameSecondNameOrSurname) {
+        Collection<ReaderNoBooksDTO> readers;
         if (partOfNameSecondNameOrSurname == null) {
             readers = readerService.getAllReaders();
         } else {
@@ -205,7 +209,7 @@ public class ReaderController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Reader.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = ReaderNoBooksDTO.class))
                             )
                     ),
                     @ApiResponse(
@@ -217,8 +221,8 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Reader>> getReadersByName(@RequestParam @Parameter(description = "Часть имени читателя", schema = @Schema(implementation = String.class), example = "Иван") String partOfName) {
-        Collection<Reader> readers = readerService.getReaderByName(partOfName);
+    public ResponseEntity<Collection<ReaderNoBooksDTO>> getReadersByName(@RequestParam @Parameter(description = "Часть имени читателя", schema = @Schema(implementation = String.class), example = "Иван") String partOfName) {
+        Collection<ReaderNoBooksDTO> readers = readerService.getReaderByName(partOfName);
         if (!readers.isEmpty()) {
             return ResponseEntity.status(200).body(readers);
         } else {
@@ -237,7 +241,7 @@ public class ReaderController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Reader.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = ReaderNoBooksDTO.class))
                             )
                     ),
                     @ApiResponse(
@@ -249,8 +253,8 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Reader>> getReadersBySecondName(@RequestParam @Parameter(description = "Часть отчества читателя", schema = @Schema(implementation = String.class), example = "Иванович") String partOfSecondName) {
-        Collection<Reader> readers = readerService.getReaderBySecondName(partOfSecondName);
+    public ResponseEntity<Collection<ReaderNoBooksDTO>> getReadersBySecondName(@RequestParam @Parameter(description = "Часть отчества читателя", schema = @Schema(implementation = String.class), example = "Иванович") String partOfSecondName) {
+        Collection<ReaderNoBooksDTO> readers = readerService.getReaderBySecondName(partOfSecondName);
         if (!readers.isEmpty()) {
             return ResponseEntity.status(200).body(readers);
         } else {
@@ -269,7 +273,7 @@ public class ReaderController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Reader.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = ReaderNoBooksDTO.class))
                             )
                     ),
                     @ApiResponse(
@@ -281,8 +285,8 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Reader>> getReadersBySurname(@RequestParam @Parameter(description = "Часть фамилии читателя", schema = @Schema(implementation = String.class), example = "Иванов") String partOfSurname) {
-        Collection<Reader> readers = readerService.getReaderBySurname(partOfSurname);
+    public ResponseEntity<Collection<ReaderNoBooksDTO>> getReadersBySurname(@RequestParam @Parameter(description = "Часть фамилии читателя", schema = @Schema(implementation = String.class), example = "Иванов") String partOfSurname) {
+        Collection<ReaderNoBooksDTO> readers = readerService.getReaderBySurname(partOfSurname);
         if (!readers.isEmpty()) {
             return ResponseEntity.status(200).body(readers);
         } else {
@@ -301,7 +305,7 @@ public class ReaderController {
                             description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Book.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = BookDTO.class))
                             )
                     ),
                     @ApiResponse(
@@ -313,8 +317,8 @@ public class ReaderController {
                     )
             }
     )
-    public ResponseEntity<Collection<Book>> getReaderBooks(@RequestParam @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
-        Collection<Book> books = readerService.getReaderBooks(id);
+    public ResponseEntity<Collection<BookDTO>> getReaderBooks(@RequestParam @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long id) {
+        Collection<BookDTO> books = readerService.getReaderBooks(id);
         if (!books.isEmpty()) {
             return ResponseEntity.status(200).body(books);
         } else {

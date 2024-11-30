@@ -66,10 +66,28 @@
     * сущности для передачи аутентификационных данных пользователей;
     * других сущностей, необходимых для работы приложения;
 - [создание мапперов](#создание-мапперов) для _DTO_;
+- [написание конфигураций для сервисов](#написание-конфигураций-для-сервисов);
+- [создание сервисов и их реализаций](#создание-сервисов-и-их-реализаций) для логики приложения;
+- [создание контроллеров](#создание-контроллеров);
+- [написание конфигурации безопасности](#написание-конфигурации-безопасности);
+- [написание тестов](#написание-тестов):
+    * unit-тестов;
+    * интеграционных тестов.
 
 ### Подключение зависимостей
 
 > [[**В начало**]](#пример-1)
+
+```xml
+
+<properties>
+    <java.version>23</java.version>
+    <org.mapstruct.version>1.6.3</org.mapstruct.version>
+    <org.lombok.version>1.18.36</org.lombok.version>
+    <ch.qos.logback.version>1.5.12</ch.qos.logback.version>
+    <spring-boot-maven-plugin.version>3.4.0</spring-boot-maven-plugin.version>
+</properties>
+```
 
 ```xml
 
@@ -229,11 +247,40 @@
                     </path>
                 </annotationProcessorPaths>
                 <compilerArgs>
-                  <compilerArg>
-                    -Amapstruct.defaultComponentModel=spring
-                  </compilerArg>
+                    <compilerArg>
+                        -Amapstruct.defaultComponentModel=spring
+                    </compilerArg>
                 </compilerArgs>
             </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>${spring-boot-maven-plugin.version}</version>
+            <configuration>
+                <jvmArguments>-Dspring.application.admin.enabled=true</jvmArguments>
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>start</goal>
+                        <goal>stop</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-maven-plugin</artifactId>
+            <version>1.4</version>
+            <executions>
+                <execution>
+                    <id>integration-test</id>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                </execution>
+            </executions>
         </plugin>
     </plugins>
 </build>
@@ -252,6 +299,12 @@ server.port=8080
 # - methods by HTTP method
 springdoc.swagger-ui.tags-sorter=alpha
 springdoc.swagger-ui.operations-sorter=method
+# Swagger UI option for permanent Try it out button enable
+springdoc.swagger-ui.try-it-out-enabled=true
+# Swagger UI option for turning on CSRF protection
+springdoc.swagger-ui.csrf.enabled=true
+springdoc.swagger-ui.csrf.cookie-name=CSRF_TOKEN
+springdoc.swagger-ui.csrf.header-name=X-CSRF_TOKEN
 # Spring Data JPA parameters for DB connection
 spring.datasource.url=jdbc:postgresql://localhost:5432/library
 spring.datasource.username=library_user
@@ -1026,6 +1079,7 @@ public class ReaderNoBooksDTO {
 ```
 
 ```java
+
 @Schema(title = "Новый читатель", description = "Сущность нового читателя")
 @NoArgsConstructor
 @Data
@@ -1140,3 +1194,83 @@ public class Whether {
 
 > [[**В начало**]](#пример-1)
 
+### Написание конфигураций для сервисов
+
+> [[**В начало**]](#пример-1)
+
+### Создание сервисов и их реализаций
+
+> [[**В начало**]](#пример-1)
+
+### Создание контроллеров
+
+> [[**В начало**]](#пример-1)
+
+```text
+0 Приветствие - HelloController
+GET    http://localhost:8080
+
+1 Авторизация - AuthorizationController
+POST   http://localhost:8080/login
+POST   http://localhost:8080/register
+POST   http://localhost:8080/logout
+GET    http://localhost:8080/users
+GET    http://localhost:8080/csrf
+PATCH  http://localhost:8080/set-role
+PATCH  http://localhost:8080/set-password
+DELETE http://localhost:8080/delete
+
+2 Книги - BooksController
+POST   http://localhost:8080/books
+GET    http://localhost:8080/books/{id}
+PUT    http://localhost:8080/books
+DELETE http://localhost:8080/books/{id}
+GET    http://localhost:8080/books
+POST   http://localhost:8080/books/{id}/cover
+GET    http://localhost:8080/books/{id}/cover/preview
+GET    http://localhost:8080/books/{id}/cover
+
+3 Читатели - ReaderController
+POST   http://localhost:8080/readers
+GET    http://localhost:8080/readers/{id}
+PUT    http://localhost:8080/readers
+DELETE http://localhost:8080/readers/{id}
+GET    http://localhost:8080/readers
+GET    http://localhost:8080/readers/name
+GET    http://localhost:8080/readers/secondName
+GET    http://localhost:8080/readers/surname
+GET    http://localhost:8080/readers/books
+
+4 Приём/выдача книг - ManageController
+POST   http://localhost:8080/manage
+GET    http://localhost:8080/manage
+
+5 Погода - WhetherController
+GET    http://localhost:8080/whether/city-info
+GET    http://localhost:8080/whether
+
+6 Затраты - ExpensesController
+GET    http://localhost:8080/expenses
+GET    http://localhost:8080/expenses/{id}
+POST   http://localhost:8080/expenses
+GET    http://localhost:8080/expenses/categories
+
+7 Счётчик - CounterController
+GET    http://localhost:8080/counter
+GET    http://localhost:8080/counter/change
+GET    http://localhost:8080/counter/change/{counter}
+
+8 Рандом - RandomizeController
+GET    http://localhost:8080/random
+```
+
+### Написание конфигурации безопасности
+
+> [[**В начало**]](#пример-1)
+
+### Написание тестов
+
+> [[**В начало**]](#пример-1)
+
+- unit-тесты:
+- интеграционные тесты:

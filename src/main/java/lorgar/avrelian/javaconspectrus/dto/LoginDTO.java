@@ -11,8 +11,8 @@ import lorgar.avrelian.javaconspectrus.models.Role;
 public class LoginDTO {
     @Schema(title = "ID", description = "ID пользователя", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
     private long id;
-    @Schema(title = "Логин", description = "Логин пользователя", defaultValue = "user@mail.ru", required = true, minLength = 3, maxLength = 30)
+    @Schema(title = "Логин", description = "Логин пользователя", defaultValue = "user", required = true, minLength = 3, maxLength = 30)
     private String login;
-    @Schema(title = "Роль", description = "Роль пользователя в системе", defaultValue = "GUEST", required = true, minLength = 3, maxLength = 30)
+    @Schema(title = "Роль", description = "Роль пользователя в системе", defaultValue = "USER", required = true, minLength = 3, maxLength = 30)
     private Role role;
 }

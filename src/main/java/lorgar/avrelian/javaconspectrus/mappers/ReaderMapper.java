@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
+import java.util.Collection;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ReaderMapper {
     @Mapping(target = "id", ignore = true)
@@ -22,4 +24,5 @@ public interface ReaderMapper {
     @Mapping(target = "surname", source = "reader.surname")
     @Mapping(target = "personalNumber", source = "reader.personalNumber")
     ReaderNoBooksDTO readerToNoBooksDTO(Reader reader);
+    Collection<ReaderNoBooksDTO> readersToNoBooksDTOs(Collection<Reader> readers);
 }

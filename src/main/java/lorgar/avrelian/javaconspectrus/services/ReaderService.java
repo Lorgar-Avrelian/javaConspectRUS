@@ -1,5 +1,6 @@
 package lorgar.avrelian.javaconspectrus.services;
 
+import lorgar.avrelian.javaconspectrus.dto.BookDTO;
 import lorgar.avrelian.javaconspectrus.dto.NewReaderDTO;
 import lorgar.avrelian.javaconspectrus.dto.ReaderNoBooksDTO;
 import lorgar.avrelian.javaconspectrus.models.Book;
@@ -12,21 +13,25 @@ import java.util.Collection;
 public interface ReaderService {
     ReaderNoBooksDTO createReader(NewReaderDTO newReader);
 
-    Reader findReader(long id);
+    ReaderNoBooksDTO findReader(long id);
 
-    Reader editReader(Reader reader);
+    Reader findDBReader(long id);
 
-    Reader deleteReader(long id);
+    ReaderNoBooksDTO editReader(Reader reader);
 
-    Collection<Reader> getAllReaders();
+    ReaderNoBooksDTO deleteReader(long id);
 
-    Collection<Reader> getAllReaders(String partOfNameSecondNameOrSurname);
+    Collection<ReaderNoBooksDTO> getAllReaders();
 
-    Collection<Reader> getReaderByName(String partOfName);
+    Collection<Reader> getAllDBReaders();
 
-    Collection<Reader> getReaderBySecondName(String partOfSecondName);
+    Collection<ReaderNoBooksDTO> getAllReaders(String partOfNameSecondNameOrSurname);
 
-    Collection<Reader> getReaderBySurname(String partOfSurname);
+    Collection<ReaderNoBooksDTO> getReaderByName(String partOfName);
 
-    Collection<Book> getReaderBooks(long id);
+    Collection<ReaderNoBooksDTO> getReaderBySecondName(String partOfSecondName);
+
+    Collection<ReaderNoBooksDTO> getReaderBySurname(String partOfSurname);
+
+    Collection<BookDTO> getReaderBooks(long id);
 }

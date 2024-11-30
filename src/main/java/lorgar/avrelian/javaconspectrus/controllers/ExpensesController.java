@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lorgar.avrelian.javaconspectrus.models.Expense;
 import lorgar.avrelian.javaconspectrus.models.ExpensesByCategory;
@@ -20,6 +21,9 @@ import java.util.Collection;
 @RestController
 @RequestMapping(path = "/expenses")
 @Tag(name = "6 Затраты", description = "Контроллер для работы с затратами")
+// Включает поддержку базовой аутентификации
+// Swagger UI для методов данного контроллера
+@SecurityRequirement(name = "basicAuth")
 public class ExpensesController {
     private final ExpenseService expenseService;
 

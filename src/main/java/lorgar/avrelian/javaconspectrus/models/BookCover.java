@@ -2,6 +2,7 @@ package lorgar.avrelian.javaconspectrus.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "book_cover")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class BookCover {
     @Schema(title = "ID", description = "ID обложки книги", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
     @Id

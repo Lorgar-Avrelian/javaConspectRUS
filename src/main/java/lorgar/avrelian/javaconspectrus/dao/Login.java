@@ -17,13 +17,13 @@ public class Login {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false, unique = true)
     private long id;
-    @Schema(title = "Логин", description = "Логин пользователя", defaultValue = "user@mail.ru", required = true, minLength = 3, maxLength = 30)
+    @Schema(title = "Логин", description = "Логин пользователя", defaultValue = "user", required = true, minLength = 3, maxLength = 30)
     @Column(name = "login", nullable = false, unique = true, length = 30)
     private String login;
     @Schema(title = "Пароль", description = "Пароль пользователя", defaultValue = "{noop}123", required = true, minLength = 3)
     @Column(name = "password", nullable = false, columnDefinition = "TEXT")
     private String password;
-    @Schema(title = "Роль", description = "Роль пользователя в системе", defaultValue = "GUEST", required = true, minLength = 3, maxLength = 30)
+    @Schema(title = "Роль", description = "Роль пользователя в системе", defaultValue = "USER", required = true, minLength = 3, maxLength = 30)
     @Column(name = "role", nullable = false)
     private Role role;
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lorgar.avrelian.javaconspectrus.services.CounterService;
 import org.springframework.http.MediaType;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/counter")
 @Tag(name = "7 Счётчик", description = "Контроллер для работы со счётчиком")
+// Включает поддержку базовой аутентификации
+// Swagger UI для методов данного контроллера
+@SecurityRequirement(name = "basicAuth")
 public class CounterController {
     private final CounterService counterService;
 
