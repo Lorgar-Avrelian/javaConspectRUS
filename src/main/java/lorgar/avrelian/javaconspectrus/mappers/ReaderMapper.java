@@ -24,5 +24,6 @@ public interface ReaderMapper {
     @Mapping(target = "surname", source = "reader.surname")
     @Mapping(target = "personalNumber", source = "reader.personalNumber")
     ReaderNoBooksDTO readerToNoBooksDTO(Reader reader);
+
     Collection<ReaderNoBooksDTO> readersToNoBooksDTOs(Collection<Reader> readers);
 }

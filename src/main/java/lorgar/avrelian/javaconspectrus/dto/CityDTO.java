@@ -1,12 +1,14 @@
 package lorgar.avrelian.javaconspectrus.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CityDTO {
     private String name;
     private HashMap<String, String> local_names;

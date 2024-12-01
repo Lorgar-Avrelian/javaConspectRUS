@@ -28,6 +28,7 @@ import org.springframework.security.web.authentication.logout.HeaderWriterLogout
 import org.springframework.security.web.csrf.*;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -225,7 +226,7 @@ public class SecurityConfig {
                     // Разрешаются CORS-запросы:
                     // - с сайта http://localhost:8080
                     corsConfiguration.addAllowedOrigin("http://localhost:8080");
-                    // - с заголовками Authorization и X-CSRF-TOKEN
+                    // - с заголовками Authorization, X-CSRF-TOKEN и X-XSRF-TOKEN
                     corsConfiguration.addAllowedHeader(HttpHeaders.AUTHORIZATION);
                     corsConfiguration.addAllowedHeader("X-CSRF-TOKEN");
                     corsConfiguration.addAllowedHeader("X-XSRF-TOKEN");
@@ -239,7 +240,8 @@ public class SecurityConfig {
                             HttpMethod.PATCH.name(),
                             HttpMethod.DELETE.name()
                                                                ));
-                    // JavaScript может обращаться к заголовку X-CSRF-TOKEN ответа
+                    // JavaScript может обращаться к заголовкам
+                    // X-CSRF-TOKEN и X-XSRF-TOKEN ответа
                     corsConfiguration.setExposedHeaders(List.of("X-CSRF-TOKEN"));
                     corsConfiguration.setExposedHeaders(List.of("X-XSRF-TOKEN"));
                     // Браузер может кешировать настройки CORS на 10 секунд
@@ -271,6 +273,9 @@ public class SecurityConfig {
                         // настройка адресов, по которым НЕ должна
                         // осуществляться защита от CSRF-атак
                         .ignoringRequestMatchers(
+                                // отключение проверки для запросов из Swagger UI
+                                new RequestHeaderRequestMatcher("referer",
+                                                                "http://localhost:8080/swagger-ui/index.html"),
                                 // HelloController
                                 new AntPathRequestMatcher("/", HttpMethod.GET.name()),
                                 // AuthorizationController
@@ -319,6 +324,7 @@ public class SecurityConfig {
                 // Включение созданного фильтра BasicAuthCorsFilter в цепочку
                 // фильтров перед фильтром UsernamePasswordAuthenticationFilter
                 .addFilterBefore(new BasicAuthCorsFilter(), UsernamePasswordAuthenticationFilter.class)
+                // !!! ВНИМАНИЕ !!!
                 // Включение созданного фильтра CSRFTokenFilter в цепочку
                 // фильтров после фильтра CsrfFilter, добавляющего CSRF-токен
                 // в заголовок запроса (необходим для тестирования через Postman)

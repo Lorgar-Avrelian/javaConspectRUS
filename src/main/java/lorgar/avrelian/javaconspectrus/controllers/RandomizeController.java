@@ -1,6 +1,5 @@
 package lorgar.avrelian.javaconspectrus.controllers;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lorgar.avrelian.javaconspectrus.services.RandomService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/random")
-//@Hidden
 @Tag(name = "8 Рандом", description = "Контроллер для получения случайных чисел")
 // Включает поддержку базовой аутентификации
 // Swagger UI для методов данного контроллера

@@ -16,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.MessageFormat;
+
 @RestController
 @RequestMapping(path = "/manage")
 @Tag(name = "4 Приём/выдача книг", description = "Контроллер для приёма/выдачи книг")
@@ -54,13 +56,13 @@ public class ManageController {
             }
     )
     public ResponseEntity<Reader> giveBook(@RequestParam @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long bookId, @RequestParam @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long readerId) {
-        logger.debug("Give to reader " + readerId + " book " + bookId);
+        logger.debug(MessageFormat.format("Give to reader {0} book {1}", readerId, bookId));
         Reader reader = manageService.giveBookToReader(bookId, readerId);
         if (reader == null) {
-            logger.error("Give to reader " + readerId + " book " + bookId + " failed");
+            logger.error("Give to reader %d book %d failed".formatted(readerId, bookId));
             return ResponseEntity.badRequest().build();
         } else {
-            logger.info("Give to reader " + readerId + " book " + bookId + " success");
+            logger.info("Give to reader %d book %d success".formatted(readerId, bookId));
             return ResponseEntity.ok(reader);
         }
     }
@@ -89,13 +91,13 @@ public class ManageController {
             }
     )
     public ResponseEntity<Reader> takeBook(@RequestParam(name = "book") @Parameter(description = "ID книги в имеющемся списке книг", required = true, schema = @Schema(implementation = Long.class), example = "1") long bookId, @RequestParam(name = "reader") @Parameter(description = "ID читателя в имеющемся списке читателей", required = true, schema = @Schema(implementation = Long.class), example = "1") long readerId) {
-        logger.debug("Take from reader " + readerId + " book " + bookId);
+        logger.debug(MessageFormat.format("Take from reader {0} book {1}", readerId, bookId));
         Reader reader = manageService.takeBookFromReader(bookId, readerId);
         if (reader == null) {
-            logger.error("Take from reader " + readerId + " book " + bookId + " failed");
+            logger.error("Take from reader %d book %d failed".formatted(readerId, bookId));
             return ResponseEntity.badRequest().build();
         } else {
-            logger.info("Take from reader " + readerId + " book " + bookId + " success");
+            logger.info("Take from reader %d book %d success".formatted(readerId, bookId));
             return ResponseEntity.ok(reader);
         }
     }

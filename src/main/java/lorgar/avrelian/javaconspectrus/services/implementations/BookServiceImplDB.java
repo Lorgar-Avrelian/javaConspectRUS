@@ -1,7 +1,9 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
 import lorgar.avrelian.javaconspectrus.dto.BookDTO;
-import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;import lorgar.avrelian.javaconspectrus.mappers.BookMapper;import lorgar.avrelian.javaconspectrus.models.Book;
+import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;
+import lorgar.avrelian.javaconspectrus.mappers.BookMapper;
+import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.repository.BookRepository;
 import lorgar.avrelian.javaconspectrus.services.BookService;
 import org.springframework.data.jpa.repository.JpaRepository;

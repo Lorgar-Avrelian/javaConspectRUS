@@ -9,6 +9,7 @@ public class CounterServiceImpl implements CounterService {
 
     public CounterServiceImpl() {
     }
+
     @Override
     public int getCounter() {
         return ++counter;

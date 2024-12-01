@@ -24,8 +24,8 @@ public interface BookMapper {
             booksDTO.add(bookToBookDTO(book));
         }
         return booksDTO.stream()
-                .sorted(Comparator.comparing(BookDTO::getId))
-                .toList();
+                       .sorted(Comparator.comparing(BookDTO::getId))
+                       .toList();
     }
 
     BookDTO bookToBookDTO(Book book);

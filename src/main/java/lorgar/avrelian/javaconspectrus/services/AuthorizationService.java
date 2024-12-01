@@ -1,14 +1,11 @@
 package lorgar.avrelian.javaconspectrus.services;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lorgar.avrelian.javaconspectrus.dao.Login;
 import lorgar.avrelian.javaconspectrus.dto.BasicAuthDTO;
 import lorgar.avrelian.javaconspectrus.dto.LoginDTO;
 import lorgar.avrelian.javaconspectrus.dto.RegisterDTO;
 import lorgar.avrelian.javaconspectrus.models.Role;
 import lorgar.avrelian.javaconspectrus.services.implementations.AuthorizationServiceImpl;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 

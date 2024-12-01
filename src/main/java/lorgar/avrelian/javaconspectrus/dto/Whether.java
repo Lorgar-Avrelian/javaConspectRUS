@@ -1,6 +1,7 @@
 package lorgar.avrelian.javaconspectrus.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,8 +9,9 @@ import java.math.BigDecimal;
 import java.sql.Time;
 
 @Schema(title = "Погода", description = "Информация о погоде")
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Whether {
     @Schema(title = "Температура, ºC", description = "Значение температуры, ºC", defaultValue = "0", minimum = "-273", maximum = "400")
     private BigDecimal temperature;

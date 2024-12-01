@@ -1,12 +1,14 @@
 package lorgar.avrelian.javaconspectrus.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class WhetherDTO {
     private WhetherMain main;
     private BigDecimal visibility;

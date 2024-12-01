@@ -3,7 +3,6 @@ package lorgar.avrelian.javaconspectrus.services;
 import lorgar.avrelian.javaconspectrus.dto.BookDTO;
 import lorgar.avrelian.javaconspectrus.dto.NewReaderDTO;
 import lorgar.avrelian.javaconspectrus.dto.ReaderNoBooksDTO;
-import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import org.springframework.stereotype.Service;
 

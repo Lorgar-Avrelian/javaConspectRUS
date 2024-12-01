@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class MyExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public void handleRuntimeException(RuntimeException e) {
-        System.out.println("RuntimeException: " + e.getMessage());;
+        System.out.printf("RuntimeException: %s%n", e.getMessage());
     }
 }

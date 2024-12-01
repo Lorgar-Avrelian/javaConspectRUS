@@ -17,7 +17,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,8 +85,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public List<LoginDTO> getAllUsers() {
         return loginMapper.loginListToLoginDTOList(loginRepository.findAll()).stream()
-                .sorted(Comparator.comparing(LoginDTO::getId))
-                .toList();
+                          .sorted(Comparator.comparing(LoginDTO::getId))
+                          .toList();
     }
 
     @Override

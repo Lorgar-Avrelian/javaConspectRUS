@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface LoginMapper {
     LoginDTO loginToLoginDTO(Login login);
-    Login loginDTOToLogin(LoginDTO loginDTO);
+
     List<LoginDTO> loginListToLoginDTOList(List<Login> loginList);
 
     default Login registerDTOToLogin(RegisterDTO registerDTO) {
