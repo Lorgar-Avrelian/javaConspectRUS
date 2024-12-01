@@ -189,3 +189,8 @@
 2024-10-25 12:58:49 [conspectus_RUS_bot Telegram Executor] DEBUG l.a.j.s.i.ManageServiceImpl:51 - Find reader 4
 2024-10-25 12:58:49 [conspectus_RUS_bot Telegram Executor] INFO  l.a.j.s.i.ManageServiceImpl:72 - Book 4 has been edited
 2024-10-25 12:58:49 [conspectus_RUS_bot Telegram Executor] TRACE l.a.j.s.i.ManageServiceImpl:73 - Reader 4 had been edited
+2024-11-14 19:40:30 [http-nio-8080-exec-2] TRACE l.a.j.s.i.ManageServiceImpl:60 - Take book 2 from reader 2
+2024-11-14 19:40:30 [http-nio-8080-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:54 - Find reader 2
+2024-11-14 19:40:31 [http-nio-8080-exec-2] DEBUG l.a.j.s.i.ManageServiceImpl:54 - Find reader 2
+2024-11-14 19:40:31 [http-nio-8080-exec-2] INFO  l.a.j.s.i.ManageServiceImpl:75 - Book 2 has been edited
+2024-11-14 19:40:31 [http-nio-8080-exec-2] TRACE l.a.j.s.i.ManageServiceImpl:76 - Reader 2 had been edited

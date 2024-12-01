@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import lorgar.avrelian.javaconspectrus.services.ManageService;
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/manage")
-@Tag(name = "Контроллер приёма/выдачи", description = "Контроллер для приёма/выдачи книг")
+@Tag(name = "4 Приём/выдача книг", description = "Контроллер для приёма/выдачи книг")
+// Включает поддержку базовой аутентификации
+// Swagger UI для методов данного контроллера
+@SecurityRequirement(name = "basicAuth")
 public class ManageController {
     private Logger logger = LoggerFactory.getLogger(ManageController.class);
     private final ManageService manageService;

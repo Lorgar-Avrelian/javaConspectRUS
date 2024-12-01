@@ -1,0 +1,1671 @@
+openapi: 3.0.1
+info:
+  title: Конспект по языку Java
+  description: Конспект по языку Java на русском языке
+  contact:
+    name: Токовенко Виктор
+    url: https://github.com/Lorgar-Avrelian?tab=repositories
+    email: victor-14-244@mail.ru
+  version: 0.1.0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: 6 Затраты
+  description: Контроллер для работы с затратами
+- name: 7 Счётчик
+  description: Контроллер для работы со счётчиком
+- name: 5 Погода
+  description: Контроллер для получения прогнозов погоды
+- name: 4 Приём/выдача книг
+  description: Контроллер для приёма/выдачи книг
+- name: 3 Читатели
+  description: Контроллер для работы с читателями
+- name: 1 Авторизация
+  description: Контроллер для авторизации пользователей
+- name: 8 Рандом
+  description: Контроллер для получения случайных чисел
+- name: 2 Книги
+  description: Контроллер для работы с книгами
+paths:
+  /readers:
+    get:
+      tags:
+      - Поиск
+      - 3 Читатели
+      summary: Список читателей
+      description: Вывести список всех зарегистрированных читателей
+      operationId: getAllReaders
+      parameters:
+      - name: partOfNameSecondNameOrSurname
+        in: query
+        description: Часть ФИО читателя
+        required: false
+        schema:
+          type: string
+        example: Иван
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReaderNoBooksDTO"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+    put:
+      tags:
+      - 3 Читатели
+      - Читатель
+      summary: Редактировать
+      description: Отредактировать информацию о читателе
+      operationId: updateReader
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reader"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReaderNoBooksDTO"
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+    post:
+      tags:
+      - 3 Читатели
+      - Читатель
+      summary: Создать
+      description: Добавить информацию о читателе
+      operationId: createReader
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewReaderDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReaderNoBooksDTO"
+        "405":
+          description: Method Not Allowed
+      security:
+      - basicAuth: []
+  /books:
+    get:
+      tags:
+      - 2 Книги
+      - Поиск
+      summary: Список книг
+      description: Вывести список всех доступных книг
+      operationId: getAllBooks
+      parameters:
+      - name: authorOrTitle
+        in: query
+        description: Часть ФИО автора или названия книги
+        required: false
+        schema:
+          type: string
+        example: Пушкин
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookDTO"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+    put:
+      tags:
+      - 2 Книги
+      - Книга
+      summary: Редактировать
+      description: Отредактировать информацию о книге
+      operationId: updateBook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDTO"
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+    post:
+      tags:
+      - 2 Книги
+      - Книга
+      summary: Создать
+      description: Добавить информацию о книге
+      operationId: createBook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewBookDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDTO"
+        "405":
+          description: Method Not Allowed
+      security:
+      - basicAuth: []
+  /register:
+    post:
+      tags:
+      - 1 Авторизация
+      - Безопасность
+      summary: Регистрация
+      description: Пройти регистрацию
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterDTO"
+        required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+  /manage:
+    get:
+      tags:
+      - Приём/выдача
+      - 4 Приём/выдача книг
+      summary: Принять
+      description: Принять книгу от читателя
+      operationId: takeBook
+      parameters:
+      - name: book
+        in: query
+        description: ID книги в имеющемся списке книг
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      - name: reader
+        in: query
+        description: ID читателя в имеющемся списке читателей
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reader"
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+    post:
+      tags:
+      - Приём/выдача
+      - 4 Приём/выдача книг
+      summary: Выдать
+      description: Выдать книгу читателю
+      operationId: giveBook
+      parameters:
+      - name: bookId
+        in: query
+        description: ID книги в имеющемся списке книг
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      - name: readerId
+        in: query
+        description: ID читателя в имеющемся списке читателей
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reader"
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+  /login:
+    post:
+      tags:
+      - 1 Авторизация
+      - Безопасность
+      summary: Войти
+      description: Пройти авторизацию
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BasicAuthDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+      security:
+      - basicAuth: []
+  /expenses:
+    get:
+      tags:
+      - 6 Затраты
+      - Затраты
+      summary: Все затраты
+      description: Посмотреть все затраты
+      operationId: getExpenses
+      parameters:
+      - name: page
+        in: query
+        description: Номер страницы
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      - name: size
+        in: query
+        description: Размер страницы
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 4
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Expense"
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+    post:
+      tags:
+      - 6 Затраты
+      - Затраты
+      summary: Внести
+      description: Внести затрату
+      operationId: createExpense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Expense"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+  /books/{id}/cover:
+    get:
+      tags:
+      - 2 Книги
+      - Изображения
+      summary: Посмотреть
+      description: Посмотреть обложку для книги
+      operationId: downloadCover
+      parameters:
+      - name: id
+        in: path
+        description: ID книги в имеющемся списке книг
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            multipart/form-data:
+              schema:
+                $ref: "#/components/schemas/BookCover"
+        "404":
+          description: Not Found
+        "502":
+          description: Bad Gateway
+      security:
+      - basicAuth: []
+    post:
+      tags:
+      - 2 Книги
+      - Изображения
+      summary: Загрузить
+      description: Загрузить обложку для книги
+      operationId: uploadCover
+      parameters:
+      - name: id
+        in: path
+        description: ID книги в имеющемся списке книг
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: Изображение обложки книги
+                  format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            multipart/form-data:
+              schema:
+                $ref: "#/components/schemas/BookCover"
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+      security:
+      - basicAuth: []
+  /set-role:
+    patch:
+      tags:
+      - 1 Авторизация
+      - Безопасность
+      summary: Права
+      description: Смена прав для зарегистрированного пользователя
+      operationId: setRole
+      parameters:
+      - name: id
+        in: query
+        description: ID пользователя
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: role
+        in: query
+        description: Новая роль пользователя
+        required: true
+        schema:
+          type: string
+          enum:
+          - ROLE_USER
+          - ROLE_ADMIN
+          - ROLE_OWNER
+      responses:
+        "200":
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginDTO"
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+  /set-password:
+    patch:
+      tags:
+      - 1 Авторизация
+      - Безопасность
+      summary: Пароль
+      description: Смена пароля для зарегистрированного пользователя
+      operationId: setPassword
+      parameters:
+      - name: id
+        in: query
+        description: ID пользователя
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: password
+        in: query
+        description: Новый пароль пользователя
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginDTO"
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+  /whether:
+    get:
+      tags:
+      - 5 Погода
+      - Погода
+      summary: Погода
+      description: Получить данные о погоде
+      operationId: getWhether
+      parameters:
+      - name: city
+        in: query
+        description: Название города
+        required: true
+        schema:
+          type: string
+        example: Москва
+      - name: country
+        in: query
+        description: Код страны
+        required: true
+        schema:
+          type: string
+        example: RU
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Whether"
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+  /whether/city-info:
+    get:
+      tags:
+      - 5 Погода
+      - Погода
+      summary: Гео
+      description: Получить гео данные города
+      operationId: getCityInfo
+      parameters:
+      - name: city
+        in: query
+        description: Название города
+        required: true
+        schema:
+          type: string
+        example: Москва
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/City"
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+  /users:
+    get:
+      tags:
+      - 1 Авторизация
+      - Безопасность
+      summary: Пользователи
+      description: Список зарегистрированных пользователей
+      operationId: getUsers
+      parameters:
+      - name: page
+        in: query
+        description: Номер страницы
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: size
+        in: query
+        description: Количество пользователей на странице
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LoginDTO"
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+      security:
+      - basicAuth: []
+  /readers/{id}:
+    get:
+      tags:
+      - 3 Читатели
+      - Читатель
+      summary: Найти
+      description: Найти информацию о читателе по ID
+      operationId: readReader
+      parameters:
+      - name: id
+        in: path
+        description: ID читателя в имеющемся списке читателей
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReaderNoBooksDTO"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+    delete:
+      tags:
+      - 3 Читатели
+      - Читатель
+      summary: Удалить
+      description: Удалить информацию о читателе по ID
+      operationId: deleteReader
+      parameters:
+      - name: id
+        in: path
+        description: ID читателя в имеющемся списке читателей
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReaderNoBooksDTO"
+        "403":
+          description: Forbidden
+      security:
+      - basicAuth: []
+  /readers/surname:
+    get:
+      tags:
+      - Поиск
+      - 3 Читатели
+      summary: Список по фамилии
+      description: Вывести список всех зарегистрированных читателей с указанной фамилией
+      operationId: getReadersBySurname
+      parameters:
+      - name: partOfSurname
+        in: query
+        description: Часть фамилии читателя
+        required: true
+        schema:
+          type: string
+        example: Иванов
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReaderNoBooksDTO"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+  /readers/secondName:
+    get:
+      tags:
+      - Поиск
+      - 3 Читатели
+      summary: Список по отчеству
+      description: Вывести список всех зарегистрированных читателей с указанным отчеством
+      operationId: getReadersBySecondName
+      parameters:
+      - name: partOfSecondName
+        in: query
+        description: Часть отчества читателя
+        required: true
+        schema:
+          type: string
+        example: Иванович
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReaderNoBooksDTO"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+  /readers/name:
+    get:
+      tags:
+      - Поиск
+      - 3 Читатели
+      summary: Список по имени
+      description: Вывести список всех зарегистрированных читателей с указанным именем
+      operationId: getReadersByName
+      parameters:
+      - name: partOfName
+        in: query
+        description: Часть имени читателя
+        required: true
+        schema:
+          type: string
+        example: Иван
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReaderNoBooksDTO"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+  /readers/books:
+    get:
+      tags:
+      - Поиск
+      - 3 Читатели
+      summary: Список книг
+      description: Вывести список всех книг данного читателя
+      operationId: getReaderBooks
+      parameters:
+      - name: id
+        in: query
+        description: ID читателя в имеющемся списке читателей
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookDTO"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+  /random:
+    get:
+      tags:
+      - 8 Рандом
+      operationId: getRandomValue
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int32
+      security:
+      - basicAuth: []
+  /expenses/{id}:
+    get:
+      tags:
+      - 6 Затраты
+      - Затраты
+      summary: Посмотреть
+      description: Посмотреть затрату по ID
+      operationId: getExpenseById
+      parameters:
+      - name: id
+        in: path
+        description: ID записи о затратах
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+  /expenses/categories:
+    get:
+      tags:
+      - 6 Затраты
+      - Затраты
+      summary: Затраты по категориям
+      description: Посмотреть все затраты по категориям
+      operationId: getExpensesByCategories
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExpensesByCategory"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+  /csrf:
+    get:
+      tags:
+      - 1 Авторизация
+      - Безопасность
+      summary: CSRF-токен
+      description: Получить CSRF-токен
+      operationId: csrf
+      parameters:
+      - name: csrfToken
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/CsrfToken"
+      responses:
+        "200":
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CsrfToken"
+      security:
+      - basicAuth: []
+  /counter:
+    get:
+      tags:
+      - 7 Счётчик
+      summary: Получить
+      description: Получить значение счётчика
+      operationId: getCounter
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain: {}
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+  /counter/change:
+    get:
+      tags:
+      - 7 Счётчик
+      summary: Изменить - вариант 1
+      description: Изменить значение счётчика - вариант 1
+      operationId: changeCounter1
+      parameters:
+      - name: counter
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain: {}
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+  /counter/change/{counter}:
+    get:
+      tags:
+      - 7 Счётчик
+      summary: Изменить - вариант 2
+      description: Изменить значение счётчика - вариант 2
+      operationId: changeCounter2
+      parameters:
+      - name: counter
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain: {}
+        "400":
+          description: Bad Request
+      security:
+      - basicAuth: []
+  /books/{id}:
+    get:
+      tags:
+      - 2 Книги
+      - Книга
+      summary: Найти
+      description: Найти информацию о книге по ID
+      operationId: readBook
+      parameters:
+      - name: id
+        in: path
+        description: ID книги в имеющемся списке книг
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDTO"
+        "404":
+          description: Not Found
+      security:
+      - basicAuth: []
+    delete:
+      tags:
+      - 2 Книги
+      - Книга
+      summary: Удалить
+      description: Удалить информацию о книге по ID
+      operationId: deleteBook
+      parameters:
+      - name: id
+        in: path
+        description: ID книги в имеющемся списке книг
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDTO"
+        "403":
+          description: Forbidden
+      security:
+      - basicAuth: []
+  /books/{id}/cover/preview:
+    get:
+      tags:
+      - 2 Книги
+      - Изображения
+      summary: Посмотреть превью
+      description: Посмотреть превью обложки для книги
+      operationId: downloadCover_1
+      parameters:
+      - name: id
+        in: path
+        description: ID книги в имеющемся списке книг
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+        "403":
+          description: Forbidden
+      security:
+      - basicAuth: []
+  /delete:
+    delete:
+      tags:
+      - 1 Авторизация
+      - Безопасность
+      summary: Удалить
+      description: Удалить пользователя
+      operationId: delete
+      parameters:
+      - name: id
+        in: query
+        description: ID пользователя
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginDTO"
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+      security:
+      - basicAuth: []
+components:
+  schemas:
+    ReaderNoBooksDTO:
+      title: Читатель
+      maximum: 9223372036854775807
+      minimum: 1
+      required:
+      - id
+      - name
+      - personalNumber
+      - surname
+      type: object
+      properties:
+        id:
+          title: ID
+          maximum: 9223372036854775807
+          minimum: 1
+          type: integer
+          description: ID читателя
+          format: int64
+          default: 1
+        name:
+          title: Имя
+          maxLength: 12
+          minLength: 2
+          type: string
+          description: Имя читателя
+          default: Иван
+        secondName:
+          title: Отчество
+          maxLength: 16
+          minLength: 2
+          type: string
+          description: Отчество читателя
+          default: Иванович
+        surname:
+          title: Фамилия
+          maxLength: 30
+          minLength: 2
+          type: string
+          description: Фамилия читателя
+          default: Иванов
+        personalNumber:
+          title: Номер билета
+          maximum: 2147483648
+          minimum: 1
+          type: integer
+          description: Номер читательского билета
+          format: int32
+          default: 1
+      description: Сущность читателя
+      default: null
+    Reader:
+      title: Читатель
+      maximum: 9223372036854775807
+      minimum: 1
+      required:
+      - id
+      - name
+      - personalNumber
+      - surname
+      type: object
+      properties:
+        id:
+          title: ID
+          maximum: 9223372036854775807
+          minimum: 1
+          type: integer
+          description: ID читателя
+          format: int64
+          default: 1
+        name:
+          title: Имя
+          maxLength: 12
+          minLength: 2
+          type: string
+          description: Имя читателя
+          default: Иван
+        secondName:
+          title: Отчество
+          maxLength: 16
+          minLength: 2
+          type: string
+          description: Отчество читателя
+          default: Иванович
+        surname:
+          title: Фамилия
+          maxLength: 30
+          minLength: 2
+          type: string
+          description: Фамилия читателя
+          default: Иванов
+        personalNumber:
+          title: Номер билета
+          maximum: 2147483648
+          minimum: 1
+          type: integer
+          description: Номер читательского билета
+          format: int32
+          default: 1
+      description: Сущность читателя
+      default: null
+    BookDTO:
+      title: Книга
+      required:
+      - author
+      - id
+      - title
+      - year
+      type: object
+      properties:
+        id:
+          title: ID
+          maximum: 9223372036854775807
+          minimum: 1
+          type: integer
+          description: ID книги
+          format: int64
+          default: 1
+        title:
+          title: Название
+          maxLength: 30
+          minLength: 3
+          type: string
+          description: Название книги
+          default: Война и мир
+        author:
+          title: Автор
+          maxLength: 24
+          minLength: 8
+          type: string
+          description: Автор книги
+          default: Л.Н. Толстой
+        year:
+          title: Год
+          minimum: 1970
+          type: integer
+          description: Год публикации книги
+          format: int32
+          default: 1986
+        reader:
+          $ref: "#/components/schemas/ReaderNoBooksDTO"
+      description: Сущность книги
+    RegisterDTO:
+      title: Регистрационные данные
+      required:
+      - login
+      - password
+      - passwordConfirmation
+      type: object
+      properties:
+        login:
+          title: Логин
+          maxLength: 30
+          minLength: 3
+          type: string
+          description: Логин пользователя
+          default: user
+        password:
+          title: Пароль
+          minLength: 3
+          type: string
+          description: Пароль пользователя
+          default: "123"
+        passwordConfirmation:
+          title: Подтверждение пароля
+          minLength: 3
+          type: string
+          description: Подтверждение пароля пользователя
+          default: "123"
+      description: "Логин, пароль и подтверждение пароля"
+    NewReaderDTO:
+      title: Новый читатель
+      required:
+      - name
+      - personalNumber
+      - surname
+      type: object
+      properties:
+        name:
+          title: Имя
+          maxLength: 12
+          minLength: 2
+          type: string
+          description: Имя читателя
+          default: Иван
+        secondName:
+          title: Отчество
+          maxLength: 16
+          minLength: 2
+          type: string
+          description: Отчество читателя
+          default: Иванович
+        surname:
+          title: Фамилия
+          maxLength: 30
+          minLength: 2
+          type: string
+          description: Фамилия читателя
+          default: Иванов
+        personalNumber:
+          title: Номер билета
+          maximum: 2147483648
+          minimum: 1
+          type: integer
+          description: Номер читательского билета
+          format: int32
+          default: 1
+      description: Сущность нового читателя
+    BasicAuthDTO:
+      title: Basic-аутентификация
+      required:
+      - login
+      - password
+      type: object
+      properties:
+        login:
+          title: Логин
+          maxLength: 30
+          minLength: 3
+          type: string
+          description: Логин пользователя
+          default: user
+        password:
+          title: Пароль
+          minLength: 3
+          type: string
+          description: Пароль пользователя
+          default: "123"
+      description: Логин и пароль
+    Expense:
+      title: Расход
+      required:
+      - amount
+      - category
+      - date
+      - id
+      - title
+      type: object
+      properties:
+        id:
+          title: ID
+          maximum: 9223372036854775807
+          minimum: 1
+          type: integer
+          description: ID траты
+          format: int32
+          default: 1
+        title:
+          title: Название
+          maxLength: 30
+          minLength: 3
+          type: string
+          description: Название траты
+          default: Поездка на транспорте
+        date:
+          title: Дата
+          type: string
+          description: Дата траты
+          format: date
+        category:
+          title: Категория
+          maxLength: 30
+          minLength: 3
+          type: string
+          description: Категория затрат
+          default: Транспорт
+        amount:
+          title: Количество
+          minimum: 0
+          type: number
+          description: Количество затрат
+          format: float
+          default: 1000
+      description: Сущность затрат
+    NewBookDTO:
+      title: Новая книга
+      required:
+      - authorFIO
+      - title
+      - year
+      type: object
+      properties:
+        title:
+          title: Название
+          maxLength: 30
+          minLength: 3
+          type: string
+          description: Название книги
+          default: Война и мир
+        authorFIO:
+          title: Автор
+          maxLength: 24
+          minLength: 8
+          type: string
+          description: Автор книги
+          default: Л.Н. Толстой
+        year:
+          title: Год
+          minimum: 1970
+          type: integer
+          description: Год публикации книги
+          format: int32
+          default: 1986
+      description: Сущность новой книги
+    Book:
+      title: Книга
+      maximum: 9223372036854775807
+      minimum: 1
+      required:
+      - author
+      - id
+      - title
+      - year
+      type: object
+      properties:
+        id:
+          title: ID
+          maximum: 9223372036854775807
+          minimum: 1
+          type: integer
+          description: ID книги
+          format: int64
+          default: 1
+        title:
+          title: Название
+          maxLength: 30
+          minLength: 3
+          type: string
+          description: Название книги
+          default: Война и мир
+        author:
+          title: Автор
+          maxLength: 24
+          minLength: 8
+          type: string
+          description: Автор книги
+          default: Л.Н. Толстой
+        year:
+          title: Год
+          minimum: 1970
+          type: integer
+          description: Год публикации книги
+          format: int32
+          default: 1986
+        reader:
+          $ref: "#/components/schemas/Reader"
+      description: Сущность книги
+      default: null
+    BookCover:
+      title: Обложка книги
+      required:
+      - filePath
+      - fileSize
+      - id
+      - imagePreview
+      - mediaType
+      type: object
+      properties:
+        id:
+          title: ID
+          maximum: 9223372036854775807
+          minimum: 1
+          type: integer
+          description: ID обложки книги
+          format: int64
+          default: 1
+        filePath:
+          title: Путь
+          type: string
+          description: Путь сохранения обложки книги
+        fileSize:
+          title: Размер
+          type: integer
+          description: Размер сохранённой обложки книги
+          format: int32
+        mediaType:
+          title: Тип
+          type: string
+          description: Тип сохранённой обложки книги
+        imagePreview:
+          title: Превью
+          type: string
+          description: Превью обложки книги
+          format: byte
+        book:
+          $ref: "#/components/schemas/Book"
+      description: Сущность обложки для книг
+    LoginDTO:
+      title: Логин
+      required:
+      - id
+      - login
+      - role
+      type: object
+      properties:
+        id:
+          title: ID
+          maximum: 9223372036854775807
+          minimum: 1
+          type: integer
+          description: ID пользователя
+          format: int64
+          default: 1
+        login:
+          title: Логин
+          maxLength: 30
+          minLength: 3
+          type: string
+          description: Логин пользователя
+          default: user
+        role:
+          title: Роль
+          maxLength: 30
+          minLength: 3
+          type: string
+          description: Роль пользователя в системе
+          default: USER
+          enum:
+          - ROLE_USER
+          - ROLE_ADMIN
+          - ROLE_OWNER
+      description: Сущность логина пользователя
+    Whether:
+      title: Погода
+      type: object
+      properties:
+        temperature:
+          title: "Температура, ºC"
+          maximum: 400
+          minimum: -273
+          type: number
+          description: "Значение температуры, ºC"
+          default: 0
+        feels_like:
+          title: "Ощущается, ºC"
+          maximum: 400
+          minimum: -273
+          type: number
+          description: "Ощущается как температура, ºC"
+          default: 0
+        temp_min:
+          title: "Минимальная температура, ºC"
+          maximum: 400
+          minimum: -273
+          type: number
+          description: "Минимальное зафиксированное значение температуры, ºC"
+          default: 0
+        temp_max:
+          title: "Максимальная температура, ºC"
+          maximum: 400
+          minimum: -273
+          type: number
+          description: "Максимальное зафиксированное значение температуры, ºC"
+          default: 0
+        pressure:
+          title: "Давление, мм рт. ст."
+          maximum: 1000
+          minimum: 0
+          type: number
+          description: "Значение атмосферного давления, мм рт. ст."
+          default: 746
+        humidity:
+          title: "Влажность, %"
+          maximum: 100
+          minimum: 0
+          type: number
+          description: "Значение влажности воздуха, %"
+          default: 50
+        visibility:
+          title: "Видимость, м"
+          maximum: 10000
+          minimum: 0
+          type: number
+          description: "Значение прямой видимости, м"
+          default: 5000
+        wind_speed:
+          title: "Скорость ветра, м/с"
+          maximum: 100
+          minimum: 0
+          type: number
+          description: "Значение скорости ветра, м/с"
+          default: 3
+        wind_deg:
+          title: "Направление ветра, º"
+          maximum: 360
+          minimum: 0
+          type: number
+          description: "Значение направления ветра, º"
+          default: 0
+        sunrise:
+          title: Восход
+          type: string
+          description: Время восхода солнца
+          format: date-time
+        sunset:
+          title: Закат
+          type: string
+          description: Время заката солнца
+          format: date-time
+      description: Информация о погоде
+    City:
+      title: Город
+      required:
+      - country
+      - id
+      - lat
+      - localNames
+      - lon
+      - name
+      - state
+      type: object
+      properties:
+        id:
+          title: ID
+          maximum: 9223372036854775807
+          minimum: 1
+          type: integer
+          description: ID города
+          format: int64
+          default: 1
+        name:
+          title: Название
+          maxLength: 30
+          minLength: 2
+          type: string
+          description: Название города
+          default: Москва
+        lat:
+          title: Широта
+          maximum: 180
+          minimum: 0
+          type: number
+          description: Географическая широта города
+          default: 55.7504461
+        lon:
+          title: Долгота
+          maximum: 180
+          minimum: 0
+          type: number
+          description: Географическая долгота города
+          default: 37.6174943
+        country:
+          title: Страна
+          maxLength: 30
+          minLength: 2
+          type: string
+          description: Код страны
+          default: RU
+        state:
+          title: Регион
+          maxLength: 30
+          minLength: 2
+          type: string
+          description: Регион страны
+          default: Moscow
+        localNames:
+          title: Варианты написания
+          type: string
+          description: Варианты написания названия города на различных языках
+          default: "{\"feature_name\":\"Moscow\",\"no\":\"Moskva\",\"bi\":\"Moskow\"\
+            ,\"na\":\"Moscow\",\"io\":\"Moskva\",\"bs\":\"Moskva\",\"jv\":\"Moskwa\"\
+            ,\"el\":\"Μόσχα\",\"mg\":\"Moskva\",\"ja\":\"モスクワ\",\"su\":\"Moskwa\"\
+            ,\"eo\":\"Moskvo\",\"ab\":\"Москва\",\"co\":\"Moscù\",\"is\":\"Moskva\"\
+            ,\"az\":\"Moskva\",\"hr\":\"Moskva\",\"iu\":\"ᒨᔅᑯ\",\"sk\":\"Moskva\"\
+            ,\"hy\":\"Մոսկվա\",\"sl\":\"Moskva\",\"uk\":\"Москва\",\"an\":\"Moscú\"\
+            ,\"sm\":\"Moscow\",\"yi\":\"מאסקווע\",\"be\":\"Масква\",\"ie\":\"Moskwa\"\
+            ,\"ro\":\"Moscova\",\"tr\":\"Moskova\",\"tt\":\"Мәскәү\",\"sr\":\"Моск\
+            ва\",\"mr\":\"मॉस्को\",\"kk\":\"Мәскеу\",\"mn\":\"Москва\",\"ca\":\"Moscou\"\
+            ,\"zh\":\"莫斯科\",\"ce\":\"Москох\",\"es\":\"Moscú\",\"vo\":\"Moskva\",\"\
+            av\":\"Москва\",\"gd\":\"Moscobha\",\"dz\":\"མོསི་ཀོ\",\"yo\":\"Mọsko\"\
+            ,\"nn\":\"Moskva\",\"bo\":\"མོ་སི་ཁོ།\",\"cy\":\"Moscfa\",\"ka\":\"მოს\
+            კოვი\",\"ug\":\"Moskwa\",\"sc\":\"Mosca\",\"cs\":\"Moskva\",\"ss\":\"\
+            Moscow\",\"lg\":\"Moosko\",\"dv\":\"މޮސްކޯ\",\"se\":\"Moskva\",\"ascii\"\
+            :\"Moscow\",\"gv\":\"Moscow\",\"fr\":\"Moscou\",\"mt\":\"Moska\",\"am\"\
+            :\"ሞስኮ\",\"sh\":\"Moskva\",\"it\":\"Mosca\",\"br\":\"Moskov\",\"ko\":\"\
+            모스크바\",\"ur\":\"ماسکو\",\"kv\":\"Мӧскуа\",\"et\":\"Moskva\",\"fo\":\"\
+            Moskva\",\"zu\":\"IMoskwa\",\"gl\":\"Moscova - Москва\",\"hi\":\"मास्क\
+            ो\",\"sg\":\"Moscow\",\"ru\":\"Москва\",\"kw\":\"Moskva\",\"da\":\"Moskva\"\
+            ,\"ln\":\"Moskú\",\"th\":\"มอสโก\",\"bg\":\"Москва\",\"li\":\"Moskou\"\
+            ,\"ku\":\"Moskow\",\"de\":\"Moskau\",\"my\":\"မော်စကိုမြို့\",\"ky\":\"\
+            Москва\",\"wa\":\"Moscou\",\"ga\":\"Moscó\",\"ak\":\"Moscow\",\"fi\":\"\
+            Moskova\",\"sw\":\"Moscow\",\"fa\":\"مسکو\",\"id\":\"Moskwa\",\"ht\":\"\
+            Moskou\",\"mk\":\"Москва\",\"uz\":\"Moskva\",\"tl\":\"Moscow\",\"mi\"\
+            :\"Mohikau\",\"so\":\"Moskow\",\"wo\":\"Mosku\",\"sq\":\"Moska\",\"nl\"\
+            :\"Moskou\",\"cu\":\"Москъва\",\"ps\":\"مسکو\",\"tg\":\"Маскав\",\"kn\"\
+            :\"ಮಾಸ್ಕೋ\",\"fy\":\"Moskou\",\"st\":\"Moscow\",\"qu\":\"Moskwa\",\"ml\"\
+            :\"മോസ്കോ\",\"ta\":\"மாஸ்கோ\",\"he\":\"מוסקווה\",\"ay\":\"Mosku\",\"cv\"\
+            :\"Мускав\",\"ch\":\"Moscow\",\"ms\":\"Moscow\",\"lv\":\"Maskava\",\"\
+            la\":\"Moscua\",\"af\":\"Moskou\",\"lt\":\"Maskva\",\"za\":\"Moscow\"\
+            ,\"kg\":\"Moskva\",\"kl\":\"Moskva\",\"gn\":\"Mosku\",\"pt\":\"Moscou\"\
+            ,\"ia\":\"Moscova\",\"os\":\"Мæскуы\",\"oc\":\"Moscòu\",\"vi\":\"Mát-xcơ\
+            -va\",\"te\":\"మాస్కో\",\"sv\":\"Moskva\",\"ar\":\"موسكو\",\"pl\":\"Moskwa\"\
+            ,\"tk\":\"Moskwa\",\"eu\":\"Mosku\",\"en\":\"Moscow\",\"ty\":\"Moscou\"\
+            ,\"hu\":\"Moszkva\",\"bn\":\"মস্কো\",\"ba\":\"Мәскәү\",\"nb\":\"Moskva\"\
+            }"
+      description: Информация о городе
+    ExpensesByCategory:
+      title: Расходы по категориям
+      type: object
+      properties:
+        amount:
+          title: Количество
+          minimum: 0
+          type: number
+          description: Количество затрат
+          format: float
+          default: 1000
+        category:
+          title: Категория
+          type: string
+          description: Название категории
+          default: Транспорт
+      description: Сущность расходов по категориям
+    CsrfToken:
+      type: object
+      properties:
+        headerName:
+          type: string
+        token:
+          type: string
+        parameterName:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

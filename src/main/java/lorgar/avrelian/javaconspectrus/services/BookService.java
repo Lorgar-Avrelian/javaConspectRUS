@@ -1,9 +1,9 @@
 package lorgar.avrelian.javaconspectrus.services;
 
 import lorgar.avrelian.javaconspectrus.dto.BookDTO;
-import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;import lorgar.avrelian.javaconspectrus.models.Book;
+import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;
+import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.services.implementations.BookServiceImplDB;
-import lorgar.avrelian.javaconspectrus.services.implementations.BookServiceImplHashMap;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,6 @@ import java.util.Collection;
  * @author Victor Tokovenko
  * @see JpaRepository
  * @see BookServiceImplDB
- * @see BookServiceImplHashMap
  */
 @Service
 public interface BookService {
@@ -26,7 +25,6 @@ public interface BookService {
      * @return {@code book} - that is saved
      * @throws RuntimeException when error received
      * @see BookServiceImplDB#createBook(NewBookDTO)
-     * @see BookServiceImplHashMap#createBook(NewBookDTO)
      */
     Book createBook(NewBookDTO newBookDTO);
 
@@ -36,7 +34,6 @@ public interface BookService {
      * @param id of required {@link Book}
      * @return {@code book} - that is founded or {@link null} if {@link Book} is not founded
      * @see BookServiceImplDB#findBook(long)
-     * @see BookServiceImplHashMap#findBook(long)
      */
     Book findBook(long id);
 
@@ -46,7 +43,6 @@ public interface BookService {
      * @param book that should be edited
      * @return {@code book} - that is saved or {@link null} if {@link Book} is not founded
      * @see BookServiceImplDB#editBook(BookDTO)
-     * @see BookServiceImplHashMap#editBook(BookDTO)
      */
     Book editBook(BookDTO book);
 
@@ -57,7 +53,6 @@ public interface BookService {
      * @return {@code book} - that is deleted or {@link null} if {@link Book} is not founded
      * @throws RuntimeException when error received
      * @see BookServiceImplDB#deleteBook(long)
-     * @see BookServiceImplHashMap#deleteBook(long)
      */
     Book deleteBook(long id);
 
@@ -67,7 +62,6 @@ public interface BookService {
      * @return {@code Collection<Book>} of founded books
      * @throws RuntimeException when error received
      * @see BookServiceImplDB#getAllBooks()
-     * @see BookServiceImplHashMap#getAllBooks()
      */
     Collection<Book> getAllBooks();
 
@@ -78,7 +72,6 @@ public interface BookService {
      * @return {@code Collection<Book>} of founded books
      * @throws RuntimeException when error received
      * @see BookServiceImplDB#getAllBooks(String)
-     * @see BookServiceImplHashMap#getAllBooks(String)
      */
     Collection<Book> getAllBooks(String authorOrTitle);
 }

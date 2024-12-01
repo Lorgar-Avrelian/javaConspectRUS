@@ -10,7 +10,7 @@ import java.util.Random;
 
 @Configuration
 public class RandomizeConfig {
-    @Value("${rand.diapazon}")
+    @Value("${rand.diapason}")
     private long seed;
 
     @Bean
@@ -18,6 +18,7 @@ public class RandomizeConfig {
     public Random myRandomInstance() {
         return new Random(seed);
     }
+
     @Bean
     @Primary
     @Scope(value = "singleton")

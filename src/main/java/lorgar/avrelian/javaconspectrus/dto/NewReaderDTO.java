@@ -4,12 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(title = "Читатель", description = "Сущность читателя")
+@Schema(title = "Новый читатель", description = "Сущность нового читателя")
 @NoArgsConstructor
 @Data
-public class ReaderNoBooksDTO {
-    @Schema(title = "ID", description = "ID читателя", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
-    private long id;
+public class NewReaderDTO {
     @Schema(title = "Имя", description = "Имя читателя", defaultValue = "Иван", required = true, minLength = 2, maxLength = 12)
     private String name;
     @Schema(title = "Отчество", description = "Отчество читателя", defaultValue = "Иванович", minLength = 2, maxLength = 16)

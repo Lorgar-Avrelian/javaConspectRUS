@@ -2,13 +2,16 @@ package lorgar.avrelian.javaconspectrus.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Schema(title = "Расход", description = "Сущность затрат")
 @Entity
 @Table(name = "expense")
+@Data
+@NoArgsConstructor
 public class Expense {
     @Schema(title = "ID", description = "ID траты", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
     @Id
@@ -27,79 +30,4 @@ public class Expense {
     @Schema(title = "Количество", description = "Количество затрат", defaultValue = "1000", required = true, minimum = "0")
     @Column(name = "amount", nullable = false)
     private float amount;
-
-    public Expense() {
-    }
-
-    public Expense(int id, String title, LocalDate date, String category, float amount) {
-        this.id = id;
-        this.title = title;
-        this.date = date;
-        this.category = category;
-        this.amount = amount;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public float getAmount() {
-        return amount;
-    }
-
-    public void setAmount(float amount) {
-        this.amount = amount;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Expense expense = (Expense) o;
-        return id == expense.id && Float.compare(amount, expense.amount) == 0 && Objects.equals(title, expense.title) && Objects.equals(date, expense.date) && Objects.equals(category, expense.category);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, date, category, amount);
-    }
-
-    @Override
-    public String toString() {
-        return "Expense{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", date=" + date +
-                ", category='" + category + '\'' +
-                ", amount=" + amount +
-                '}';
-    }
 }

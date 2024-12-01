@@ -1,7 +1,6 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
 import lombok.extern.java.Log;
-import lorgar.avrelian.javaconspectrus.mappers.LoginMapper;
 import lorgar.avrelian.javaconspectrus.repository.LoginRepository;
 import lorgar.avrelian.javaconspectrus.services.JpaUserDetailsService;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,6 +51,9 @@ public class JpaUserDetailsServiceImpl implements JpaUserDetailsService {
                                           Collections.singleton(login.getRole())
                                   );
                               })
-                              .orElseThrow(() -> new UsernameNotFoundException(username));
+                              .orElseThrow(() -> {
+                                  log.severe("No DB connection");
+                                  return new UsernameNotFoundException(username);
+                              });
     }
 }

@@ -9,9 +9,10 @@ import java.util.Collection;
 
 @Schema(title = "Читатель", description = "Сущность читателя")
 @Entity
+@Table(name = "reader")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class Reader {
     @Schema(title = "ID", description = "ID читателя", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
     @Column(name = "id", nullable = false, updatable = false, unique = true)

@@ -1,6 +1,8 @@
 package lorgar.avrelian.javaconspectrus.telegramBot;
 
-import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;import lorgar.avrelian.javaconspectrus.models.Book;
+import lorgar.avrelian.javaconspectrus.dto.BookDTO;
+import lorgar.avrelian.javaconspectrus.dto.NewBookDTO;
+import lorgar.avrelian.javaconspectrus.models.Book;
 import lorgar.avrelian.javaconspectrus.models.BookCover;
 import lorgar.avrelian.javaconspectrus.models.Reader;
 import lorgar.avrelian.javaconspectrus.services.BookCoverService;
@@ -324,7 +326,7 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
             // Получение расширения файла Telegram при помощи статического метода getExtension()
             extension = getExtension(file.getFilePath());
             // Создание пути сохранения файла в системе
-            filePath = Path.of(coversDir, book.getId() + "." + extension);
+            filePath = Path.of(coversDir, "%d.%s".formatted(book.getId(), extension));
             Files.deleteIfExists(filePath);
             // Загрузка файла
             this.downloadFile(file, new File(filePath.toString()));
@@ -362,7 +364,9 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
 
     private static void bookAddInit(long chatId, SendMessage sendMessage) {
         bookAdd.add(chatId);
-        sendMessage.setText("Введите данные о книге в формате:\n[Название книги] , [Автор книги] , [Год издания]\n Также приложите фото обложки книги!");
+        sendMessage.setText("Введите данные о книге в формате:\n" +
+                                    "[Название книги] , [Автор книги] , [Год издания]\n " +
+                                    "Также приложите фото обложки книги!");
     }
 
     // Метод, обрабатывающий ответы на команды, получаемые при нажатии кнопок
@@ -386,7 +390,7 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                 // Указание ID чата
                 sendPhoto.setChatId(chatId);
                 // Добавление текста к фото
-                sendPhoto.setCaption(book.getTitle() + " - " + book.getAuthor() + " - ID: " + book.getId());
+                sendPhoto.setCaption("%s - %s - ID: %d".formatted(book.getTitle(), book.getAuthor(), book.getId()));
                 // Прикрепление фото к сообщению (выбрана отправка напрямую),
                 // можно отправлять preview, используя new InputFile(new ByteArrayInputStream(bookCover.getImagePreview()), book.getTitle());
                 InputFile inputFile = new InputFile(new File(bookCover.getFilePath()));
@@ -404,29 +408,31 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                 SendMessage sendMessage = new SendMessage();
                 callbackData = callbackData.substring(READERS.length());
                 long readerId = Long.valueOf(callbackData);
-                Reader reader = readerService.findReader(readerId);
+                Reader reader = readerService.findDBReader(readerId);
                 sendMessage.setChatId(chatId);
                 sendMessage.setText(
-                        "ID: " + reader.getId() + "\n" +
-                                "Фамилия: " + reader.getSurname() + "\n" +
-                                "Имя: " + reader.getName() + "\n" +
-                                "Отчество: " + reader.getSecondName() + "\n" +
-                                "Номер читательского билета: " + reader.getPersonalNumber()
+                        "ID: %d\nФамилия: %s\nИмя: %s\nОтчество: %s\nНомер читательского билета: %d".formatted(
+                                reader.getId(),
+                                reader.getSurname(),
+                                reader.getName(),
+                                reader.getSecondName(),
+                                reader.getPersonalNumber()
+                                                                                                              )
                                    );
                 // Создание текстовых кнопок ответного сообщения SendMessage
                 InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
                 // Создание рядов кнопок
                 List<List<InlineKeyboardButton>> rows = new ArrayList<>();
                 // Получение исходных данных
-                Collection<Book> books = readerService.getReaderBooks(readerId);
+                Collection<BookDTO> books = readerService.getReaderBooks(readerId);
                 // Формирование логики
-                for (Book book : books) {
+                for (BookDTO book : books) {
                     // Создание ряда кнопок
                     List<InlineKeyboardButton> row = new ArrayList<>();
                     // Создание текстовой кнопки
                     InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
                     // Определение текста кнопки
-                    inlineKeyboardButton.setText(book.getTitle() + " - " + book.getAuthor() + " - ID: " + book.getId());
+                    inlineKeyboardButton.setText("%s - %s - ID: %d".formatted(book.getTitle(), book.getAuthor(), book.getId()));
                     // Определение значения ответного запроса CallbackData при нажатии кнопки
                     inlineKeyboardButton.setCallbackData(BOOKS + book.getId());
                     // Добавление кнопки в ряд
@@ -538,7 +544,7 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
         // Создание рядов кнопок
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         // Получение исходных данных
-        Collection<Reader> readers = readerService.getAllReaders();
+        Collection<Reader> readers = readerService.getAllDBReaders();
         // Формирование логики
         for (Reader reader : readers) {
             // Создание ряда кнопок
@@ -546,7 +552,7 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
             // Создание текстовой кнопки
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
             // Определение текста кнопки
-            inlineKeyboardButton.setText(reader.getName() + " " + reader.getSecondName() + " " + reader.getSurname());
+            inlineKeyboardButton.setText("%s %s %s".formatted(reader.getName(), reader.getSecondName(), reader.getSurname()));
             // Определение значения ответного запроса CallbackData при нажатии кнопки
             inlineKeyboardButton.setCallbackData(READERS + reader.getId());
             // Добавление кнопки в ряд
@@ -600,10 +606,10 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                 }
                 bookId = takeMap.get(chatId);
                 Book book = bookService.findBook(takeMap.get(chatId));
-                Reader reader = readerService.findReader(readerId);
+                Reader reader = readerService.findDBReader(readerId);
                 if (reader != null && book.getReader().equals(reader)) {
                     manageService.takeBookFromReader(bookId, readerId);
-                    sendMessage.setText("Книга с ID " + bookId + " получена от читателя с ID " + readerId);
+                    sendMessage.setText("Книга с ID %d получена от читателя с ID %d".formatted(bookId, readerId));
                 } else if (reader == null) {
                     sendMessage.setText("Такого читателя не зарегистрировано!");
                 } else {
@@ -621,10 +627,10 @@ public class JavaConspectusBot extends TelegramLongPollingBot {
                 }
                 bookId = giveMap.get(chatId);
                 Book book = bookService.findBook(giveMap.get(chatId));
-                Reader reader = readerService.findReader(readerId);
+                Reader reader = readerService.findDBReader(readerId);
                 if (reader != null && book.getReader() == null) {
                     manageService.giveBookToReader(bookId, readerId);
-                    sendMessage.setText("Книга с ID " + bookId + " выдана читателю с ID " + readerId);
+                    sendMessage.setText("Книга с ID %d выдана читателю с ID %d".formatted(bookId, readerId));
                 } else if (reader == null) {
                     sendMessage.setText("Такого читателя не зарегистрировано!");
                 } else {
