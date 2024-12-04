@@ -8,42 +8,42 @@ info:
     email: victor-14-244@mail.ru
   version: 0.1.0
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:8080
+    description: Generated server url
 tags:
-- name: 6 Затраты
-  description: Контроллер для работы с затратами
-- name: 7 Счётчик
-  description: Контроллер для работы со счётчиком
-- name: 5 Погода
-  description: Контроллер для получения прогнозов погоды
-- name: 4 Приём/выдача книг
-  description: Контроллер для приёма/выдачи книг
-- name: 3 Читатели
-  description: Контроллер для работы с читателями
-- name: 1 Авторизация
-  description: Контроллер для авторизации пользователей
-- name: 8 Рандом
-  description: Контроллер для получения случайных чисел
-- name: 2 Книги
-  description: Контроллер для работы с книгами
+  - name: 6 Затраты
+    description: Контроллер для работы с затратами
+  - name: 7 Счётчик
+    description: Контроллер для работы со счётчиком
+  - name: 5 Погода
+    description: Контроллер для получения прогнозов погоды
+  - name: 4 Приём/выдача книг
+    description: Контроллер для приёма/выдачи книг
+  - name: 3 Читатели
+    description: Контроллер для работы с читателями
+  - name: 1 Авторизация
+    description: Контроллер для авторизации пользователей
+  - name: 8 Рандом
+    description: Контроллер для получения случайных чисел
+  - name: 2 Книги
+    description: Контроллер для работы с книгами
 paths:
   /readers:
     get:
       tags:
-      - Поиск
-      - 3 Читатели
+        - Поиск
+        - 3 Читатели
       summary: Список читателей
       description: Вывести список всех зарегистрированных читателей
       operationId: getAllReaders
       parameters:
-      - name: partOfNameSecondNameOrSurname
-        in: query
-        description: Часть ФИО читателя
-        required: false
-        schema:
-          type: string
-        example: Иван
+        - name: partOfNameSecondNameOrSurname
+          in: query
+          description: Часть ФИО читателя
+          required: false
+          schema:
+            type: string
+          example: Иван
       responses:
         "200":
           description: OK
@@ -56,11 +56,11 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
     put:
       tags:
-      - 3 Читатели
-      - Читатель
+        - 3 Читатели
+        - Читатель
       summary: Редактировать
       description: Отредактировать информацию о читателе
       operationId: updateReader
@@ -80,11 +80,11 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
     post:
       tags:
-      - 3 Читатели
-      - Читатель
+        - 3 Читатели
+        - Читатель
       summary: Создать
       description: Добавить информацию о читателе
       operationId: createReader
@@ -103,24 +103,26 @@ paths:
                 $ref: "#/components/schemas/ReaderNoBooksDTO"
         "405":
           description: Method Not Allowed
+        "500":
+          description: Internal Server Error
       security:
-      - basicAuth: []
+        - basicAuth: []
   /books:
     get:
       tags:
-      - 2 Книги
-      - Поиск
+        - 2 Книги
+        - Поиск
       summary: Список книг
       description: Вывести список всех доступных книг
       operationId: getAllBooks
       parameters:
-      - name: authorOrTitle
-        in: query
-        description: Часть ФИО автора или названия книги
-        required: false
-        schema:
-          type: string
-        example: Пушкин
+        - name: authorOrTitle
+          in: query
+          description: Часть ФИО автора или названия книги
+          required: false
+          schema:
+            type: string
+          example: Пушкин
       responses:
         "200":
           description: OK
@@ -133,11 +135,11 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
     put:
       tags:
-      - 2 Книги
-      - Книга
+        - 2 Книги
+        - Книга
       summary: Редактировать
       description: Отредактировать информацию о книге
       operationId: updateBook
@@ -157,11 +159,11 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
     post:
       tags:
-      - 2 Книги
-      - Книга
+        - 2 Книги
+        - Книга
       summary: Создать
       description: Добавить информацию о книге
       operationId: createBook
@@ -181,12 +183,12 @@ paths:
         "405":
           description: Method Not Allowed
       security:
-      - basicAuth: []
+        - basicAuth: []
   /register:
     post:
       tags:
-      - 1 Авторизация
-      - Безопасность
+        - 1 Авторизация
+        - Безопасность
       summary: Регистрация
       description: Пройти регистрацию
       operationId: register
@@ -202,32 +204,32 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
   /manage:
     get:
       tags:
-      - Приём/выдача
-      - 4 Приём/выдача книг
+        - Приём/выдача
+        - 4 Приём/выдача книг
       summary: Принять
       description: Принять книгу от читателя
       operationId: takeBook
       parameters:
-      - name: book
-        in: query
-        description: ID книги в имеющемся списке книг
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
-      - name: reader
-        in: query
-        description: ID читателя в имеющемся списке читателей
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: book
+          in: query
+          description: ID книги в имеющемся списке книг
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+        - name: reader
+          in: query
+          description: ID читателя в имеющемся списке читателей
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -238,31 +240,31 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
     post:
       tags:
-      - Приём/выдача
-      - 4 Приём/выдача книг
+        - Приём/выдача
+        - 4 Приём/выдача книг
       summary: Выдать
       description: Выдать книгу читателю
       operationId: giveBook
       parameters:
-      - name: bookId
-        in: query
-        description: ID книги в имеющемся списке книг
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
-      - name: readerId
-        in: query
-        description: ID читателя в имеющемся списке читателей
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: bookId
+          in: query
+          description: ID книги в имеющемся списке книг
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+        - name: readerId
+          in: query
+          description: ID читателя в имеющемся списке читателей
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -273,12 +275,12 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
   /login:
     post:
       tags:
-      - 1 Авторизация
-      - Безопасность
+        - 1 Авторизация
+        - Безопасность
       summary: Войти
       description: Пройти авторизацию
       operationId: login
@@ -294,32 +296,32 @@ paths:
         "401":
           description: Unauthorized
       security:
-      - basicAuth: []
+        - basicAuth: []
   /expenses:
     get:
       tags:
-      - 6 Затраты
-      - Затраты
+        - 6 Затраты
+        - Затраты
       summary: Все затраты
       description: Посмотреть все затраты
       operationId: getExpenses
       parameters:
-      - name: page
-        in: query
-        description: Номер страницы
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
-      - name: size
-        in: query
-        description: Размер страницы
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 4
+        - name: page
+          in: query
+          description: Номер страницы
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+        - name: size
+          in: query
+          description: Размер страницы
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 4
       responses:
         "200":
           description: OK
@@ -334,11 +336,11 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
     post:
       tags:
-      - 6 Затраты
-      - Затраты
+        - 6 Затраты
+        - Затраты
       summary: Внести
       description: Внести затрату
       operationId: createExpense
@@ -358,24 +360,24 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
   /books/{id}/cover:
     get:
       tags:
-      - 2 Книги
-      - Изображения
+        - 2 Книги
+        - Изображения
       summary: Посмотреть
       description: Посмотреть обложку для книги
       operationId: downloadCover
       parameters:
-      - name: id
-        in: path
-        description: ID книги в имеющемся списке книг
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: id
+          in: path
+          description: ID книги в имеющемся списке книг
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -388,28 +390,28 @@ paths:
         "502":
           description: Bad Gateway
       security:
-      - basicAuth: []
+        - basicAuth: []
     post:
       tags:
-      - 2 Книги
-      - Изображения
+        - 2 Книги
+        - Изображения
       summary: Загрузить
       description: Загрузить обложку для книги
       operationId: uploadCover
       parameters:
-      - name: id
-        in: path
-        description: ID книги в имеющемся списке книг
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          description: ID книги в имеющемся списке книг
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           multipart/form-data:
             schema:
               required:
-              - file
+                - file
               type: object
               properties:
                 file:
@@ -428,33 +430,33 @@ paths:
         "403":
           description: Forbidden
       security:
-      - basicAuth: []
+        - basicAuth: []
   /set-role:
     patch:
       tags:
-      - 1 Авторизация
-      - Безопасность
+        - 1 Авторизация
+        - Безопасность
       summary: Права
       description: Смена прав для зарегистрированного пользователя
       operationId: setRole
       parameters:
-      - name: id
-        in: query
-        description: ID пользователя
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: role
-        in: query
-        description: Новая роль пользователя
-        required: true
-        schema:
-          type: string
-          enum:
-          - ROLE_USER
-          - ROLE_ADMIN
-          - ROLE_OWNER
+        - name: id
+          in: query
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: role
+          in: query
+          description: Новая роль пользователя
+          required: true
+          schema:
+            type: string
+            enum:
+              - ROLE_USER
+              - ROLE_ADMIN
+              - ROLE_OWNER
       responses:
         "200":
           description: Ok
@@ -467,29 +469,29 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
   /set-password:
     patch:
       tags:
-      - 1 Авторизация
-      - Безопасность
+        - 1 Авторизация
+        - Безопасность
       summary: Пароль
       description: Смена пароля для зарегистрированного пользователя
       operationId: setPassword
       parameters:
-      - name: id
-        in: query
-        description: ID пользователя
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: password
-        in: query
-        description: Новый пароль пользователя
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: query
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: password
+          in: query
+          description: Новый пароль пользователя
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Ok
@@ -502,30 +504,30 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
   /whether:
     get:
       tags:
-      - 5 Погода
-      - Погода
+        - 5 Погода
+        - Погода
       summary: Погода
       description: Получить данные о погоде
       operationId: getWhether
       parameters:
-      - name: city
-        in: query
-        description: Название города
-        required: true
-        schema:
-          type: string
-        example: Москва
-      - name: country
-        in: query
-        description: Код страны
-        required: true
-        schema:
-          type: string
-        example: RU
+        - name: city
+          in: query
+          description: Название города
+          required: true
+          schema:
+            type: string
+          example: Москва
+        - name: country
+          in: query
+          description: Код страны
+          required: true
+          schema:
+            type: string
+          example: RU
       responses:
         "200":
           description: OK
@@ -538,23 +540,23 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
   /whether/city-info:
     get:
       tags:
-      - 5 Погода
-      - Погода
+        - 5 Погода
+        - Погода
       summary: Гео
       description: Получить гео данные города
       operationId: getCityInfo
       parameters:
-      - name: city
-        in: query
-        description: Название города
-        required: true
-        schema:
-          type: string
-        example: Москва
+        - name: city
+          in: query
+          description: Название города
+          required: true
+          schema:
+            type: string
+          example: Москва
       responses:
         "200":
           description: OK
@@ -567,30 +569,30 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
   /users:
     get:
       tags:
-      - 1 Авторизация
-      - Безопасность
+        - 1 Авторизация
+        - Безопасность
       summary: Пользователи
       description: Список зарегистрированных пользователей
       operationId: getUsers
       parameters:
-      - name: page
-        in: query
-        description: Номер страницы
-        required: false
-        schema:
-          type: integer
-          format: int32
-      - name: size
-        in: query
-        description: Количество пользователей на странице
-        required: false
-        schema:
-          type: integer
-          format: int32
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          description: Количество пользователей на странице
+          required: false
+          schema:
+            type: integer
+            format: int32
       responses:
         "200":
           description: Ok
@@ -605,24 +607,24 @@ paths:
         "403":
           description: Forbidden
       security:
-      - basicAuth: []
+        - basicAuth: []
   /readers/{id}:
     get:
       tags:
-      - 3 Читатели
-      - Читатель
+        - 3 Читатели
+        - Читатель
       summary: Найти
       description: Найти информацию о читателе по ID
       operationId: readReader
       parameters:
-      - name: id
-        in: path
-        description: ID читателя в имеющемся списке читателей
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: id
+          in: path
+          description: ID читателя в имеющемся списке читателей
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -633,23 +635,23 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
     delete:
       tags:
-      - 3 Читатели
-      - Читатель
+        - 3 Читатели
+        - Читатель
       summary: Удалить
       description: Удалить информацию о читателе по ID
       operationId: deleteReader
       parameters:
-      - name: id
-        in: path
-        description: ID читателя в имеющемся списке читателей
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: id
+          in: path
+          description: ID читателя в имеющемся списке читателей
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -660,23 +662,23 @@ paths:
         "403":
           description: Forbidden
       security:
-      - basicAuth: []
+        - basicAuth: []
   /readers/surname:
     get:
       tags:
-      - Поиск
-      - 3 Читатели
+        - Поиск
+        - 3 Читатели
       summary: Список по фамилии
       description: Вывести список всех зарегистрированных читателей с указанной фамилией
       operationId: getReadersBySurname
       parameters:
-      - name: partOfSurname
-        in: query
-        description: Часть фамилии читателя
-        required: true
-        schema:
-          type: string
-        example: Иванов
+        - name: partOfSurname
+          in: query
+          description: Часть фамилии читателя
+          required: true
+          schema:
+            type: string
+          example: Иванов
       responses:
         "200":
           description: OK
@@ -689,23 +691,23 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
   /readers/secondName:
     get:
       tags:
-      - Поиск
-      - 3 Читатели
+        - Поиск
+        - 3 Читатели
       summary: Список по отчеству
       description: Вывести список всех зарегистрированных читателей с указанным отчеством
       operationId: getReadersBySecondName
       parameters:
-      - name: partOfSecondName
-        in: query
-        description: Часть отчества читателя
-        required: true
-        schema:
-          type: string
-        example: Иванович
+        - name: partOfSecondName
+          in: query
+          description: Часть отчества читателя
+          required: true
+          schema:
+            type: string
+          example: Иванович
       responses:
         "200":
           description: OK
@@ -718,23 +720,23 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
   /readers/name:
     get:
       tags:
-      - Поиск
-      - 3 Читатели
+        - Поиск
+        - 3 Читатели
       summary: Список по имени
       description: Вывести список всех зарегистрированных читателей с указанным именем
       operationId: getReadersByName
       parameters:
-      - name: partOfName
-        in: query
-        description: Часть имени читателя
-        required: true
-        schema:
-          type: string
-        example: Иван
+        - name: partOfName
+          in: query
+          description: Часть имени читателя
+          required: true
+          schema:
+            type: string
+          example: Иван
       responses:
         "200":
           description: OK
@@ -747,24 +749,24 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
   /readers/books:
     get:
       tags:
-      - Поиск
-      - 3 Читатели
+        - Поиск
+        - 3 Читатели
       summary: Список книг
       description: Вывести список всех книг данного читателя
       operationId: getReaderBooks
       parameters:
-      - name: id
-        in: query
-        description: ID читателя в имеющемся списке читателей
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: id
+          in: query
+          description: ID читателя в имеющемся списке читателей
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -777,11 +779,11 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
   /random:
     get:
       tags:
-      - 8 Рандом
+        - 8 Рандом
       operationId: getRandomValue
       responses:
         "200":
@@ -792,24 +794,24 @@ paths:
                 type: integer
                 format: int32
       security:
-      - basicAuth: []
+        - basicAuth: []
   /expenses/{id}:
     get:
       tags:
-      - 6 Затраты
-      - Затраты
+        - 6 Затраты
+        - Затраты
       summary: Посмотреть
       description: Посмотреть затрату по ID
       operationId: getExpenseById
       parameters:
-      - name: id
-        in: path
-        description: ID записи о затратах
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: id
+          in: path
+          description: ID записи о затратах
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -820,12 +822,12 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
   /expenses/categories:
     get:
       tags:
-      - 6 Затраты
-      - Затраты
+        - 6 Затраты
+        - Затраты
       summary: Затраты по категориям
       description: Посмотреть все затраты по категориям
       operationId: getExpensesByCategories
@@ -841,21 +843,21 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
   /csrf:
     get:
       tags:
-      - 1 Авторизация
-      - Безопасность
+        - 1 Авторизация
+        - Безопасность
       summary: CSRF-токен
       description: Получить CSRF-токен
       operationId: csrf
       parameters:
-      - name: csrfToken
-        in: query
-        required: true
-        schema:
-          $ref: "#/components/schemas/CsrfToken"
+        - name: csrfToken
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/CsrfToken"
       responses:
         "200":
           description: Ok
@@ -864,11 +866,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/CsrfToken"
       security:
-      - basicAuth: []
+        - basicAuth: []
   /counter:
     get:
       tags:
-      - 7 Счётчик
+        - 7 Счётчик
       summary: Получить
       description: Получить значение счётчика
       operationId: getCounter
@@ -880,21 +882,21 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
   /counter/change:
     get:
       tags:
-      - 7 Счётчик
+        - 7 Счётчик
       summary: Изменить - вариант 1
       description: Изменить значение счётчика - вариант 1
       operationId: changeCounter1
       parameters:
-      - name: counter
-        in: query
-        required: true
-        schema:
-          type: integer
-          format: int32
+        - name: counter
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
       responses:
         "200":
           description: OK
@@ -903,21 +905,21 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
   /counter/change/{counter}:
     get:
       tags:
-      - 7 Счётчик
+        - 7 Счётчик
       summary: Изменить - вариант 2
       description: Изменить значение счётчика - вариант 2
       operationId: changeCounter2
       parameters:
-      - name: counter
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int32
+        - name: counter
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
       responses:
         "200":
           description: OK
@@ -926,24 +928,24 @@ paths:
         "400":
           description: Bad Request
       security:
-      - basicAuth: []
+        - basicAuth: []
   /books/{id}:
     get:
       tags:
-      - 2 Книги
-      - Книга
+        - 2 Книги
+        - Книга
       summary: Найти
       description: Найти информацию о книге по ID
       operationId: readBook
       parameters:
-      - name: id
-        in: path
-        description: ID книги в имеющемся списке книг
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: id
+          in: path
+          description: ID книги в имеющемся списке книг
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -954,23 +956,23 @@ paths:
         "404":
           description: Not Found
       security:
-      - basicAuth: []
+        - basicAuth: []
     delete:
       tags:
-      - 2 Книги
-      - Книга
+        - 2 Книги
+        - Книга
       summary: Удалить
       description: Удалить информацию о книге по ID
       operationId: deleteBook
       parameters:
-      - name: id
-        in: path
-        description: ID книги в имеющемся списке книг
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: id
+          in: path
+          description: ID книги в имеющемся списке книг
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -981,24 +983,24 @@ paths:
         "403":
           description: Forbidden
       security:
-      - basicAuth: []
+        - basicAuth: []
   /books/{id}/cover/preview:
     get:
       tags:
-      - 2 Книги
-      - Изображения
+        - 2 Книги
+        - Изображения
       summary: Посмотреть превью
       description: Посмотреть превью обложки для книги
       operationId: downloadCover_1
       parameters:
-      - name: id
-        in: path
-        description: ID книги в имеющемся списке книг
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: 1
+        - name: id
+          in: path
+          description: ID книги в имеющемся списке книг
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
       responses:
         "200":
           description: OK
@@ -1012,23 +1014,23 @@ paths:
         "403":
           description: Forbidden
       security:
-      - basicAuth: []
+        - basicAuth: []
   /delete:
     delete:
       tags:
-      - 1 Авторизация
-      - Безопасность
+        - 1 Авторизация
+        - Безопасность
       summary: Удалить
       description: Удалить пользователя
       operationId: delete
       parameters:
-      - name: id
-        in: query
-        description: ID пользователя
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: query
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: Ok
@@ -1041,7 +1043,7 @@ paths:
         "403":
           description: Forbidden
       security:
-      - basicAuth: []
+        - basicAuth: []
 components:
   schemas:
     ReaderNoBooksDTO:
@@ -1049,10 +1051,10 @@ components:
       maximum: 9223372036854775807
       minimum: 1
       required:
-      - id
-      - name
-      - personalNumber
-      - surname
+        - id
+        - name
+        - personalNumber
+        - surname
       type: object
       properties:
         id:
@@ -1099,10 +1101,10 @@ components:
       maximum: 9223372036854775807
       minimum: 1
       required:
-      - id
-      - name
-      - personalNumber
-      - surname
+        - id
+        - name
+        - personalNumber
+        - surname
       type: object
       properties:
         id:
@@ -1147,10 +1149,10 @@ components:
     BookDTO:
       title: Книга
       required:
-      - author
-      - id
-      - title
-      - year
+        - author
+        - id
+        - title
+        - year
       type: object
       properties:
         id:
@@ -1188,9 +1190,9 @@ components:
     RegisterDTO:
       title: Регистрационные данные
       required:
-      - login
-      - password
-      - passwordConfirmation
+        - login
+        - password
+        - passwordConfirmation
       type: object
       properties:
         login:
@@ -1216,9 +1218,9 @@ components:
     NewReaderDTO:
       title: Новый читатель
       required:
-      - name
-      - personalNumber
-      - surname
+        - name
+        - personalNumber
+        - surname
       type: object
       properties:
         name:
@@ -1254,8 +1256,8 @@ components:
     BasicAuthDTO:
       title: Basic-аутентификация
       required:
-      - login
-      - password
+        - login
+        - password
       type: object
       properties:
         login:
@@ -1275,11 +1277,11 @@ components:
     Expense:
       title: Расход
       required:
-      - amount
-      - category
-      - date
-      - id
-      - title
+        - amount
+        - category
+        - date
+        - id
+        - title
       type: object
       properties:
         id:
@@ -1320,9 +1322,9 @@ components:
     NewBookDTO:
       title: Новая книга
       required:
-      - authorFIO
-      - title
-      - year
+        - authorFIO
+        - title
+        - year
       type: object
       properties:
         title:
@@ -1352,10 +1354,10 @@ components:
       maximum: 9223372036854775807
       minimum: 1
       required:
-      - author
-      - id
-      - title
-      - year
+        - author
+        - id
+        - title
+        - year
       type: object
       properties:
         id:
@@ -1394,11 +1396,11 @@ components:
     BookCover:
       title: Обложка книги
       required:
-      - filePath
-      - fileSize
-      - id
-      - imagePreview
-      - mediaType
+        - filePath
+        - fileSize
+        - id
+        - imagePreview
+        - mediaType
       type: object
       properties:
         id:
@@ -1433,9 +1435,9 @@ components:
     LoginDTO:
       title: Логин
       required:
-      - id
-      - login
-      - role
+        - id
+        - login
+        - role
       type: object
       properties:
         id:
@@ -1461,9 +1463,9 @@ components:
           description: Роль пользователя в системе
           default: USER
           enum:
-          - ROLE_USER
-          - ROLE_ADMIN
-          - ROLE_OWNER
+            - ROLE_USER
+            - ROLE_ADMIN
+            - ROLE_OWNER
       description: Сущность логина пользователя
     Whether:
       title: Погода
@@ -1546,13 +1548,13 @@ components:
     City:
       title: Город
       required:
-      - country
-      - id
-      - lat
-      - localNames
-      - lon
-      - name
-      - state
+        - country
+        - id
+        - lat
+        - localNames
+        - lon
+        - name
+        - state
       type: object
       properties:
         id:
@@ -1659,11 +1661,11 @@ components:
     CsrfToken:
       type: object
       properties:
-        headerName:
+        parameterName:
           type: string
         token:
           type: string
-        parameterName:
+        headerName:
           type: string
   securitySchemes:
     basicAuth:

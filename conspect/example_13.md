@@ -1931,19 +1931,18 @@ public interface ReaderService {
 @Service
 public class ReaderServiceImpl implements ReaderService {
     private final ReaderRepository readerRepository;
-    private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final ReaderMapper readerMapper;
+    private final ManageService manageService;
 
-    public ReaderServiceImpl(ReaderRepository readerRepository, BookRepository bookRepository, BookMapper bookMapper, ReaderMapper readerMapper) {
+    public ReaderServiceImpl(ReaderRepository readerRepository,
+                             BookMapper bookMapper,
+                             ReaderMapper readerMapper,
+                             @Lazy @Qualifier(value = "manageServiceImpl") ManageService manageService) {
         this.readerRepository = readerRepository;
-        this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
         this.readerMapper = readerMapper;
-    }
-
-    private ManageService setManageService() {
-        return new ManageServiceImpl(bookRepository, readerRepository);
+        this.manageService = manageService;
     }
 
     @Override
@@ -1956,7 +1955,7 @@ public class ReaderServiceImpl implements ReaderService {
     public ReaderNoBooksDTO findReader(long id) {
         Reader reader = readerRepository.findById(id).orElse(null);
         if (reader != null) {
-            reader.setBooks(setManageService().findReaderBooks(reader.getId()));
+            reader.setBooks(manageService.findReaderBooks(reader.getId()));
             return readerMapper.readerToNoBooksDTO(reader);
         } else {
             return null;
@@ -1967,7 +1966,7 @@ public class ReaderServiceImpl implements ReaderService {
     public Reader findDBReader(long id) {
         Reader reader = readerRepository.findById(id).orElse(null);
         if (reader != null) {
-            reader.setBooks(setManageService().findReaderBooks(reader.getId()));
+            reader.setBooks(manageService.findReaderBooks(reader.getId()));
             return reader;
         } else {
             return null;
@@ -1978,7 +1977,7 @@ public class ReaderServiceImpl implements ReaderService {
     public ReaderNoBooksDTO editReader(Reader reader) {
         if (readerRepository.existsById(reader.getId())) {
             reader = readerRepository.save(reader);
-            reader.setBooks(setManageService().findReaderBooks(reader.getId()));
+            reader.setBooks(manageService.findReaderBooks(reader.getId()));
             return readerMapper.readerToNoBooksDTO(reader);
         } else {
             return null;
@@ -2028,7 +2027,7 @@ public class ReaderServiceImpl implements ReaderService {
 
     @Override
     public Collection<BookDTO> getReaderBooks(long id) {
-        return bookMapper.booksListToBookDTOList(setManageService().findReaderBooks(id));
+        return bookMapper.booksListToBookDTOList(manageService.findReaderBooks(id));
     }
 }
 ```
@@ -3064,6 +3063,8 @@ public class BooksController {
 @RestController
 @RequestMapping(path = "/readers")
 @Tag(name = "3 Читатели", description = "Контроллер для работы с читателями")
+// Включает поддержку базовой аутентификации
+// Swagger UI для методов данного контроллера
 @SecurityRequirement(name = "basicAuth")
 public class ReaderController {
     private final ReaderService readerService;
@@ -3092,12 +3093,24 @@ public class ReaderController {
                             content = @Content(
                                     schema = @Schema(implementation = Void.class)
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal Server Error",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
                     )
             }
     )
     public ResponseEntity<ReaderNoBooksDTO> createReader(@RequestBody NewReaderDTO reader) {
         try {
-            return ResponseEntity.ok(readerService.createReader(reader));
+            ReaderNoBooksDTO readerDTO = readerService.createReader(reader);
+            if (readerDTO != null) {
+                return ResponseEntity.ok(readerDTO);
+            } else {
+                return ResponseEntity.internalServerError().build();
+            }
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
         }
@@ -3936,6 +3949,8 @@ paths:
                 $ref: "#/components/schemas/ReaderNoBooksDTO"
         "405":
           description: Method Not Allowed
+        "500":
+          description: Internal Server Error
       security:
         - basicAuth: [ ]
   /books:
@@ -5492,11 +5507,11 @@ components:
     CsrfToken:
       type: object
       properties:
-        headerName:
+        parameterName:
           type: string
         token:
           type: string
-        parameterName:
+        headerName:
           type: string
   securitySchemes:
     basicAuth:

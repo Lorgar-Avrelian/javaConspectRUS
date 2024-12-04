@@ -54,12 +54,24 @@ public class ReaderController {
                             content = @Content(
                                     schema = @Schema(implementation = Void.class)
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal Server Error",
+                            content = @Content(
+                                    schema = @Schema(implementation = Void.class)
+                            )
                     )
             }
     )
     public ResponseEntity<ReaderNoBooksDTO> createReader(@RequestBody NewReaderDTO reader) {
         try {
-            return ResponseEntity.ok(readerService.createReader(reader));
+            ReaderNoBooksDTO readerDTO = readerService.createReader(reader);
+            if (readerDTO != null) {
+                return ResponseEntity.ok(readerDTO);
+            } else {
+                return ResponseEntity.internalServerError().build();
+            }
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
         }

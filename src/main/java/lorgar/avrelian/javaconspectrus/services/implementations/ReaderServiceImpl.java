@@ -6,10 +6,11 @@ import lorgar.avrelian.javaconspectrus.dto.ReaderNoBooksDTO;
 import lorgar.avrelian.javaconspectrus.mappers.BookMapper;
 import lorgar.avrelian.javaconspectrus.mappers.ReaderMapper;
 import lorgar.avrelian.javaconspectrus.models.Reader;
-import lorgar.avrelian.javaconspectrus.repository.BookRepository;
 import lorgar.avrelian.javaconspectrus.repository.ReaderRepository;
 import lorgar.avrelian.javaconspectrus.services.ManageService;
 import lorgar.avrelian.javaconspectrus.services.ReaderService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -17,19 +18,18 @@ import java.util.Collection;
 @Service
 public class ReaderServiceImpl implements ReaderService {
     private final ReaderRepository readerRepository;
-    private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final ReaderMapper readerMapper;
+    private final ManageService manageService;
 
-    public ReaderServiceImpl(ReaderRepository readerRepository, BookRepository bookRepository, BookMapper bookMapper, ReaderMapper readerMapper) {
+    public ReaderServiceImpl(ReaderRepository readerRepository,
+                             BookMapper bookMapper,
+                             ReaderMapper readerMapper,
+                             @Lazy @Qualifier(value = "manageServiceImpl") ManageService manageService) {
         this.readerRepository = readerRepository;
-        this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
         this.readerMapper = readerMapper;
-    }
-
-    private ManageService setManageService() {
-        return new ManageServiceImpl(bookRepository, readerRepository);
+        this.manageService = manageService;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ReaderServiceImpl implements ReaderService {
     public ReaderNoBooksDTO findReader(long id) {
         Reader reader = readerRepository.findById(id).orElse(null);
         if (reader != null) {
-            reader.setBooks(setManageService().findReaderBooks(reader.getId()));
+            reader.setBooks(manageService.findReaderBooks(reader.getId()));
             return readerMapper.readerToNoBooksDTO(reader);
         } else {
             return null;
@@ -53,7 +53,7 @@ public class ReaderServiceImpl implements ReaderService {
     public Reader findDBReader(long id) {
         Reader reader = readerRepository.findById(id).orElse(null);
         if (reader != null) {
-            reader.setBooks(setManageService().findReaderBooks(reader.getId()));
+            reader.setBooks(manageService.findReaderBooks(reader.getId()));
             return reader;
         } else {
             return null;
@@ -64,7 +64,7 @@ public class ReaderServiceImpl implements ReaderService {
     public ReaderNoBooksDTO editReader(Reader reader) {
         if (readerRepository.existsById(reader.getId())) {
             reader = readerRepository.save(reader);
-            reader.setBooks(setManageService().findReaderBooks(reader.getId()));
+            reader.setBooks(manageService.findReaderBooks(reader.getId()));
             return readerMapper.readerToNoBooksDTO(reader);
         } else {
             return null;
@@ -114,6 +114,6 @@ public class ReaderServiceImpl implements ReaderService {
 
     @Override
     public Collection<BookDTO> getReaderBooks(long id) {
-        return bookMapper.booksListToBookDTOList(setManageService().findReaderBooks(id));
+        return bookMapper.booksListToBookDTOList(manageService.findReaderBooks(id));
     }
 }
