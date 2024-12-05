@@ -2130,14 +2130,14 @@ public class WhetherServiceImpl implements WhetherService {
     private String currentWhetherUrl;
     @Value("${whether.geo.result.count}")
     private int resultCount;
-    @Autowired
-    private RestTemplate restTemplate;
     private ObjectMapper mapper = new ObjectMapper();
     private Logger logger = LoggerFactory.getLogger(WhetherServiceImpl.class);
+    private final RestTemplate restTemplate;
     private final CityRepository cityRepository;
 
-    public WhetherServiceImpl(CityRepository cityRepository) {
+    public WhetherServiceImpl(CityRepository cityRepository, RestTemplate restTemplate) {
         this.cityRepository = cityRepository;
+        this.restTemplate = restTemplate;
     }
 
     @Override

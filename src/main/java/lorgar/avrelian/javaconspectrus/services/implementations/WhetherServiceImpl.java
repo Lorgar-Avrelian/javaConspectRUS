@@ -35,14 +35,14 @@ public class WhetherServiceImpl implements WhetherService {
     private String currentWhetherUrl;
     @Value("${whether.geo.result.count}")
     private int resultCount;
-    @Autowired
-    private RestTemplate restTemplate;
-    private ObjectMapper mapper = new ObjectMapper();
-    private Logger logger = LoggerFactory.getLogger(WhetherServiceImpl.class);
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final Logger logger = LoggerFactory.getLogger(WhetherServiceImpl.class);
+    private final RestTemplate restTemplate;
     private final CityRepository cityRepository;
 
-    public WhetherServiceImpl(CityRepository cityRepository) {
+    public WhetherServiceImpl(CityRepository cityRepository, RestTemplate restTemplate) {
         this.cityRepository = cityRepository;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class WhetherServiceImpl implements WhetherService {
         String uri = geoUrl + "?q=" + city + "&limit=" + resultCount + "&appid=" + apiKey;
         List<City> citiesList = cityRepository.findByLocalNamesContainsIgnoreCase(city);
         if (citiesList.isEmpty()) {
-            CityDTO[] cities = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity(HttpHeaders.EMPTY), CityDTO[].class).getBody();
+            CityDTO[] cities = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(HttpHeaders.EMPTY), CityDTO[].class).getBody();
             CityDTO cityDTO;
             HashMap<String, String> localNames = new HashMap<>();
             if (cities.length == 0) {

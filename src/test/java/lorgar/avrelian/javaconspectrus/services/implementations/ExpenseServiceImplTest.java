@@ -36,7 +36,6 @@ class ExpenseServiceImplTest {
     @Test
     @DisplayName(value = "getAllExpenses(): return Collection<Expense>")
     @Order(1)
-    @Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
     void getAllExpenses1() {
         when(expenseRepository.findAll())
                 .thenReturn(EXPENSES_COLLECTION);

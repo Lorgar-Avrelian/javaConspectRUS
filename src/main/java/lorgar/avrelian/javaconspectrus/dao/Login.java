@@ -2,6 +2,7 @@ package lorgar.avrelian.javaconspectrus.dao;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lorgar.avrelian.javaconspectrus.models.Role;
@@ -11,6 +12,7 @@ import lorgar.avrelian.javaconspectrus.models.Role;
 @Table(name = "login")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Login {
     @Schema(title = "ID", description = "ID пользователя", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
     @Id

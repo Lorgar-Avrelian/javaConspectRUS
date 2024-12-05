@@ -2,6 +2,7 @@ package lorgar.avrelian.javaconspectrus.dao;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 @Table(name = "city")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class City {
     @Schema(title = "ID", description = "ID города", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
     @Id

@@ -1,6 +1,6 @@
 package lorgar.avrelian.javaconspectrus.services.implementations;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import lorgar.avrelian.javaconspectrus.repository.LoginRepository;
 import lorgar.avrelian.javaconspectrus.services.JpaUserDetailsService;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +26,7 @@ import java.util.Collections;
  */
 @Service
 @Transactional(isolation = Isolation.READ_COMMITTED)
-@Log
+@Slf4j
 public class JpaUserDetailsServiceImpl implements JpaUserDetailsService {
     private final LoginRepository loginRepository;
 
@@ -52,7 +52,7 @@ public class JpaUserDetailsServiceImpl implements JpaUserDetailsService {
                                   );
                               })
                               .orElseThrow(() -> {
-                                  log.severe("No DB connection");
+                                  log.error("No DB connection");
                                   return new UsernameNotFoundException(username);
                               });
     }
