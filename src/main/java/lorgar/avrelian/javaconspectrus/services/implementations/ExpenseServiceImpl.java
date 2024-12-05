@@ -26,7 +26,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Collection<Expense> getAllExpenses(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        Page resultPage = expenseRepository.findAll(pageRequest);
+        Page<Expense> resultPage = expenseRepository.findAll(pageRequest);
         return resultPage.getContent();
     }
 

@@ -2,6 +2,7 @@ package lorgar.avrelian.javaconspectrus.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Table(name = "expense")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Expense {
     @Schema(title = "ID", description = "ID траты", defaultValue = "1", required = true, minimum = "1", maximum = "9223372036854775807")
     @Id
