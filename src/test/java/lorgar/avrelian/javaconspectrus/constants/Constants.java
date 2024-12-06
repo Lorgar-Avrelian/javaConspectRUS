@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.User;
 
 import java.math.BigDecimal;
 import java.nio.file.Path;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -379,6 +380,38 @@ public class Constants {
             "England"
     );
     public static final CityDTO[] CITIES_DTO = {MOSCOW_DTO, NOGINSK_DTO, LONDON_DTO};
+    public static final WhetherMain WHETHER_MAIN = new WhetherMain(
+            new BigDecimal("-4.73"),
+            new BigDecimal("-10.55"),
+            new BigDecimal("-5.68"),
+            new BigDecimal("-4.71"),
+            new BigDecimal("1038"),
+            new BigDecimal("83")
+    );
+    public static final WhetherWind WHETHER_WIND = new WhetherWind(
+            new BigDecimal("4.59"),
+            new BigDecimal("133")
+    );
+    public static final WhetherSunshine WHETHER_SUNSHINE = new WhetherSunshine(1733463780L, 1733489918L);
+    public static final WhetherDTO WHETHER_DTO = new WhetherDTO(
+            WHETHER_MAIN,
+            new BigDecimal("1000"),
+            WHETHER_WIND,
+            WHETHER_SUNSHINE
+    );
+    public static final Whether WHETHER = new Whether(
+            WHETHER_MAIN.getTemp(),
+            WHETHER_MAIN.getFeels_like(),
+            WHETHER_MAIN.getTemp_min(),
+            WHETHER_MAIN.getTemp_max(),
+            WHETHER_MAIN.getPressure().multiply(BigDecimal.valueOf(0.7500615758456601)),
+            WHETHER_MAIN.getHumidity(),
+            WHETHER_DTO.getVisibility(),
+            WHETHER_WIND.getSpeed(),
+            WHETHER_WIND.getDeg(),
+            new Time(WHETHER_SUNSHINE.getSunrise() * 1000),
+            new Time(WHETHER_SUNSHINE.getSunset() * 1000)
+    );
     //
     public static final Reader READER_UNSUPPORTED = new Reader(4, "4th name with unsupported length, that will be ignored", "4th second name", "4th surname", 444, new ArrayList<>());
     public static final Path BOOK_IMAGE_PATH_1 = Path.of("src/test/resources/testImages/1.jpg");

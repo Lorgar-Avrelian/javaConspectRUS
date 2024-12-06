@@ -2062,9 +2062,13 @@ public class ManageServiceImpl implements ManageService {
     @Override
     public Reader giveBookToReader(long bookId, long readerId) {
         logger.debug("Give to reader " + readerId + " book " + bookId);
-        Reader reader = readerRepository.findById(readerId).get();
-        Book book = bookRepository.findById(bookId).get();
-        if (book != null && reader != null && book.getReader() == null) {
+        try {
+            reader = readerRepository.findById(readerId).get();
+            book = bookRepository.findById(bookId).get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+        if (book.getReader() == null) {
             book.setReader(reader);
         } else {
             logger.error("Book " + bookId + " or reader " + readerId + " not found");
@@ -2082,9 +2086,15 @@ public class ManageServiceImpl implements ManageService {
     @Override
     public Reader takeBookFromReader(long bookId, long readerId) {
         logger.trace("Take book " + bookId + " from reader " + readerId);
-        Reader reader = readerRepository.findById(readerId).get();
-        Book book = bookRepository.findById(bookId).get();
-        if (book != null && reader != null && reader.equals(book.getReader())) {
+        Reader reader;
+        Book book;
+        try {
+            reader = readerRepository.findById(readerId).get();
+            book = bookRepository.findById(bookId).get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+        if (reader.equals(book.getReader())) {
             book.setReader(null);
             Collection<Book> books = reader.getBooks();
             books.remove(book);
@@ -2098,10 +2108,10 @@ public class ManageServiceImpl implements ManageService {
 
     private Reader setReaderBooks(Book book, Reader reader) {
         bookRepository.save(book);
-        reader = readerRepository.save(reader);
+        Reader result = readerRepository.save(reader);
         logger.info("Book " + book.getId() + " has been edited");
         logger.trace("Reader " + reader.getId() + " had been edited");
-        return reader;
+        return result;
     }
 }
 ```
