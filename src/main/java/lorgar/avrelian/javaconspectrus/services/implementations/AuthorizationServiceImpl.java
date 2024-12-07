@@ -53,13 +53,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public Login login(BasicAuthDTO basicAuthDTO) {
         Login login = loginRepository.findByLoginEqualsIgnoreCase(basicAuthDTO.getLogin()).orElse(null);
-        if (login != null) {
-            if (passwordEncoder.matches(basicAuthDTO.getPassword(), login.getPassword())) {
-                userDetailsService.loadUserByUsername(basicAuthDTO.getLogin());
-                return login;
-            } else {
-                return null;
-            }
+        if (login != null && passwordEncoder.matches(basicAuthDTO.getPassword(), login.getPassword())) {
+            userDetailsService.loadUserByUsername(basicAuthDTO.getLogin());
+            return login;
         } else {
             return null;
         }

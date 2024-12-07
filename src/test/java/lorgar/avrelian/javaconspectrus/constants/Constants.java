@@ -413,8 +413,37 @@ public class Constants {
             new Time(WHETHER_SUNSHINE.getSunset() * 1000)
     );
     //
-    public static final Reader READER_UNSUPPORTED = new Reader(4, "4th name with unsupported length, that will be ignored", "4th second name", "4th surname", 444, new ArrayList<>());
+    public static final BasicAuthDTO OWNER_AUTH = new BasicAuthDTO("owner", "123");
+    public static final BasicAuthDTO ADMIN_AUTH = new BasicAuthDTO("admin", "123");
+    public static final BasicAuthDTO USER_AUTH = new BasicAuthDTO("user", "123");
+    public static final RegisterDTO OWNER_REGISTER = new RegisterDTO("owner", "123", "123");
+    public static final RegisterDTO ADMIN_REGISTER = new RegisterDTO("admin", "123", "123");
+    public static final RegisterDTO USER_REGISTER = new RegisterDTO("user", "123", "123");
+    public static final List<Login> LOGINS = new ArrayList<>(
+            List.of(OWNER, ADMIN, USER)
+    );
+    public static final LoginDTO OWNER_LOGIN_DTO = new LoginDTO(
+            OWNER.getId(),
+            OWNER.getLogin(),
+            OWNER.getRole()
+    );
+    public static final LoginDTO ADMIN_LOGIN_DTO = new LoginDTO(
+            ADMIN.getId(),
+            ADMIN.getLogin(),
+            ADMIN.getRole()
+    );
+    public static final LoginDTO USER_LOGIN_DTO = new LoginDTO(
+            USER.getId(),
+            USER.getLogin(),
+            USER.getRole()
+    );
+    public static final List<LoginDTO> LOGIN_DTO_LIST = new ArrayList<>(
+            List.of(OWNER_LOGIN_DTO, ADMIN_LOGIN_DTO, USER_LOGIN_DTO)
+    );
+    //
     public static final Path BOOK_IMAGE_PATH_1 = Path.of("src/test/resources/testImages/1.jpg");
     public static final Path BOOK_IMAGE_PATH_2 = Path.of("src/test/resources/testImages/2.jpg");
     public static final Path BOOK_IMAGE_PATH_3 = Path.of("src/test/resources/testImages/3.jpg");
+    //
+    public static final Reader READER_UNSUPPORTED = new Reader(4, "4th name with unsupported length, that will be ignored", "4th second name", "4th surname", 444, new ArrayList<>());
 }
