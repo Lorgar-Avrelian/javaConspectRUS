@@ -2,7 +2,7 @@
 
 > [[_оглавление_]](../README.md/#28-stream-api)
 
-> [[**2.8.1 Лямбда-выражения**]](/conspect/2.md/#281-лямбда-выражения)
+> [[**2.8.1 Лямбда-выражения**]](/conspect/2_8.md/#281-лямбда-выражения)
 
 ```java
 private static void runnableExample() {
