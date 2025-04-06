@@ -2,7 +2,7 @@
 
 > [[_оглавление_]](../README.md/#39-spring-security)
 
-> [**[3.9 Spring Security]**](/conspect/3.md/#39-spring-security)
+> [**[3.9 Spring Security]**](/conspect/03_09.md/#39-spring-security)
 
 ### Настройка _Spring Security_ с _Basic_-аутентификацией и использованием _JPA_-репозитория для данных пользователей:
 

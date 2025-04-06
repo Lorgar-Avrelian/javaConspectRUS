@@ -2,7 +2,7 @@
 
 > [[_оглавление_]](../README.md/#53-mockito)
 
-> [[**5.3 Mockito**]](/conspect/5.md/#53-mockito)
+> [[**5.3 Mockito**]](/conspect/05.md/#53-mockito)
 
 - файл _application-test.properties_:
 

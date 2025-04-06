@@ -2,7 +2,7 @@
 
 > [[_оглавление_]](../README.md/#38-spring-rest-clients)
 
-> [**[3.8.1 RestTemplate]**](/conspect/3.md/#381-resttemplate)
+> [**[3.8.1 RestTemplate]**](/conspect/03_08.md/#381-resttemplate)
 
 - создание и конфигурирование bean-компонента _RestTemplate_:
 
