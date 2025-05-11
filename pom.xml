@@ -21,6 +21,7 @@
         <module>syntax</module>
         <module>security-encoders</module>
         <module>threads</module>
+        <module>spring</module>
     </modules>
 
 </project>
