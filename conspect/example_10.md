@@ -2,7 +2,7 @@
 
 > [[_оглавление_]](../README.md/#83-sql)
 
-> [**[8.3.8 Liquibase]**](/conspect/08.md/#838-liquibase)
+> [**[8.3.8 Liquibase]**](/conspect/07.md/#838-liquibase)
 
 - добавление зависимости в файле _pom.xml_:
 
