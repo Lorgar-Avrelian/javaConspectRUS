@@ -2,7 +2,7 @@
 
 > [[_оглавление_]](../README.md/#111-telegram)
 
-> [**[11.1 Telegram]**](/conspect/11.md/#111-telegram)
+> [**[11.1 Telegram]**](/conspect/10.md/#111-telegram)
 
 - добавление токена и названия бота в файл _application.properties_:
 
