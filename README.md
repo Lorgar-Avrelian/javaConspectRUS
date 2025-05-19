@@ -246,18 +246,18 @@
 > > [_2.1.2.3 JVM_](/conspect/02_01.md/#2123-jvm)  
 
 > [**2.1.3 Память Java-приложения**](/conspect/02_01.md/#213-память-java-приложения)  
+> > [_2.1.3.1 Куча (Heap)_](/conspect/02_01.md/#2131-куча-heap)  
+> > [_2.1.3.2 Стек (Stack))_](/conspect/02_01.md/#2132-стек-stack)  
 
-> [**2.1.3 Сборка мусора (Garbage Collection)**](/conspect/02_01.md/#213-сборка-мусора-garbage-collection)
-> > [_2.1.3.1 Serial GC_](/conspect/02_01.md/#2131-serial-gc)  
-> > [_2.1.3.2 Parallel GC_](/conspect/02_01.md/#2132-parallel-gc)  
-> > [_2.1.3.3 CMS (Concurrent Mark Sweep) GC_](/conspect/02_01.md/#2133-cms-concurrent-mark-sweep-gc)  
-> > [_2.1.3.4 G1 (Garbage First) GC_](/conspect/02_01.md/#2134-g1-garbage-first-gc)
+> [**2.1.4 Сборка мусора (Garbage Collection)**](/conspect/02_01.md/#214-сборка-мусора-garbage-collection)
+> > [_2.1.4.1 Serial GC_](/conspect/02_01.md/#2141-serial-gc)  
+> > [_2.1.4.2 Parallel GC_](/conspect/02_01.md/#2142-parallel-gc)  
+> > [_2.1.4.3 CMS (Concurrent Mark Sweep) GC_](/conspect/02_01.md/#2143-cms-concurrent-mark-sweep-gc)  
+> > [_2.1.4.4 G1 (Garbage First) GC_](/conspect/02_01.md/#2144-g1-garbage-first-gc)
 
-> [**2.1.4 Жизненный цикл приложения**](/conspect/02_01.md/#214-жизненный-цикл-приложения)  
-> > [_2.1.4.1 JDK, JRE, JVM_](/conspect/02_01.md/#2141-jdk-jre-jvm)  
-> > [_2.1.4.2 Основные настройки JVM_](/conspect/02_01.md/#2142-основные-настройки-jvm)
+> [**2.1.5 Типы ссылок на объекты**](/conspect/02_01.md/#215-типы-ссылок-на-объекты)  
 
-> [**2.1.5 Типы ссылок на объекты**](/conspect/02_01.md/#215-типы-ссылок-на-объекты)
+> [**2.1.6 Настройка параметров работы Java-приложения**](/conspect/02_01.md/#216-настройка-параметров-работы-java-приложения)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
