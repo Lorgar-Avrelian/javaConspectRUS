@@ -245,6 +245,8 @@
 > > [_2.1.2.2 JRE_](/conspect/02_01.md/#2122-jre)  
 > > [_2.1.2.3 JVM_](/conspect/02_01.md/#2123-jvm)  
 
+> [**2.1.3 Память Java-приложения**](/conspect/02_01.md/#213-память-java-приложения)  
+
 > [**2.1.3 Сборка мусора (Garbage Collection)**](/conspect/02_01.md/#213-сборка-мусора-garbage-collection)
 > > [_2.1.3.1 Serial GC_](/conspect/02_01.md/#2131-serial-gc)  
 > > [_2.1.3.2 Parallel GC_](/conspect/02_01.md/#2132-parallel-gc)  
