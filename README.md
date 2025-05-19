@@ -240,9 +240,10 @@
 > > [_2.1.1.8 Граф_](/conspect/02_01.md/#2118-граф)  
 > > [_2.1.1.9 Дерево_](/conspect/02_01.md/#2119-дерево)  
 
-> [**2.1.1 Стек (Stack)**](/conspect/02_01.md/#211-стек-stack)
-
-> [**2.1.2 Куча (Heap)**](/conspect/02_01.md/#212-куча-heap)
+> [**2.1.2 Жизненный цикл Java-приложения**](/conspect/02_01.md/#212-жизненный-цикл-java-приложения)  
+> > [_2.1.2.1 JDK_](/conspect/02_01.md/#2121-jdk)  
+> > [_2.1.2.2 JRE_](/conspect/02_01.md/#2122-jre)  
+> > [_2.1.2.3 JVM_](/conspect/02_01.md/#2123-jvm)  
 
 > [**2.1.3 Сборка мусора (Garbage Collection)**](/conspect/02_01.md/#213-сборка-мусора-garbage-collection)
 > > [_2.1.3.1 Serial GC_](/conspect/02_01.md/#2131-serial-gc)  
