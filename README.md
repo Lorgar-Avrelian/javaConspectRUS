@@ -248,7 +248,7 @@
 > [**2.1.3 Память Java-приложения**](/conspect/02_01.md/#213-память-java-приложения)  
 > > [_2.1.3.1 Куча (Heap)_](/conspect/02_01.md/#2131-куча-heap)  
 > > [_2.1.3.2 Стэк (Stack)_](/conspect/02_01.md/#2132-стэк-stack)  
-> > [_2.1.3.3 Мета-пространство (Meta Space)_](/conspect/02_01.md/#2133-мета-пространство-meta-space)  
+> > [_2.1.3.3 Non-heap_](/conspect/02_01.md/#2133-non-heap)  
 
 > [**2.1.4 Сборка мусора (Garbage Collection)**](/conspect/02_01.md/#214-сборка-мусора-garbage-collection)
 > > [_2.1.4.1 Serial GC_](/conspect/02_01.md/#2141-serial-gc)  
