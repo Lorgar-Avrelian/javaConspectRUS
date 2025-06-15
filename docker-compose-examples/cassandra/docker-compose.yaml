@@ -1,0 +1,19 @@
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    restart: always
+    environment:
+      CASSANDRA_USER: cassandra
+      CASSANDRA_PASSWORD: cassandra
+    ports:
+      - "127.0.0.1:7002:7000"
+      - "127.0.0.1:7003:7001"
+      - "127.0.0.1:7200:7199"
+      - "127.0.0.1:9043:9042"
+      - "127.0.0.1:9161:9160"
+    volumes:
+      - cassandra-1:/var/lib/cassandra
+
+volumes:
+  cassandra-1:
