@@ -1,0 +1,93 @@
+services:
+  cassandra1:
+    image: cassandra:4.1.9
+    container_name: cassandra1
+    hostname: cassandra1
+    networks:
+      - cassandra-net
+    ports:
+      - "7002:7000"
+      - "7003:7001"
+      - "7200:7199"
+      - "9043:9042"
+      - "9161:9160"
+    environment: &cassandra_config
+      CASSANDRA_START_RPC: true
+      CASSANDRA_RPC_ADDRESS: 0.0.0.0
+      CASSANDRA_LISTEN_ADDRESS: auto
+      CASSANDRA_SEEDS: cassandra1, cassandra2
+      CASSANDRA_CLUSTER_NAME: my-cluster
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_RACK: rack1
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_NUM_TOKENS: 16
+    volumes:
+      - cassandra-1:/var/lib/cassandra:rw
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "nodetool status" ]
+      interval: 2m
+      start_period: 2m
+      timeout: 10s
+      retries: 3
+
+  cassandra2:
+    image: cassandra:4.1.9
+    container_name: cassandra2
+    hostname: cassandra2
+    networks:
+      - cassandra-net
+    ports:
+      - "7004:7000"
+      - "7005:7001"
+      - "7201:7199"
+      - "9044:9042"
+      - "9162:9160"
+    environment: *cassandra_config
+    depends_on:
+      cassandra1:
+        condition: service_healthy
+    volumes:
+      - cassandra-2:/var/lib/cassandra:rw
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "nodetool status" ]
+      interval: 2m
+      start_period: 2m
+      timeout: 10s
+      retries: 3
+
+  cassandra3:
+    image: cassandra:4.1.9
+    container_name: cassandra3
+    hostname: cassandra3
+    networks:
+      - cassandra-net
+    ports:
+      - "7006:7000"
+      - "7007:7001"
+      - "7202:7199"
+      - "9045:9042"
+      - "9163:9160"
+    environment: *cassandra_config
+    depends_on:
+      cassandra2:
+        condition: service_healthy
+    volumes:
+      - cassandra-3:/var/lib/cassandra:rw
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "nodetool status" ]
+      interval: 2m
+      start_period: 2m
+      timeout: 10s
+      retries: 3
+
+volumes:
+  cassandra-1:
+  cassandra-2:
+  cassandra-3:
+
+networks:
+  cassandra-net:
+    driver: bridge
