@@ -2,7 +2,7 @@ services:
   cassandra:
     image: cassandra:latest
     container_name: cassandra
-    restart: always
+    restart: on-failure
     environment:
       CASSANDRA_USER: cassandra
       CASSANDRA_PASSWORD: cassandra
