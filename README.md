@@ -305,30 +305,23 @@
 -----------------------------------------------------------------------------------------------------------------------
 [***2.4 Java Collections Framework***](/conspect/02_04.md/#24-java-collections-framework)
 
-> [**2.4.1 Класс Collections**](/conspect/02_04.md/#241-класс-collections)
-> > [_2.4.1.1 fill()_](/conspect/02_04.md/#2411-fill)  
-> > [_2.4.1.2 max()_](/conspect/02_04.md/#2412-max)  
-> > [_2.4.1.3 min()_](/conspect/02_04.md/#2413-min)  
-> > [_2.4.1.4 copy()_](/conspect/02_04.md/#2414-copy)  
-> > [_2.4.1.5 binarySearch()_](/conspect/02_04.md/#2415-binarysearch)
+> [**2.4.1 Список (_List_)**](/conspect/02_04.md/#241-список-list)
+> > [_2.4.1.1 **ArrayList**_](/conspect/02_04.md/#2411-arraylist)
+> > > [2.4.1.1.1 add()](/conspect/02_04.md/#24111-add)  
+> > > [2.4.1.1.2 get()](/conspect/02_04.md/#24112-get)  
+> > > [2.4.1.1.3 set()](/conspect/02_04.md/#24113-set)  
+> > > [2.4.1.1.4 size()](/conspect/02_04.md/#24114-size)  
+> > > [2.4.1.1.5 contains()](/conspect/02_04.md/#24115-contains)  
+> > > [2.4.1.1.6 remove()](/conspect/02_04.md/#24116-remove)  
+> > > [2.4.1.1.7 clear()](/conspect/02_04.md/#24117-clear)  
+> > > [2.4.1.1.8 addAll()](/conspect/02_04.md/#24118-addall)  
+> > > [2.4.1.1.9 indexOf()](/conspect/02_04.md/#24119-indexof)  
+> > > [2.4.1.1.10 isEmpty()](/conspect/02_04.md/#241110-isempty)  
+> > > [2.4.1.1.11 sort()](/conspect/02_04.md/#241111-sort)  
+> > > [2.4.1.1.12 toArray()](/conspect/02_04.md/#241112-toarray)
 
-> [**2.4.2 Список (_List_)**](/conspect/02_04.md/#242-список-list)
-> > [_2.4.2.1 **ArrayList**_](/conspect/02_04.md/#2421-arraylist)
-> > > [2.4.2.1.1 add()](/conspect/02_04.md/#24211-add)  
-> > > [2.4.2.1.2 get()](/conspect/02_04.md/#24212-get)  
-> > > [2.4.2.1.3 set()](/conspect/02_04.md/#24213-set)  
-> > > [2.4.2.1.4 size()](/conspect/02_04.md/#24214-size)  
-> > > [2.4.2.1.5 contains()](/conspect/02_04.md/#24215-contains)  
-> > > [2.4.2.1.6 remove()](/conspect/02_04.md/#24216-remove)  
-> > > [2.4.2.1.7 clear()](/conspect/02_04.md/#24217-clear)  
-> > > [2.4.2.1.8 addAll()](/conspect/02_04.md/#24218-addall)  
-> > > [2.4.2.1.9 indexOf()](/conspect/02_04.md/#24219-indexof)  
-> > > [2.4.2.1.10 isEmpty()](/conspect/02_04.md/#242110-isempty)  
-> > > [2.4.2.1.11 sort()](/conspect/02_04.md/#242111-sort)  
-> > > [2.4.2.1.12 toArray()](/conspect/02_04.md/#242112-toarray)
-
-> > [_2.4.2.2 **LinkedList**_](/conspect/02_04.md/#2422-linkedlist)  
-> > [_2.4.2.3 Разница между **ArrayList** и **LinkedList**_](/conspect/02_04.md/#2423-разница-между-arraylist-и-linkedlist)
+> > [_2.4.1.2 **LinkedList**_](/conspect/02_04.md/#2412-linkedlist)  
+> > [_2.4.1.3 Разница между **ArrayList** и **LinkedList**_](/conspect/02_04.md/#2413-разница-между-arraylist-и-linkedlist)
 
 > [**2.4.3 Множество (_Set_)**](/conspect/02_04.md/#243-множество-set)
 
@@ -375,6 +368,13 @@
 > > > [2.4.5.5.3 getKey()](/conspect/02_04.md/#24553-getkey)  
 > > > [2.4.5.5.4 getValue()](/conspect/02_04.md/#24554-getvalue)  
 > > > [2.4.5.5.5 setValue()](/conspect/02_04.md/#24555-setvalue)
+
+> [**2.4.1 Класс Collections**](/conspect/02_04.md/#241-класс-collections)
+> > [_2.4.1.1 fill()_](/conspect/02_04.md/#2411-fill)  
+> > [_2.4.1.2 max()_](/conspect/02_04.md/#2412-max)  
+> > [_2.4.1.3 min()_](/conspect/02_04.md/#2413-min)  
+> > [_2.4.1.4 copy()_](/conspect/02_04.md/#2414-copy)  
+> > [_2.4.1.5 binarySearch()_](/conspect/02_04.md/#2415-binarysearch)
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
