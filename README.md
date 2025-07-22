@@ -318,7 +318,8 @@
 > > > [2.4.1.1.9 indexOf()](/conspect/02_04.md/#24119-indexof)  
 > > > [2.4.1.1.10 isEmpty()](/conspect/02_04.md/#241110-isempty)  
 > > > [2.4.1.1.11 sort()](/conspect/02_04.md/#241111-sort)  
-> > > [2.4.1.1.12 toArray()](/conspect/02_04.md/#241112-toarray)
+> > > [2.4.1.1.12 toArray()](/conspect/02_04.md/#241112-toarray)  
+> > > [2.4.1.1.13 subList()](/conspect/02_04.md/#241113-sublist)  
 
 > > [_2.4.1.2 **LinkedList**_](/conspect/02_04.md/#2412-linkedlist)  
 > > [_2.4.1.3 Разница между **ArrayList** и **LinkedList**_](/conspect/02_04.md/#2413-разница-между-arraylist-и-linkedlist)
