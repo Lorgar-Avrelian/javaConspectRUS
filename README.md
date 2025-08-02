@@ -322,7 +322,7 @@
 > > > [2.4.1.1.13 subList()](/conspect/02_04.md/#241113-sublist)
 
 > > [_2.4.1.2 Двусвязный список (**LinkedList**)_](/conspect/02_04.md/#2412-двусвязный-список-linkedlist)  
-> > [_2.4.1.3 Разница между **ArrayList** и **LinkedList**_](/conspect/02_04.md/#2413-разница-между-arraylist-и-linkedlist)
+> > [_2.4.1.3 Разница между **ArrayList** и **LinkedList**_](/conspect/02_04.md/#2413-разница-между-arraylist-и-linkedlist)  
 > > [_2.4.1.4 Стек (**Stack**)_](conspect/02_04.md/#2414-стек-stack)
 
 > [**2.4.3 Множество (_Set_)**](/conspect/02_04.md/#243-множество-set)
