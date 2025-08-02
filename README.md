@@ -323,7 +323,12 @@
 
 > > [_2.4.1.2 Двусвязный список (**LinkedList**)_](/conspect/02_04.md/#2412-двусвязный-список-linkedlist)  
 > > [_2.4.1.3 Разница между **ArrayList** и **LinkedList**_](/conspect/02_04.md/#2413-разница-между-arraylist-и-linkedlist)  
-> > [_2.4.1.4 Стек (**Stack**)_](conspect/02_04.md/#2414-стек-stack)
+> > [_2.4.1.4 Стек (**Stack**)_](conspect/02_04.md/#2414-стек-stack)  
+> > > [2.4.1.4.1 push()](conspect/02_04.md/#24141-push)  
+> > > [2.4.1.4.2 pop()](conspect/02_04.md/#24142-pop)  
+> > > [2.4.1.4.3 peek()](conspect/02_04.md/#24143-peek)  
+> > > [2.4.1.4.4 empty()](conspect/02_04.md/#24144-empty)  
+> > > [2.4.1.4.5 search()](conspect/02_04.md/#24145-search)  
 
 > [**2.4.3 Множество (_Set_)**](/conspect/02_04.md/#243-множество-set)
 
