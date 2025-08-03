@@ -374,6 +374,8 @@
 > > > [2.4.3.8.10 getLast()](/conspect/02_04.md/#243810-getlast)  
 > > > [2.4.3.8.11 peekFirst()](/conspect/02_04.md/#243811-peekfirst)  
 > > > [2.4.3.8.12 peekLast()](/conspect/02_04.md/#243812-peeklast)  
+> > > [2.4.3.8.13 removeFirstOccurrence()](/conspect/02_04.md/#243813-removefirstoccurrence)  
+> > > [2.4.3.8.14 removeLastOccurrence()](/conspect/02_04.md/#243814-removelastoccurrence)  
 
 > [**2.4.5 Мап (_Map_)**](/conspect/02_04.md/#245-мап-map)
 > > [_2.4.5.1 **HashMap**_](/conspect/02_04.md/#2451-hashmap)
