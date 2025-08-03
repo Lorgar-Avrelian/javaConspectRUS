@@ -354,6 +354,10 @@
 > [**2.4.3 Очередь (_Queue_)**](/conspect/02_04.md/#243-очередь-queue)
 > > [_2.4.3.1 add()_](/conspect/02_04.md/#2431-add)  
 > > [_2.4.3.2 offer()_](/conspect/02_04.md/#2432-offer)  
+> > [_2.4.3.3 remove()_](/conspect/02_04.md/#2433-remove)  
+> > [_2.4.3.4 poll()_](/conspect/02_04.md/#2434-poll)  
+> > [_2.4.3.5 element()_](/conspect/02_04.md/#2435-element)  
+> > [_2.4.3.6 peek()_](/conspect/02_04.md/#2436-peek)  
 >
 > > [_2.4.3.6 Двусторонняя очередь (**Deque**)_](/conspect/02_04.md/#2436-двусторонняя-очередь-deque)
 > > > [2.4.3.6.1 addFirst()](/conspect/02_04.md/#24361-addfirst)  
