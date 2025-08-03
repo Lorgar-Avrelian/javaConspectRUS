@@ -333,6 +333,13 @@
 > [**2.4.2 Множество (_Set_)**](/conspect/02_04.md/#242-множество-set)  
 > > [_2.4.2.1 Хеш-таблица (**HashSet**)_](/conspect/02_04.md/#2421-хеш-таблица-hashset)  
 > > [_2.4.2.2 Связанная хеш-таблица (**LinkedHashSet**)_](/conspect/02_04.md/#2422-связанная-хеш-таблица-linkedhashset)  
+> > [_2.4.2.3 Сортированное множество (**SortedSet**)_](/conspect/02_04.md/#2423-сортированное-множество-sortedset)  
+> > > [2.4.2.3.1 first()](/conspect/02_04.md/#24231-first)  
+> > > [2.4.2.3.2 last()](/conspect/02_04.md/#24232-last)  
+> > > [2.4.2.3.3 headSet()](/conspect/02_04.md/#24233-headset)  
+> > > [2.4.2.3.4 tailSet()](/conspect/02_04.md/#24234-tailset)  
+> > > [2.4.2.3.5 subSet()](/conspect/02_04.md/#24235-subset)  
+> > [_2.4.2.3 Красно-чёрное дерево (**TreeSet**)_](/conspect/02_04.md/#2423-красно-чёрное-дерево-treeset)  
 
 > [**2.4.4 Очередь (_Queue_)**](/conspect/02_04.md/#244-очередь-queue)
 > > [_2.4.4.1 add()_](/conspect/02_04.md/#2441-add)  
