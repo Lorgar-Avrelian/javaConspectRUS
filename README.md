@@ -390,6 +390,10 @@
 > > [_2.4.4.4 containsValue()_](/conspect/02_04.md/#2444-containsvalue)  
 > > [_2.4.4.5 get()_](/conspect/02_04.md/#2445-get)  
 > > [_2.4.4.6 put()_](/conspect/02_04.md/#2446-put)  
+> > [_2.4.4.7 remove()_](/conspect/02_04.md/#2447-remove)  
+> > [_2.4.4.8 putAll()_](/conspect/02_04.md/#2448-putall)  
+> > [_2.4.4.9 clear()_](/conspect/02_04.md/#2449-clear)  
+> > [_2.4.4.10 keySet()_](/conspect/02_04.md/#24410-keyset)  
 > 
 > > [_2.4.5.1 **HashMap**_](/conspect/02_04.md/#2451-hashmap)  
 > > > [2.4.5.1.1 put()](/conspect/02_04.md/#24511-put)  
