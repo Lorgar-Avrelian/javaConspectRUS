@@ -416,6 +416,16 @@
 > > > [2.4.4.17.6 lastKey()](/conspect/02_04.md/#244176-lastkey)  
 > 
 > > > [2.4.4.17.7 Навигационная карта (**_NavigableMap_**)](/conspect/02_04.md/#244177-навигационная-карта-navigablemap)  
+> > > > [2.4.4.17.7.1 lowerEntry()](/conspect/02_04.md/#2441771-lowerentry)  
+> > > > [2.4.4.17.7.2 lowerKey()](/conspect/02_04.md/#2441772-lowerkey)  
+> > > > [2.4.4.17.7.3 floorEntry()](/conspect/02_04.md/#2441773-floorentry)  
+> > > > [2.4.4.17.7.4 floorKey()](/conspect/02_04.md/#2441774-floorkey)  
+> > > > [2.4.4.17.7.5 ceilingEntry()](/conspect/02_04.md/#2441775-ceilingentry)  
+> > > > [2.4.4.17.7.6 ceilingKey()](/conspect/02_04.md/#2441776-ceilingkey)  
+> > > > [2.4.4.17.7.7 higherEntry()](/conspect/02_04.md/#2441777-higherentry)  
+> > > > [2.4.4.17.7.8 higherKey()](/conspect/02_04.md/#2441778-higherkey)  
+> > > > [2.4.4.17.7.9 firstEntry()](/conspect/02_04.md/#2441779-firstentry)  
+> > > > [2.4.4.17.7.10 lastEntry()](/conspect/02_04.md/#24417710-lastentry)  
 > 
 > > [_2.4.5.3 **TreeMap**_](/conspect/02_04.md/#2453-treemap)  
 > > [_2.4.5.4 Сравнительная таблица реализаций интерфейса **Map**_](/conspect/02_04.md/#2454-сравнительная-таблица-реализаций-интерфейса-map)
