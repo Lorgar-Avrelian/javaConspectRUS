@@ -394,6 +394,7 @@
 > > [_2.4.4.8 putAll()_](/conspect/02_04.md/#2448-putall)  
 > > [_2.4.4.9 clear()_](/conspect/02_04.md/#2449-clear)  
 > > [_2.4.4.10 keySet()_](/conspect/02_04.md/#24410-keyset)  
+> > [_2.4.4.11 values()_](/conspect/02_04.md/#24411-values)  
 > 
 > > [_2.4.5.1 **HashMap**_](/conspect/02_04.md/#2451-hashmap)  
 > > > [2.4.5.1.1 put()](/conspect/02_04.md/#24511-put)  
