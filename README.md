@@ -384,7 +384,12 @@
 > > > [2.4.3.8.16 Двусторонняя очередь на базе динамического массива (**ArrayDeque**)](/conspect/02_04.md/#243816-двусторонняя-очередь-на-базе-динамического-массива-arraydeque)  
 
 > [**2.4.4 Карта (_Map_)**](/conspect/02_04.md/#244-карта-map)  
-> > [_2.4.4.1 containsKey()_](/conspect/02_04.md/#2441-containskey)  
+> > [_2.4.4.1 size()_](/conspect/02_04.md/#2441-size)  
+> > [_2.4.4.2 isEmpty()_](/conspect/02_04.md/#2442-isempty)  
+> > [_2.4.4.3 containsKey()_](/conspect/02_04.md/#2443-containskey)  
+> > [_2.4.4.4 containsValue()_](/conspect/02_04.md/#2444-containsvalue)  
+> > [_2.4.4.5 get()_](/conspect/02_04.md/#2445-get)  
+> > [_2.4.4.6 put()_](/conspect/02_04.md/#2446-put)  
 > 
 > > [_2.4.5.1 **HashMap**_](/conspect/02_04.md/#2451-hashmap)  
 > > > [2.4.5.1.1 put()](/conspect/02_04.md/#24511-put)  
