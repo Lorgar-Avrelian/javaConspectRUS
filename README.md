@@ -397,17 +397,6 @@
 > > [_2.4.4.11 values()_](/conspect/02_04.md/#24411-values)  
 > 
 > > [_2.4.5.1 **HashMap**_](/conspect/02_04.md/#2451-hashmap)  
-> > > [2.4.5.1.1 put()](/conspect/02_04.md/#24511-put)  
-> > > [2.4.5.1.2 get()](/conspect/02_04.md/#24512-get)  
-> > > [2.4.5.1.3 containsValue()](/conspect/02_04.md/#24513-containsvalue)  
-> > > [2.4.5.1.4 containsKey()](/conspect/02_04.md/#24514-containskey)  
-> > > [2.4.5.1.5 remove()](/conspect/02_04.md/#24515-remove)  
-> > > [2.4.5.1.6 isEmpty()](/conspect/02_04.md/#24516-isempty)  
-> > > [2.4.5.1.7 size()](/conspect/02_04.md/#24517-size)  
-> > > [2.4.5.1.8 clear()](/conspect/02_04.md/#24518-clear)  
-> > > [2.4.5.1.9 keySet()](/conspect/02_04.md/#24519-keyset)  
-> > > [2.4.5.1.10 values()](/conspect/02_04.md/#245110-values)  
-> > > [2.4.5.1.11 entrySet()](/conspect/02_04.md/#245111-entryset)
 >
 > > [_2.4.5.2 **LinkedHashMap**_](/conspect/02_04.md/#2452-linkedhashmap)  
 > > [_2.4.5.3 **TreeMap**_](/conspect/02_04.md/#2453-treemap)  
