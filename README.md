@@ -426,6 +426,11 @@
 > > > > [2.4.4.17.7.8 higherKey()](/conspect/02_04.md/#2441778-higherkey)  
 > > > > [2.4.4.17.7.9 firstEntry()](/conspect/02_04.md/#2441779-firstentry)  
 > > > > [2.4.4.17.7.10 lastEntry()](/conspect/02_04.md/#24417710-lastentry)  
+> > > > [2.4.4.17.7.11 pollFirstEntry()](/conspect/02_04.md/#24417711-pollfirstentry)  
+> > > > [2.4.4.17.7.12 pollLastEntry()](/conspect/02_04.md/#24417712-polllastentry)  
+> > > > [2.4.4.17.7.13 descendingMap()](/conspect/02_04.md/#24417713-descendingmap)  
+> > > > [2.4.4.17.7.14 navigableKeySet()](/conspect/02_04.md/#24417714-navigablekeyset)  
+> > > > [2.4.4.17.7.15 descendingKeySet()](/conspect/02_04.md/#24417715-descendingkeyset)  
 > 
 > > [_2.4.5.3 **TreeMap**_](/conspect/02_04.md/#2453-treemap)  
 > > [_2.4.5.4 Сравнительная таблица реализаций интерфейса **Map**_](/conspect/02_04.md/#2454-сравнительная-таблица-реализаций-интерфейса-map)
