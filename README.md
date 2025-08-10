@@ -405,8 +405,16 @@
 > > > [2.4.4.15.3 setValue()](/conspect/02_04.md/#244153-setvalue)
 > 
 > > [_2.4.4.16 Ассоциативный массив (**HashMap**)_](/conspect/02_04.md/#24416-ассоциативный-массив-hashmap)  
+> > > [2.4.4.16.1 Связанный ассоциативный массив (**_LinkedHashMap_**)](/conspect/02_04.md/#244161-связанный-ассоциативный-массив-linkedhashmap)  
 >
-> > [_2.4.5.2 **LinkedHashMap**_](/conspect/02_04.md/#2452-linkedhashmap)  
+> > [_2.4.4.17 Сортированная карта (**SortedMap**)_](/conspect/02_04.md/#24417-сортированная-карта-sortedmap)  
+> > > [2.4.4.17.1 comparator()](/conspect/02_04.md/#244171-comparator)  
+> > > [2.4.4.17.2 subMap()](/conspect/02_04.md/#244172-submap)  
+> > > [2.4.4.17.3 headMap()](/conspect/02_04.md/#244173-headmap)  
+> > > [2.4.4.17.4 tailMap()](/conspect/02_04.md/#244174-tailmap)  
+> > > [2.4.4.17.5 firstKey()](/conspect/02_04.md/#244175-firstkey)  
+> > > [2.4.4.17.6 lastKey()](/conspect/02_04.md/#244176-lastkey)  
+> 
 > > [_2.4.5.3 **TreeMap**_](/conspect/02_04.md/#2453-treemap)  
 > > [_2.4.5.4 Сравнительная таблица реализаций интерфейса **Map**_](/conspect/02_04.md/#2454-сравнительная-таблица-реализаций-интерфейса-map)
 
