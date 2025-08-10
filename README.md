@@ -396,13 +396,15 @@
 > > [_2.4.4.10 keySet()_](/conspect/02_04.md/#24410-keyset)  
 > > [_2.4.4.11 values()_](/conspect/02_04.md/#24411-values)  
 > > [_2.4.4.12 entrySet()_](/conspect/02_04.md/#24412-entryset)  
+> > [_2.4.4.13 getOrDefault()_](/conspect/02_04.md/#24413-getordefault)  
+> > [_2.4.4.14 putIfAbsent()_](/conspect/02_04.md/#24414-putifabsent)  
 >
-> > [_2.4.4.13 Интерфейс **Map.Entry**_](/conspect/02_04.md/#24413-интерфейс-mapentry)
-> > > [2.4.4.13.1 getKey()](/conspect/02_04.md/#244131-getkey)  
-> > > [2.4.4.13.2 getValue()](/conspect/02_04.md/#244132-getvalue)  
-> > > [2.4.4.13.3 setValue()](/conspect/02_04.md/#244133-setvalue)
+> > [_2.4.4.15 Интерфейс **Map.Entry**_](/conspect/02_04.md/#24415-интерфейс-mapentry)
+> > > [2.4.4.15.1 getKey()](/conspect/02_04.md/#244151-getkey)  
+> > > [2.4.4.15.2 getValue()](/conspect/02_04.md/#244152-getvalue)  
+> > > [2.4.4.15.3 setValue()](/conspect/02_04.md/#244153-setvalue)
 > 
-> > [_2.4.5.1 **HashMap**_](/conspect/02_04.md/#2451-hashmap)  
+> > [_2.4.4.16 Ассоциативный массив (**HashMap**)_](/conspect/02_04.md/#24416-ассоциативный-массив-hashmap)  
 >
 > > [_2.4.5.2 **LinkedHashMap**_](/conspect/02_04.md/#2452-linkedhashmap)  
 > > [_2.4.5.3 **TreeMap**_](/conspect/02_04.md/#2453-treemap)  
