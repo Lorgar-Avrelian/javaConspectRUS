@@ -395,19 +395,18 @@
 > > [_2.4.4.9 clear()_](/conspect/02_04.md/#2449-clear)  
 > > [_2.4.4.10 keySet()_](/conspect/02_04.md/#24410-keyset)  
 > > [_2.4.4.11 values()_](/conspect/02_04.md/#24411-values)  
+> > [_2.4.4.12 entrySet()_](/conspect/02_04.md/#24412-entryset)  
+>
+> > [_2.4.4.13 Интерфейс **Map.Entry**_](/conspect/02_04.md/#24413-интерфейс-mapentry)
+> > > [2.4.4.13.1 getKey()](/conspect/02_04.md/#244131-getkey)  
+> > > [2.4.4.13.2 getValue()](/conspect/02_04.md/#244132-getvalue)  
+> > > [2.4.4.13.3 setValue()](/conspect/02_04.md/#244133-setvalue)
 > 
 > > [_2.4.5.1 **HashMap**_](/conspect/02_04.md/#2451-hashmap)  
 >
 > > [_2.4.5.2 **LinkedHashMap**_](/conspect/02_04.md/#2452-linkedhashmap)  
 > > [_2.4.5.3 **TreeMap**_](/conspect/02_04.md/#2453-treemap)  
 > > [_2.4.5.4 Сравнительная таблица реализаций интерфейса **Map**_](/conspect/02_04.md/#2454-сравнительная-таблица-реализаций-интерфейса-map)
->
-> > [_2.4.5.5 Интерфейс **Map.Entry**_](/conspect/02_04.md/#2455-интерфейс-mapentry)
-> > > [2.4.5.5.1 equals()](/conspect/02_04.md/#24551-equals)  
-> > > [2.4.5.5.2 hashCode()](/conspect/02_04.md/#24552-hashcode)  
-> > > [2.4.5.5.3 getKey()](/conspect/02_04.md/#24553-getkey)  
-> > > [2.4.5.5.4 getValue()](/conspect/02_04.md/#24554-getvalue)  
-> > > [2.4.5.5.5 setValue()](/conspect/02_04.md/#24555-setvalue)
 
 > [**2.4.1 Класс Collections**](/conspect/02_04.md/#241-класс-collections)
 > > [_2.4.1.1 fill()_](/conspect/02_04.md/#2411-fill)  
