@@ -22,7 +22,6 @@
         <module>security-encoders</module>
         <module>threads</module>
         <module>spring</module>
-        <module>experimental</module>
     </modules>
 
 </project>
