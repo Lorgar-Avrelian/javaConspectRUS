@@ -455,6 +455,8 @@
 > [**2.4.6 Класс Collections**](/conspect/02_04.md/#246-класс-collections)
 > > [_2.4.6.1 sort()_](/conspect/02_04.md/#2461-sort)  
 > > [_2.4.6.2 binarySearch()_](/conspect/02_04.md/#2462-binarysearch)  
+> > [_2.4.6.3 reverse()_](/conspect/02_04.md/#2463-reverse)  
+> > [_2.4.6.4 shuffle()_](/conspect/02_04.md/#2464-shuffle)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
