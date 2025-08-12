@@ -465,6 +465,7 @@
 > > [_2.4.6.10 rotate()_](/conspect/02_04.md/#24610-rotate)  
 > > [_2.4.6.11 replaceAll()_](/conspect/02_04.md/#24611-replaceall)  
 > > [_2.4.6.12 indexOfSubList()_](/conspect/02_04.md/#24612-indexofsublist)  
+> > [_2.4.6.13 lastIndexOfSubList()_](/conspect/02_04.md/#24613-lastindexofsublist)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
