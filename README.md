@@ -506,6 +506,7 @@
 > > > [2.5.3.3.10 noneMatch()](/conspect/02_05.md/#253310-nonematch)  
 > > > [2.5.3.3.11 toArray()](/conspect/02_05.md/#253311-toarray)  
 > > > [2.5.3.3.12 toList()](/conspect/02_05.md/#253312-tolist)  
+> > > [2.5.3.3.13 reduce()](/conspect/02_05.md/#253313-reduce)  
 
 > [**2.5.4 Collectors**](/conspect/02_05.md/#254-collectors)
 
