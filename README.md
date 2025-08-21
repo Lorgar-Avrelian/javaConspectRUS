@@ -491,7 +491,8 @@
 > > > [2.5.3.2.4 map()](/conspect/02_05.md/#25324-map)  
 > > > [2.5.3.2.5 flatMap()](/conspect/02_05.md/#25325-flatmap)  
 > > > [2.5.3.2.6 skip()](/conspect/02_05.md/#25326-skip)  
-> > > [2.5.3.2.7 sorted()](/conspect/02_05.md/#25327-sorted)
+> > > [2.5.3.2.7 sorted()](/conspect/02_05.md/#25327-sorted)  
+> > > [2.5.3.2.8 gather()](/conspect/02_05.md/#25328-gather)
 >
 > > [_2.5.3.3 Терминальные (конечные) операции_](/conspect/02_05.md/#2533-терминальные-конечные-операции)
 > > > [2.5.3.3.1 allMatch()](/conspect/02_05.md/#25331-allmatch)  
