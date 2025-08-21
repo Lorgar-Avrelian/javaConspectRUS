@@ -504,7 +504,8 @@
 > > > [2.5.3.3.8 max()](/conspect/02_05.md/#25338-max)  
 > > > [2.5.3.3.9 min()](/conspect/02_05.md/#25339-min)  
 > > > [2.5.3.3.10 noneMatch()](/conspect/02_05.md/#253310-nonematch)  
-> > > [2.5.3.3.11 toArray()](/conspect/02_05.md/#253311-toarray)
+> > > [2.5.3.3.11 toArray()](/conspect/02_05.md/#253311-toarray)  
+> > > [2.5.3.3.12 toList()](/conspect/02_05.md/#253312-tolist)  
 
 > [**2.5.4 Collectors**](/conspect/02_05.md/#254-collectors)
 
