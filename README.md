@@ -522,16 +522,10 @@
 > > [_2.5.4.10 toMap()_](/conspect/02_05.md/#25410-tomap)  
 
 > [**2.5.5 Optional**](/conspect/02_05.md/#255-optional)
-> > [_2.5.5.1 Создание Optional_](/conspect/02_05.md/#2551-создание-optional)  
-> > [_2.5.5.2 isPresent() и isEmpty()_](/conspect/02_05.md/#2552-ispresent-и-isempty)  
-> > [_2.5.5.3 ifPresent()_](/conspect/02_05.md/#2553-ifpresent)  
-> > [_2.5.5.4 orElse()_](/conspect/02_05.md/#2554-orelse)  
-> > [_2.5.5.5 orElseGet()_](/conspect/02_05.md/#2555-orelseget)  
-> > [_2.5.5.6 orElseThrow()_](/conspect/02_05.md/#2556-orelsethrow)  
-> > [_2.5.5.7 get()_](/conspect/02_05.md/#2557-get)  
-> > [_2.5.5.8 filter()_](/conspect/02_05.md/#2558-filter)  
-> > [_2.5.5.9 map()_](/conspect/02_05.md/#2559-map)  
-> > [_2.5.5.10 flatMap()_](/conspect/02_05.md/#25510-flatmap)
+> > [_2.5.5.1 empty()_](/conspect/02_05.md/#2551-empty)  
+> > [_2.5.5.2 of()_](/conspect/02_05.md/#2552-of)  
+> > [_2.5.5.3 ofNullable()_](/conspect/02_05.md/#2553-ofnullable)  
+> > [_2.5.5.4 get()_](/conspect/02_05.md/#2554-get)  
 
 > [**2.5.6 Параллельные стримы**](/conspect/02_05.md/#256-параллельные-стримы)
 -----------------------------------------------------------------------------------------------------------------------
