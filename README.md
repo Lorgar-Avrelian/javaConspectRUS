@@ -517,6 +517,7 @@
 > > [_2.5.4.5 toUnmodifiableSet()_](/conspect/02_05.md/#2545-tounmodifiableset)  
 > > [_2.5.4.6 joining()_](/conspect/02_05.md/#2546-joining)  
 > > [_2.5.4.7 mapping()_](/conspect/02_05.md/#2547-mapping)  
+> > [_2.5.4.8 groupingBy()_](/conspect/02_05.md/#2548-groupingby)  
 
 > [**2.5.5 Optional**](/conspect/02_05.md/#255-optional)
 > > [_2.5.5.1 Создание Optional_](/conspect/02_05.md/#2551-создание-optional)  
