@@ -531,6 +531,11 @@
 > > [_2.5.5.7 ifPresent()_](/conspect/02_05.md/#2557-ifpresent)  
 > > [_2.5.5.8 ifPresentOrElse()_](/conspect/02_05.md/#2558-ifpresentorelse)  
 > > [_2.5.5.9 filter()_](/conspect/02_05.md/#2559-filter)  
+> > [_2.5.5.10 map()_](/conspect/02_05.md/#25510-map)  
+> > [_2.5.5.11 flatMap()_](/conspect/02_05.md/#25511-flatmap)  
+> > [_2.5.5.12 or()_](/conspect/02_05.md/#25512-or)  
+> > [_2.5.5.13 orElse()_](/conspect/02_05.md/#25513-orelse)  
+> > [_2.5.5.14 orElseGet()_](/conspect/02_05.md/#25514-orelseget)  
 
 > [**2.5.6 Параллельные стримы**](/conspect/02_05.md/#256-параллельные-стримы)
 -----------------------------------------------------------------------------------------------------------------------
