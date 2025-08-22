@@ -509,7 +509,14 @@
 > > > [2.5.3.3.12 toList()](/conspect/02_05.md/#253312-tolist)  
 > > > [2.5.3.3.13 reduce()](/conspect/02_05.md/#253313-reduce)  
 
-> [**2.5.4 Collectors**](/conspect/02_05.md/#254-collectors)
+> [**2.5.4 Collectors**](/conspect/02_05.md/#254-collectors)  
+> > [_2.5.4.1 toCollection()_](/conspect/02_05.md/#2541-tocollection)  
+> > [_2.5.4.2 toList()_](/conspect/02_05.md/#2542-tolist)  
+> > [_2.5.4.3 toUnmodifiableList()_](/conspect/02_05.md/#2543-tounmodifiablelist)  
+> > [_2.5.4.4 toSet()_](/conspect/02_05.md/#2544-toset)  
+> > [_2.5.4.5 toUnmodifiableSet()_](/conspect/02_05.md/#2545-tounmodifiableset)  
+> > [_2.5.4.6 joining()_](/conspect/02_05.md/#2546-joining)  
+> > [_2.5.4.7 mapping()_](/conspect/02_05.md/#2547-mapping)  
 
 > [**2.5.5 Optional**](/conspect/02_05.md/#255-optional)
 > > [_2.5.5.1 Создание Optional_](/conspect/02_05.md/#2551-создание-optional)  
