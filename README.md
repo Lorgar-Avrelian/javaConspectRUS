@@ -519,6 +519,7 @@
 > > [_2.5.4.7 mapping()_](/conspect/02_05.md/#2547-mapping)  
 > > [_2.5.4.8 groupingBy()_](/conspect/02_05.md/#2548-groupingby)  
 > > [_2.5.4.9 partitioningBy()_](/conspect/02_05.md/#2549-partitioningby)  
+> > [_2.5.4.10 toMap()_](/conspect/02_05.md/#25410-tomap)  
 
 > [**2.5.5 Optional**](/conspect/02_05.md/#255-optional)
 > > [_2.5.5.1 Создание Optional_](/conspect/02_05.md/#2551-создание-optional)  
