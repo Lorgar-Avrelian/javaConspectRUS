@@ -548,13 +548,8 @@
 [***2.6 Многопоточность (Multithreading)***](/conspect/02_06.md/#26-многопоточность-multithreading)
 
 > [**2.6.1 Класс Thread**](/conspect/02_06.md/#261-класс-thread)  
-> > [_2.9.1.1 start()_](/conspect/02_06.md/#2911-start)  
-> > [_2.9.1.2 run()_](/conspect/02_06.md/#2912-run)  
-> > [_2.9.1.3 sleep()_](/conspect/02_06.md/#2913-sleep)  
-> > [_2.9.1.4 join()_](/conspect/02_06.md/#2914-join)  
-> > [_2.9.1.5 interrupt()_](/conspect/02_06.md/#2915-interrupt)  
-> > [_2.9.1.6 currentThread()_](/conspect/02_06.md/#2916-currentthread)  
-> > [_2.9.1.7 isInterrupted()_](/conspect/02_06.md/#2917-isinterrupted)
+> > [_2.6.1.1 Состояния потока_](/conspect/02_06.md/#2611-состояния-потока)  
+> > [_2.6.1.2 Создание потока_](/conspect/02_06.md/#2612-создание-потока)  
 
 > [**2.9.2 Потоки-демоны**](/conspect/02_06.md/#292-потоки-демоны)
 
