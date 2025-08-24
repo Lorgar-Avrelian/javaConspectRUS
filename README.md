@@ -562,6 +562,8 @@
 > > [_2.6.1.12 isInterrupted()_](/conspect/02_06.md/#26112-isinterrupted)  
 > > [_2.6.1.13 setDaemon()_](/conspect/02_06.md/#26113-setdaemon)  
 > > [_2.6.1.14 isDaemon()_](/conspect/02_06.md/#26114-isdaemon)  
+> > [_2.6.1.15 setUncaughtExceptionHandler()_](/conspect/02_06.md/#26115-setuncaughtexceptionhandler)  
+> > [_2.6.1.16 setDefaultUncaughtExceptionHandler()_](/conspect/02_06.md/#26116-setdefaultuncaughtexceptionhandler)  
 
 > [**2.6.2 Потоки-демоны**](/conspect/02_06.md/#262-потоки-демоны)
 
