@@ -555,6 +555,8 @@
 > > [_2.6.1.5 join()_](/conspect/02_06.md/#2615-join)  
 > > [_2.6.1.6 sleep()_](/conspect/02_06.md/#2616-sleep)  
 > > [_2.6.1.7 wait()_](/conspect/02_06.md/#2617-wait)  
+> > [_2.6.1.8 notify()_](/conspect/02_06.md/#2618-notify)  
+> > [_2.6.1.9 notifyAll()_](/conspect/02_06.md/#2619-notifyall)  
 
 > [**2.9.2 Потоки-демоны**](/conspect/02_06.md/#292-потоки-демоны)
 
