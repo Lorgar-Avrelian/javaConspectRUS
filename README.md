@@ -560,8 +560,10 @@
 > > [_2.6.1.10 interrupt()_](/conspect/02_06.md/#26110-interrupt)  
 > > [_2.6.1.11 currentThread()_](/conspect/02_06.md/#26111-currentthread)  
 > > [_2.6.1.12 isInterrupted()_](/conspect/02_06.md/#26112-isinterrupted)  
+> > [_2.6.1.13 setDaemon()_](/conspect/02_06.md/#26113-setdaemon)  
+> > [_2.6.1.14 isDaemon()_](/conspect/02_06.md/#26114-isdaemon)  
 
-> [**2.9.2 Потоки-демоны**](/conspect/02_06.md/#292-потоки-демоны)
+> [**2.6.2 Потоки-демоны**](/conspect/02_06.md/#262-потоки-демоны)
 
 > [**2.9.3 Синхронизация потоков**](/conspect/02_06.md/#293-синхронизация-потоков)
 > > [_2.9.3.1 **Deadlock**_](/conspect/02_06.md/#2931-deadlock)  
