@@ -557,6 +557,9 @@
 > > [_2.6.1.7 wait()_](/conspect/02_06.md/#2617-wait)  
 > > [_2.6.1.8 notify()_](/conspect/02_06.md/#2618-notify)  
 > > [_2.6.1.9 notifyAll()_](/conspect/02_06.md/#2619-notifyall)  
+> > [_2.6.1.10 interrupt()_](/conspect/02_06.md/#26110-interrupt)  
+> > [_2.6.1.11 currentThread()_](/conspect/02_06.md/#26111-currentthread)  
+> > [_2.6.1.12 isInterrupted()_](/conspect/02_06.md/#26112-isinterrupted)  
 
 > [**2.9.2 Потоки-демоны**](/conspect/02_06.md/#292-потоки-демоны)
 
