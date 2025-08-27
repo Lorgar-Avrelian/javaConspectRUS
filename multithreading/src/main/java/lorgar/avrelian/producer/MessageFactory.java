@@ -3,6 +3,8 @@ package lorgar.avrelian.producer;
 import lorgar.avrelian.model.Message;
 
 /**
+ * Фабрика сообщений
+ *
  * @author Victor Tokovenko
  */
 public final class MessageFactory {
@@ -18,6 +20,11 @@ public final class MessageFactory {
         return new Message(String.format(MESSAGE_TEMPLATE, this.incrementNextMessageId(), produce.getName()));
     }
 
+    /**
+     * Синхронизированный метод для генерации порядкового номера сообщения
+     *
+     * @return ID сообщения
+     */
     private synchronized int incrementNextMessageId() {
         return this.nextMessageId++;
     }

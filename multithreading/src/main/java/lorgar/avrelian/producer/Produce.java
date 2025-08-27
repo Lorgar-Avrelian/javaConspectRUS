@@ -6,6 +6,8 @@ import lorgar.avrelian.model.Message;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Задача для продюсеров сообщений
+ *
  * @author Victor Tokovenko
  */
 public final class Produce implements Runnable {

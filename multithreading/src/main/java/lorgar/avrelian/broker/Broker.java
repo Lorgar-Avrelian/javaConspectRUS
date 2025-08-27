@@ -10,6 +10,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
+ * Брокер сообщений
+ *
  * @author Victor Tokovenko
  */
 public final class Broker {
@@ -46,12 +48,20 @@ public final class Broker {
         return this.getClass().getName() + " [messages = " + messages + "]";
     }
 
+    /**
+     * Метод для публикации сообщений в очереди брокера
+     *
+     * @param message сообщение
+     * @param produce задача для продюсера
+     * @return булев результат успешной/неудачной отправки
+     */
     public synchronized boolean produce(final Message message, final Produce produce) {
         while (!this.shouldProduce(produce)) {
             try {
                 super.wait();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                return false;
             }
         }
         boolean add = this.messages.add(message);
@@ -59,10 +69,22 @@ public final class Broker {
         return add;
     }
 
+    /**
+     * Метод для определения возможности публикации сообщения потоком-продюсером
+     *
+     * @param produce задача для продюсера
+     * @return булев результат возможности публикации с учётом текущих настроек продюсера и брокера
+     */
     private boolean shouldProduce(final Produce produce) {
         return this.messages.size() < this.maxMessages && produce.getMaximumMessages() >= this.messages.size();
     }
 
+    /**
+     * Метод для чтения сообщений из очереди брокера
+     *
+     * @param task задача для получателя
+     * @return {@link Optional} с прочитанным сообщением
+     */
     public synchronized Optional<Message> consume(Consume task) {
         while (!this.shouldConsume(task)) {
             try {
@@ -77,6 +99,12 @@ public final class Broker {
         return Optional.ofNullable(message);
     }
 
+    /**
+     * Метод для определения возможности чтения сообщения потоком-получателем
+     *
+     * @param consume задача для получателя
+     * @return булев результат возможности чтения с учётом текущих настроек получателя и брокера
+     */
     private boolean shouldConsume(final Consume consume) {
         return !this.messages.isEmpty() && consume.getMinimalMessages() <= this.messages.size();
     }
