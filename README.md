@@ -577,6 +577,12 @@
 > > > [2.6.5.3.3 notifyAll()](/conspect/02_06.md/#26533-notifyall)  
 > 
 > > [_2.6.5.4 **Lock**_](/conspect/02_06.md/#2654-lock)  
+> > > [2.6.5.4.1 lock()](/conspect/02_06.md/#26541-lock)  
+> > > [2.6.5.4.2 lockInterruptibly()](/conspect/02_06.md/#26542-lockinterruptibly)  
+> > > [2.6.5.4.3 tryLock()](/conspect/02_06.md/#26543-trylock)  
+> > > [2.6.5.4.4 unlock()](/conspect/02_06.md/#26544-unlock)  
+> > > [2.6.5.4.5 newCondition()](/conspect/02_06.md/#26545-newcondition)  
+> 
 > > [_2.9.3.1 **Deadlock**_](/conspect/02_06.md/#2931-deadlock)  
 > > [_2.9.3.2 Синхронизаторы_](/conspect/02_06.md/#2932-синхронизаторы)
 > > > [2.9.3.2.1 **Semaphore**](/conspect/02_06.md/#29321-semaphore)  
