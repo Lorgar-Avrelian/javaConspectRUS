@@ -583,6 +583,8 @@
 > > > [2.6.5.4.4 unlock()](/conspect/02_06.md/#26544-unlock)  
 > > > [2.6.5.4.5 newCondition()](/conspect/02_06.md/#26545-newcondition)  
 > 
+> > > [2.6.5.4.6 **Condition**](/conspect/02_06.md/#26546-condition)  
+> 
 > > [_2.9.3.1 **Deadlock**_](/conspect/02_06.md/#2931-deadlock)  
 > > [_2.9.3.2 Синхронизаторы_](/conspect/02_06.md/#2932-синхронизаторы)
 > > > [2.9.3.2.1 **Semaphore**](/conspect/02_06.md/#29321-semaphore)  
