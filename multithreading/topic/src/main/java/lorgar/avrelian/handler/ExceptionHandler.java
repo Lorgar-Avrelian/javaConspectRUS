@@ -1,6 +1,8 @@
 package lorgar.avrelian.handler;
 
 /**
+ * Обработчик непроверяемых исключений
+ *
  * @author Victor Tokovenko
  */
 public final class ExceptionHandler implements Thread.UncaughtExceptionHandler {

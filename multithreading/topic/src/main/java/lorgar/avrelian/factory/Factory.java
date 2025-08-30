@@ -3,6 +3,8 @@ package lorgar.avrelian.factory;
 import java.util.concurrent.ThreadFactory;
 
 /**
+ * Фабрика потоков
+ *
  * @author Victor Tokovenko
  */
 public class Factory implements ThreadFactory {

@@ -7,6 +7,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * Топик
+ *
  * @author Victor Tokovenko
  */
 public final class Topic<T> {
@@ -23,10 +25,16 @@ public final class Topic<T> {
         this.queu = new ArrayDeque<T>(length);
     }
 
+    /**
+     * Метод для чтения сообщения из топика.
+     *
+     * @return сообщение из топика
+     * @throws InterruptedException в случае прерывания потока
+     */
     public T read() throws InterruptedException {
         lock.lock();
         try {
-            while (queu.size() == 0) {
+            while (queu.isEmpty()) {
                 empty.await();
             }
             final T poll = queu.poll();
@@ -39,6 +47,12 @@ public final class Topic<T> {
         }
     }
 
+    /**
+     * Метод для публикации сообщения в топик.
+     *
+     * @return булев результат публикации
+     * @throws InterruptedException в случае прерывания потока
+     */
     public boolean write(final T value) throws InterruptedException {
         lock.lock();
         try {
@@ -55,6 +69,9 @@ public final class Topic<T> {
         }
     }
 
+    /**
+     * Метод для вывода в терминал текущей статистики сообщений в топике.
+     */
     public void messages() {
         System.out.println("Topic contains " + queu.size() + " messages: " + queu);
     }

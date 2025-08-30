@@ -5,6 +5,8 @@ import lorgar.avrelian.topic.Topic;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Задача для потоков-потребителей
+ *
  * @author Victor Tokovenko
  */
 public final class ReadTask implements Runnable {

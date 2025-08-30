@@ -5,6 +5,8 @@ import lorgar.avrelian.topic.Topic;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Задача для потока-продюсера
+ *
  * @author Victor Tokovenko
  */
 public final class WriteTask implements Runnable {

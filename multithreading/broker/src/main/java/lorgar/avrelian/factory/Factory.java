@@ -5,6 +5,8 @@ import lorgar.avrelian.handler.ExceptionHandler;
 import java.util.concurrent.ThreadFactory;
 
 /**
+ * Фабрика потоков
+ *
  * @author Victor Tokovenko
  */
 public class Factory implements ThreadFactory {
