@@ -584,6 +584,12 @@
 > > > [2.6.5.4.5 newCondition()](/conspect/02_06.md/#26545-newcondition)  
 > 
 > > > [2.6.5.4.6 **Condition**](/conspect/02_06.md/#26546-condition)  
+> > > > [2.6.5.4.6.1 await()](/conspect/02_06.md/#265461-await)  
+> > > > [2.6.5.4.6.2 awaitUninterruptibly()](/conspect/02_06.md/#265462-awaituninterruptibly)  
+> > > > [2.6.5.4.6.3 awaitNanos()](/conspect/02_06.md/#265463-awaitnanos)  
+> > > > [2.6.5.4.6.4 awaitUntil()](/conspect/02_06.md/#265464-awaituntil)  
+> > > > [2.6.5.4.6.5 signal()](/conspect/02_06.md/#265465-signal)  
+> > > > [2.6.5.4.6.6 signalAll()](/conspect/02_06.md/#265466-signalall)  
 > 
 > > [_2.9.3.1 **Deadlock**_](/conspect/02_06.md/#2931-deadlock)  
 > > [_2.9.3.2 Синхронизаторы_](/conspect/02_06.md/#2932-синхронизаторы)
