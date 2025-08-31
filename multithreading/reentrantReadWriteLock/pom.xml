@@ -5,18 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>lorgar.avrelian</groupId>
-        <artifactId>javaconspectrus</artifactId>
+        <artifactId>multithreading</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>multithreading</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>broker</module>
-        <module>topic</module>
-        <module>reentrantLock</module>
-        <module>reentrantReadWriteLock</module>
-    </modules>
+    <artifactId>reentrantReadWriteLock</artifactId>
 
     <properties>
         <maven.compiler.source>24</maven.compiler.source>
