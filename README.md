@@ -593,7 +593,10 @@
 > 
 > > > [2.6.5.4.7 **ReentrantLock**](/conspect/02_06.md/#26547-reentrantlock)  
 > > > [2.6.5.4.8 **ReadWriteLock**](/conspect/02_06.md/#26548-readwritelock)  
-> > > > [2.6.5.4.8.1 **ReentrantReadWriteLock**](/conspect/02_06.md/#265481-reentrantreadwritelock)  
+> > > > [2.6.5.4.8.1 readLock()](/conspect/02_06.md/#265481-readlock)  
+> > > > [2.6.5.4.8.2 writeLock()](/conspect/02_06.md/#265482-writelock)  
+> 
+> > > > [2.6.5.4.8.3 **ReentrantReadWriteLock**](/conspect/02_06.md/#265483-reentrantreadwritelock)  
 > 
 > > [_2.9.3.1 **Deadlock**_](/conspect/02_06.md/#2931-deadlock)  
 > > [_2.9.3.2 Синхронизаторы_](/conspect/02_06.md/#2932-синхронизаторы)
