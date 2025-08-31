@@ -599,6 +599,7 @@
 > > > > [2.6.5.4.8.3 **ReentrantReadWriteLock**](/conspect/02_06.md/#265483-reentrantreadwritelock)  
 > 
 > > [_2.6.5.5 **Deadlock**_](/conspect/02_06.md/#2655-deadlock)  
+> > [_2.6.5.6 **Livelock**_](/conspect/02_06.md/#2656-livelock)  
 > 
 > > [_2.9.3.2 Синхронизаторы_](/conspect/02_06.md/#2932-синхронизаторы)
 > > > [2.9.3.2.1 **Semaphore**](/conspect/02_06.md/#29321-semaphore)  
