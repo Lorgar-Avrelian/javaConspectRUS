@@ -603,12 +603,12 @@
 > 
 > > [_2.6.5.7 Атомики (**Atomic\***)_](/conspect/02_06.md/#2657-атомики-atomic)  
 > 
-> > [_2.9.3.2 Синхронизаторы_](/conspect/02_06.md/#2932-синхронизаторы)
-> > > [2.9.3.2.1 **Semaphore**](/conspect/02_06.md/#29321-semaphore)  
-> > > [2.9.3.2.2 **CountDownLatch**](/conspect/02_06.md/#29322-countdownlatch)  
-> > > [2.9.3.2.3 **CyclicBarrier**](/conspect/02_06.md/#29323-cyclicbarrier)  
-> > > [2.9.3.2.4 **Exchanger**](/conspect/02_06.md/#29324-exchanger)  
-> > > [2.9.3.2.5 **Phaser**](/conspect/02_06.md/#29325-phaser)
+> > [_2.6.5.8 Синхронизаторы_](/conspect/02_06.md/#2658-синхронизаторы)
+> > > [2.6.5.8.1 **Semaphore**](/conspect/02_06.md/#26581-semaphore)  
+> > > [2.6.5.8.2 **CountDownLatch**](/conspect/02_06.md/#26582-countdownlatch)  
+> > > [2.6.5.8.3 **CyclicBarrier**](/conspect/02_06.md/#26583-cyclicbarrier)  
+> > > [2.6.5.8.4 **Exchanger**](/conspect/02_06.md/#26584-exchanger)  
+> > > [2.6.5.8.5 **Phaser**](/conspect/02_06.md/#26585-phaser)
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
