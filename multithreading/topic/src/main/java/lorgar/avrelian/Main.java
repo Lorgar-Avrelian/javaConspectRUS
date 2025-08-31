@@ -96,7 +96,7 @@ public class Main {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                thread.interrupt();
+                Thread.currentThread().interrupt();
             }
         }
     }
