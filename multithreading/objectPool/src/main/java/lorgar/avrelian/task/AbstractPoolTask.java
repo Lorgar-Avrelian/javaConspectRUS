@@ -26,5 +26,10 @@ public abstract class AbstractPoolTask<T> implements Runnable {
         }
     }
 
+    /**
+     * Метод для реализации операций с объектом, которые должны быть выполнены потоком в процессе работы с объектом.
+     *
+     * @param object объект из пула объектов {@link AbstractPool}.
+     */
     protected abstract void work(final T object);
 }
