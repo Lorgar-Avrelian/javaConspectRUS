@@ -612,6 +612,7 @@
 > 
 > [**2.6.6 Concurrent Collections**](/conspect/02_06.md/#266-concurrent-collections)  
 > > [_2.6.6.1 **CopyOnWriteArrayList**_](/conspect/02_06.md/#2661-copyonwritearraylist)  
+> > [_2.6.6.2 **CopyOnWriteArraySet**_](/conspect/02_06.md/#2662-copyonwritearrayset)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
