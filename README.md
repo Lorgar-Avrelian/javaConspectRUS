@@ -618,6 +618,8 @@
 > > > [2.6.6.3.2 **ConcurrentNavigableMap**](/conspect/02_06.md/#26632-concurrentnavigablemap)  
 > > > > [2.6.6.3.2.1 **ConcurrentSkipListMap**](/conspect/02_06.md/#266321-concurrentskiplistmap)  
 > > > > [2.6.6.3.2.2 **ConcurrentSkipListSet**](/conspect/02_06.md/#266322-concurrentskiplistset)  
+> 
+> > [_2.6.6.4 **ConcurrentLinkedQueue**_](/conspect/02_06.md/#2664-concurrentlinkedqueue)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
