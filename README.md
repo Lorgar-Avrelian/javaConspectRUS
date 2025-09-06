@@ -623,6 +623,7 @@
 > > [_2.6.6.6 **ConcurrentLinkedDeque**_](/conspect/02_06.md/#2666-concurrentlinkeddeque)  
 > > [_2.6.6.7 **BlockingQueue**_](/conspect/02_06.md/#2667-blockingqueue)  
 > > > [2.6.6.7.1 **ArrayBlockingQueue**](/conspect/02_06.md/#26671-arrayblockingqueue)  
+> > > [2.6.6.7.2 **DelayQueue**](/conspect/02_06.md/#26672-delayqueue)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
