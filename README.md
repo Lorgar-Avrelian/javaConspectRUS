@@ -620,6 +620,7 @@
 > > > > [2.6.6.3.2.2 **ConcurrentSkipListSet**](/conspect/02_06.md/#266322-concurrentskiplistset)  
 > 
 > > [_2.6.6.4 **ConcurrentLinkedQueue**_](/conspect/02_06.md/#2664-concurrentlinkedqueue)  
+> > [_2.6.6.5 **ConcurrentLinkedDeque**_](/conspect/02_06.md/#2665-concurrentlinkeddeque)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
