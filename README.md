@@ -621,6 +621,7 @@
 > > [_2.6.6.4 **ConcurrentSkipListSet**_](/conspect/02_06.md/#2664-concurrentskiplistset)  
 > > [_2.6.6.5 **ConcurrentLinkedQueue**_](/conspect/02_06.md/#2665-concurrentlinkedqueue)  
 > > [_2.6.6.6 **ConcurrentLinkedDeque**_](/conspect/02_06.md/#2666-concurrentlinkeddeque)  
+> > [_2.6.6.7 **BlockingQueue**_](/conspect/02_06.md/#2667-blockingqueue)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
