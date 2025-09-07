@@ -637,6 +637,7 @@
 > > [_2.6.7.1 **ExecutorService**_](/conspect/02_06.md/#2671-executorservice)  
 > > > [2.6.7.1.1 shutdown()](/conspect/02_06.md/#26711-shutdown)  
 > > > [2.6.7.1.2 shutdownNow()](/conspect/02_06.md/#26712-shutdownnow)  
+> > > [2.6.7.1.3 isShutdown()](/conspect/02_06.md/#26713-isshutdown)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
