@@ -633,7 +633,7 @@
 > > > [2.6.6.7.7 **TransferQueue**](/conspect/02_06.md/#26677-transferqueue)  
 > > > > [2.6.6.7.7.1 **LinkedTransferQueue**](/conspect/02_06.md/#266771-linkedtransferqueue)  
 > 
-> [**2.6.7 Executors**](/conspect/02_06.md/#267-executors)  
+> [**2.6.7 Executor**](/conspect/02_06.md/#267-executor)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
