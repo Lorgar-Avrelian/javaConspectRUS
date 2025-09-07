@@ -628,6 +628,8 @@
 > > > [2.6.6.7.4 **PriorityBlockingQueue**](/conspect/02_06.md/#26674-priorityblockingqueue)  
 > > > [2.6.6.7.5 **SynchronousQueue**](/conspect/02_06.md/#26675-synchronousqueue)  
 > > > [2.6.6.7.6 **BlockingDeque**](/conspect/02_06.md/#26676-blockingdeque)  
+> > > > [2.6.6.7.6.1 **LinkedBlockingDeque**](/conspect/02_06.md/#266761-linkedblockingdeque)  
+> 
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
