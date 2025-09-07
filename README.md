@@ -625,6 +625,7 @@
 > > > [2.6.6.7.1 **ArrayBlockingQueue**](/conspect/02_06.md/#26671-arrayblockingqueue)  
 > > > [2.6.6.7.2 **DelayQueue**](/conspect/02_06.md/#26672-delayqueue)  
 > > > [2.6.6.7.3 **LinkedBlockingQueue**](/conspect/02_06.md/#26673-linkedblockingqueue)  
+> > > [2.6.6.7.4 **PriorityBlockingQueue**](/conspect/02_06.md/#26674-priorityblockingqueue)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
