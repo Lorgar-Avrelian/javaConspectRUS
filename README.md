@@ -638,6 +638,7 @@
 > > > [2.6.7.1.1 shutdown()](/conspect/02_06.md/#26711-shutdown)  
 > > > [2.6.7.1.2 shutdownNow()](/conspect/02_06.md/#26712-shutdownnow)  
 > > > [2.6.7.1.3 isShutdown()](/conspect/02_06.md/#26713-isshutdown)  
+> > > [2.6.7.1.4 isTerminated()](/conspect/02_06.md/#26714-isterminated)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
