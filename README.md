@@ -630,6 +630,8 @@
 > > > [2.6.6.7.6 **BlockingDeque**](/conspect/02_06.md/#26676-blockingdeque)  
 > > > > [2.6.6.7.6.1 **LinkedBlockingDeque**](/conspect/02_06.md/#266761-linkedblockingdeque)  
 > 
+> > > [2.6.6.7.7 **TransferQueue**](/conspect/02_06.md/#26677-transferqueue)  
+> > > > [2.6.6.7.7.1 **LinkedTransferQueue**](/conspect/02_06.md/#266771-linkedtransferqueue)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
