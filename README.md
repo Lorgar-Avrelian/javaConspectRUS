@@ -635,12 +635,14 @@
 > 
 > [**2.6.7 Executor**](/conspect/02_06.md/#267-executor)  
 > > [_2.6.7.1 execute()_](/conspect/02_06.md/#2671-execute)  
+> 
 > > [_2.6.7.2 **ExecutorService**_](/conspect/02_06.md/#2672-executorservice)  
 > > > [2.6.7.2.1 shutdown()](/conspect/02_06.md/#26721-shutdown)  
 > > > [2.6.7.2.2 shutdownNow()](/conspect/02_06.md/#26722-shutdownnow)  
 > > > [2.6.7.2.3 isShutdown()](/conspect/02_06.md/#26723-isshutdown)  
 > > > [2.6.7.2.4 isTerminated()](/conspect/02_06.md/#26724-isterminated)  
 > > > [2.6.7.2.5 awaitTermination()](/conspect/02_06.md/#26725-awaittermination)  
+> > > [2.6.7.2.6 submit()](/conspect/02_06.md/#26726-submit)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
