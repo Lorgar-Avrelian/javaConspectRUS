@@ -644,6 +644,7 @@
 > > > [2.6.7.2.5 awaitTermination()](/conspect/02_06.md/#26725-awaittermination)  
 > > > [2.6.7.2.6 submit()](/conspect/02_06.md/#26726-submit)  
 > > > [2.6.7.2.7 invokeAll()](/conspect/02_06.md/#26727-invokeall)  
+> > > [2.6.7.2.8 invokeAny()](/conspect/02_06.md/#26728-invokeany)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
