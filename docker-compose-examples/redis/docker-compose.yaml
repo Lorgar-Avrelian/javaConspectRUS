@@ -1,0 +1,12 @@
+services:
+  redis: # Defines a service named 'redis'
+    image: redis:latest # Uses the latest official Redis Docker image
+    container_name: my-redis-container # Assigns a specific name to the container
+    ports:
+      - "6379:6379" # Maps port 6379 on the host to port 6379 in the container (default Redis port)
+    volumes:
+      - redis_data:/data # Mounts a named volume to persist Redis data
+    command: redis-server --appendonly yes # Runs Redis with AOF persistence enabled
+
+volumes:
+  redis_data: # Defines the named volume for Redis data persistence

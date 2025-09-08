@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mysql:8.0 # Specifies the MySQL image and version to use
+    container_name: mysql # Optional: Assigns a custom name to the container
+    restart: always # Ensures the container restarts automatically if it stops
+    environment:
+      MYSQL_ROOT_PASSWORD: admin # Sets the root password for MySQL
+      MYSQL_DATABASE: db_msp # Optional: Creates a default database
+      MYSQL_USER: admin # Optional: Creates a default user
+      MYSQL_PASSWORD: admin # Optional: Sets the password for the default user
+    ports:
+      - "3306:3306" # Maps port 3306 on the host to port 3306 in the container
+    volumes:
+      - db_data:/var/lib/mysql # Persists data to a named volume on the host
+
+volumes:
+  db_data: # Defines the named volume for data persistence
