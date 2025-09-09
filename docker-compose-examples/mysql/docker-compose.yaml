@@ -1,17 +1,35 @@
 services:
   db:
-    image: mysql:8.0 # Specifies the MySQL image and version to use
-    container_name: mysql # Optional: Assigns a custom name to the container
-    restart: always # Ensures the container restarts automatically if it stops
-    environment:
-      MYSQL_ROOT_PASSWORD: admin # Sets the root password for MySQL
-      MYSQL_DATABASE: db_msp # Optional: Creates a default database
-      MYSQL_USER: admin # Optional: Creates a default user
-      MYSQL_PASSWORD: admin # Optional: Sets the password for the default user
+    image: mysql:8.0           # Официальный образ MySQL 8.0
+    container_name: mysql-db   # Имя контейнера (необязательно, для удобства)
     ports:
-      - "3306:3306" # Maps port 3306 on the host to port 3306 in the container
+      - "3306:3306"            # Проброс порта MySQL на хост (для подключения снаружи). Обратите внимание, что если у Вас уже есть установленый MYSQL, то воизбежание конфликта необходимо выбрать иной порт, например 3307:3307
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}   # Пароль root (берётся из .env)
+      MYSQL_DATABASE: ${MYSQL_DATABASE}             # Имя БД для создания (из .env)
+      MYSQL_USER: ${MYSQL_USER}                     # Дополнительный пользователь БД (из .env)
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}             # Пароль доп. пользователя (из .env)
     volumes:
-      - db_data:/var/lib/mysql # Persists data to a named volume on the host
+      - db_data:/var/lib/mysql    # Именованный том для хранения данных БД
+    networks:
+      - app-network              # Подключение к пользовательской сети
 
+  phpmyadmin:
+    image: phpmyadmin:latest    # Образ phpMyAdmin
+    container_name: myadmin     # Имя контейнера phpMyAdmin
+    depends_on:
+      - db                      # Сначала должен стартовать контейнер db
+    ports:
+      - "8080:80"               # phpMyAdmin будет доступен на порту 8080
+    environment:
+      PMA_HOST: db              # Хост БД для подключения (имя сервиса MySQL)
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # Пароль root для доступа
+    networks:
+      - app-network
+
+# Определяем именованный том и сеть
 volumes:
-  db_data: # Defines the named volume for data persistence
+  db_data:                      # Том для данных MySQL (Docker сам хранит его данные)
+networks:
+  app-network:                  # Пользовательская сеть для наших сервисов
+    driver: bridge
