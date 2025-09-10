@@ -1,12 +1,43 @@
 services:
-  redis: # Defines a service named 'redis'
-    image: redis:latest # Uses the latest official Redis Docker image
-    container_name: my-redis-container # Assigns a specific name to the container
+  redis:
+    image: redis:latest # Using a lightweight Redis image
+    container_name: redis
+    restart: unless-stopped
     ports:
-      - "6379:6379" # Maps port 6379 on the host to port 6379 in the container (default Redis port)
+      - "6379:6379"
+    tty: true
+    stdin_open: true
+    environment:
+      REDIS_PASSWORD: admin
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "$REDIS_PASSWORD", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     volumes:
-      - redis_data:/data # Mounts a named volume to persist Redis data
-    command: redis-server --appendonly yes # Runs Redis with AOF persistence enabled
+      - redis:/data # Persist Redis data
+    networks:
+      - redis-network
+
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redis-insight
+    restart: unless-stopped
+    ports:
+      - "5540:5540" # Access RedisInsight on http://localhost:5540
+    volumes:
+      - redis-insight:/data # Persist RedisInsight data (e.g., connection details, workbench history)
+    networks:
+      - redis-network
+    depends_on:
+      - redis # Ensure Redis starts before RedisInsight
 
 volumes:
-  redis_data: # Defines the named volume for Redis data persistence
+  redis:
+    driver: local
+  redis-insight:
+    driver: local
+
+networks:
+  redis-network:
+    driver: bridge

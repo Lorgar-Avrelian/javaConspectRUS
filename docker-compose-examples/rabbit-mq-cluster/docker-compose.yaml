@@ -1,0 +1,102 @@
+services:
+  rabbitmq-1:
+    image: rabbitmq:management
+    hostname: rabbitmq-1
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_ERLANG_COOKIE: "rabbitmq_cookie"
+      RABBITMQ_HOSTNAME: rabbitmq-1
+      RABBITMQ_NODE_RAM_CACHE_SIZE: "60%"
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - rabbitmq-1-data:/var/lib/rabbitmq-1
+      - rabbitmq-1-log:/var/log/rabbitmq-1
+    networks:
+      - rabbitmq_network
+
+  rabbitmq-2:
+    image: rabbitmq:management
+    hostname: rabbitmq-2
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_ERLANG_COOKIE: "rabbitmq_cookie"
+      RABBITMQ_HOSTNAME: rabbitmq-2
+      RABBITMQ_NODE_RAM_ONLY: "true"
+      RABBITMQ_NODE_RAM_CACHE_SIZE: "60%"
+      RABBITMQ_CLUSTER_NODE_TYPE: "ram"
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - rabbitmq-2-data:/var/lib/rabbitmq-2
+      - rabbitmq-2-log:/var/log/rabbitmq-2
+    networks:
+      - rabbitmq_network
+    depends_on:
+      - rabbitmq-1
+
+  rabbitmq-3:
+    image: rabbitmq:management
+    hostname: rabbitmq-3
+    ports:
+      - "5674:5672"
+      - "15674:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_ERLANG_COOKIE: "rabbitmq_cookie"
+      RABBITMQ_HOSTNAME: rabbitmq-3
+      RABBITMQ_NODE_RAM_CACHE_SIZE: "60%"
+      RABBITMQ_CLUSTER_NODE_TYPE: "disc"
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - rabbitmq-3-data:/var/lib/rabbitmq-3
+      - rabbitmq-3-log:/var/log/rabbitmq-3
+    networks:
+      - rabbitmq_network
+    depends_on:
+      - rabbitmq-1
+
+volumes:
+  rabbitmq-1-data:
+    driver: local
+  rabbitmq-2-data:
+    driver: local
+  rabbitmq-3-data:
+    driver: local
+  rabbitmq-1-log:
+    driver: local
+  rabbitmq-2-log:
+    driver: local
+  rabbitmq-3-log:
+    driver: local
+
+networks:
+  rabbitmq_network:
+    driver: bridge
+
+# Команды для объединения узлов в кластер:
+# rabbitmqctl stop_app                        - остановка контейнера
+# rabbitmqctl join_cluster rabbit@rabbitmq-1  - изменение кластера контейнера
+# rabbitmqctl start_app                       - запуск контейнера
