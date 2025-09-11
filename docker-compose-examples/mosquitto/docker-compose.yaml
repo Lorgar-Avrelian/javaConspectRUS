@@ -1,0 +1,43 @@
+services:
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Moscow
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./config/pwfile:/mosquitto/config/pwfile
+      - ./data:/mosquitto/data
+      - ./log:/mosquitto/log
+    stdin_open: true
+    tty: true
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - mosquitto
+
+volumes:
+  config:
+  data:
+  log:
+
+networks:
+  mosquitto:
+    name: mosquitto
+    driver: bridge
+
+# Insert the next commands at the terminal after container is started first time:
+# - sudo docker exec -it mosquitto sh
+# - mosquitto_passwd -c /mosquitto/config/pwfile admin
+# - admin
+# - admin
+# - Ctrl+D
+# - sudo docker restart mosquitto
