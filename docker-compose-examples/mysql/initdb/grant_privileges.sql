@@ -1,0 +1,3 @@
+CREATE USER 'admin'@'%' IDENTIFIED BY 'admin';
+GRANT ALL PRIVILEGES ON my_app_db.* TO 'admin'@'%';
+FLUSH PRIVILEGES;

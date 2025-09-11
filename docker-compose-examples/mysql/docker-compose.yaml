@@ -10,6 +10,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}                     # Дополнительный пользователь БД (из .env)
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}             # Пароль доп. пользователя (из .env)
     volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
       - db_data:/var/lib/mysql    # Именованный том для хранения данных БД
     networks:
       - app-network              # Подключение к пользовательской сети
