@@ -66,11 +66,13 @@ services:
     image: phpmyadmin:latest    # Образ phpMyAdmin
     container_name: myadmin     # Имя контейнера phpMyAdmin
     depends_on:
-      - db                      # Сначала должен стартовать контейнер db
+      - mysql-router            # Сначала должен стартовать контейнер mysql-router
     ports:
       - "8080:80"               # phpMyAdmin будет доступен на порту 8080
     environment:
-      PMA_HOST: db              # Хост БД для подключения (имя сервиса MySQL)
+      PMA_HOST: mysql-router                       # Хост БД для подключения (имя сервиса MySQL)
+      PMA_PORT: 6446                               # Port exposed by MySQL Router
+      PMA_ARBITRARY: 1                             # Allow connecting to arbitrary servers
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # Пароль root для доступа
     networks:
       - app-network
