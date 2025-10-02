@@ -1,6 +1,8 @@
 services:
   mysql1:
     image: mysql/mysql-server:8.0
+    container_name: mysql1
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}   # Пароль root (берётся из .env)
       MYSQL_DATABASE: ${MYSQL_DATABASE}             # Имя БД для создания (из .env)
@@ -16,7 +18,7 @@ services:
 
   mysql2:
     image: mysql/mysql-server:8.0
-    container_name: mysql1
+    container_name: mysql2
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}   # Пароль root (берётся из .env)
