@@ -78,6 +78,12 @@ services:
     ports:
       - "6446:6446" # Default port for MySQL Router's read-write access
       - "6447:6447" # Default port for MySQL Router's read-only access
+    healthcheck:
+      test: ["CMD", "mysqlrouter", "--status"] # Check MySQL Router's status
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s # Give MySQL Router time to start and connect
     depends_on:
       - mysql1
       - mysql2
