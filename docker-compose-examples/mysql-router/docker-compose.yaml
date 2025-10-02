@@ -13,6 +13,11 @@ services:
       - mysql_data1:/var/lib/mysql
     ports:
       - "33061:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - app-network
 
@@ -30,6 +35,11 @@ services:
       - mysql_data2:/var/lib/mysql
     ports:
       - "33062:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - app-network
 
@@ -47,6 +57,11 @@ services:
       - mysql_data3:/var/lib/mysql
     ports:
       - "33063:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - app-network
 
