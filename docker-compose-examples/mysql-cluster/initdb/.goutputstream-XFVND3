@@ -1,0 +1,10 @@
+# my.cnf
+[mysqld]
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+# General settings for Group Replication
+gtid_mode=ON
+enforce_gtid_consistency=ON
+log_bin=binlog
+binlog_format=ROW

@@ -1,0 +1,143 @@
+services:
+  mysql:
+    image: mysql/mysql-server:8.0
+    container_name: mysql
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - "33360:3306"
+    volumes:
+      - initdb:/docker-entrypoint-initdb.d
+      - ./docker/initdb/init-scripts.sh:/init-scripts.sh
+      - ./docker/initdb/orchestrate.sh:/orchestrate.sh
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      SERVER_ID: 1
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-padmin" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    command: [ "/bin/bash", "-c", "chmod +x /init-scripts.sh /orchestrate.sh && (sleep 20 && /orchestrate.sh) & exec /init-scripts.sh mysql" ]
+
+  pmdb:
+    image: mysql/mysql-server:8.0
+    container_name: pmdb
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - "23308:3306"
+    volumes:
+      - initdb:/docker-entrypoint-initdb.d
+      - ./docker/initdb/init-scripts.sh:/init-scripts.sh
+      - pmdb-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      SERVER_ID: 2
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-padmin" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    command: [ "/bin/bash", "-c", "chmod +x /init-scripts.sh && exec /init-scripts.sh pmdb" ]
+
+  pmdb-mgr:
+    image: mysql/mysql-server:8.0
+    container_name: pmdb-mgr
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - "33362:3306"
+    volumes:
+      - initdb:/docker-entrypoint-initdb.d
+      - ./docker/initdb/init-scripts.sh:/init-scripts.sh
+      - pmdb-mgr-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      SERVER_ID: 3
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-padmin" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    command: [ "/bin/bash", "-c", "chmod +x /init-scripts.sh && exec /init-scripts.sh pmdb-mgr" ]
+
+  mysql-router:
+    image: mysql/mysql-router:latest
+    container_name: mysql-router
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - "6446:6446"
+      - "6447:6447"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      pmdb:
+        condition: service_healthy
+      pmdb-mgr:
+        condition: service_healthy
+    command: >
+      bash -c "
+              # Check if the config file exists. If not, this is the first run.
+              if [ ! -f /tmp/myrouter/mysqlrouter.conf ]; then
+                echo 'Router is not configured. Waiting for cluster to bootstrap...'
+
+                until mysql -hmysql -umysql_router -prouter_pass -e 'SELECT 1' &> /dev/null; do
+                  echo 'Waiting for cluster...'
+                  sleep 5
+                done
+
+                echo 'Cluster is ready. Bootstrapping Router...'
+                mysqlrouter --bootstrap mysql_router:router_pass@mysql:3306 --directory /tmp/myrouter --user=mysqlrouter --force
+              fi
+
+              mysqlrouter -c /tmp/myrouter/mysqlrouter.conf &
+
+              while [ ! -f /tmp/myrouter/mysqlrouter.log ]; do sleep 1; done
+
+              exec tail -f /tmp/myrouter/mysqlrouter.log
+
+volumes:
+  mysql-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/mysql-data
+  pmdb-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/pmdb-data
+  pmdb-mgr-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/pmdb-mgr-data
+  initdb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/initdb
+
+networks:
+  app-network:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 2001:db8:1::/64
+        - subnet: 192.168.1.0/24
