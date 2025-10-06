@@ -32,7 +32,23 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${ROOT_PASS}';
 CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '${ROOT_PASS}';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+CREATE USER IF NOT EXISTS 'admin'@'%' IDENTIFIED BY '${ROOT_PASS}';
+GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
+CREATE DATABASE IF NOT EXISTS db_msp;
+CREATE DATABASE IF NOT EXISTS db_msp_logs;
+CREATE DATABASE IF NOT EXISTS db_msp_migrations;
+CREATE DATABASE IF NOT EXISTS db_msp_sysmng;
+CREATE DATABASE IF NOT EXISTS nms_comp;
+CREATE DATABASE IF NOT EXISTS pm_storage;
+CREATE DATABASE IF NOT EXISTS sys;
+GRANT ALL PRIVILEGES ON db_msp.* TO 'admin'@'%';
+GRANT ALL PRIVILEGES ON db_msp_logs.* TO 'admin'@'%';
+GRANT ALL PRIVILEGES ON db_msp_migrations.* TO 'admin'@'%';
+GRANT ALL PRIVILEGES ON db_msp_sysmng.* TO 'admin'@'%';
+GRANT ALL PRIVILEGES ON nms_comp.* TO 'admin'@'%';
+GRANT ALL PRIVILEGES ON pm_storage.* TO 'admin'@'%';
+GRANT ALL PRIVILEGES ON sys.* TO 'admin'@'%';
 EOF
     
     # Shutdown temporary server
