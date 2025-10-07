@@ -36,6 +36,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: admin
       SERVER_ID: 2
+    depends_on:
+      mysql:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-padmin" ]
       interval: 10s
@@ -58,6 +61,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: admin
       SERVER_ID: 3
+    depends_on:
+      mysql:
+        condition: service_healthy
+      pmdb:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-padmin" ]
       interval: 10s
@@ -75,6 +83,9 @@ services:
     ports:
       - "6446:6446"
       - "6447:6447"
+    volumes:
+      - mysql-router:/var/lib/mysql
+      - mysql-router-tmp:/tmp/myrouter/
     depends_on:
       mysql:
         condition: service_healthy
@@ -102,6 +113,7 @@ services:
               while [ ! -f /tmp/myrouter/mysqlrouter.log ]; do sleep 1; done
 
               exec tail -f /tmp/myrouter/mysqlrouter.log
+            "
 
 volumes:
   mysql-data:
@@ -122,6 +134,18 @@ volumes:
       type: none
       o: bind
       device: ./docker/pmdb-mgr-data
+  mysql-router:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/mysql-router
+  mysql-router-tmp:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/mysql-router-tmp
 
 networks:
   app-network:
