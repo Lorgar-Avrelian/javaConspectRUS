@@ -609,6 +609,55 @@
 > > > [2.6.5.8.3 **CyclicBarrier**](/conspect/02_06.md/#26583-cyclicbarrier)  
 > > > [2.6.5.8.4 **Exchanger**](/conspect/02_06.md/#26584-exchanger)  
 > > > [2.6.5.8.5 **Phaser**](/conspect/02_06.md/#26585-phaser)
+> 
+> [**2.6.6 Concurrent Collections**](/conspect/02_06.md/#266-concurrent-collections)  
+> > [_2.6.6.1 **CopyOnWriteArrayList**_](/conspect/02_06.md/#2661-copyonwritearraylist)  
+> > [_2.6.6.2 **CopyOnWriteArraySet**_](/conspect/02_06.md/#2662-copyonwritearrayset)  
+> > [_2.6.6.3 **ConcurrentMap**_](/conspect/02_06.md/#2663-concurrentmap)  
+> > > [2.6.6.3.1 **ConcurrentHashMap**](/conspect/02_06.md/#26631-concurrenthashmap)  
+> > > [2.6.6.3.2 **ConcurrentNavigableMap**](/conspect/02_06.md/#26632-concurrentnavigablemap)  
+> > > > [2.6.6.3.2.1 **ConcurrentSkipListMap**](/conspect/02_06.md/#266321-concurrentskiplistmap)  
+> 
+> > [_2.6.6.4 **ConcurrentSkipListSet**_](/conspect/02_06.md/#2664-concurrentskiplistset)  
+> > [_2.6.6.5 **ConcurrentLinkedQueue**_](/conspect/02_06.md/#2665-concurrentlinkedqueue)  
+> > [_2.6.6.6 **ConcurrentLinkedDeque**_](/conspect/02_06.md/#2666-concurrentlinkeddeque)  
+> > [_2.6.6.7 **BlockingQueue**_](/conspect/02_06.md/#2667-blockingqueue)  
+> > > [2.6.6.7.1 **ArrayBlockingQueue**](/conspect/02_06.md/#26671-arrayblockingqueue)  
+> > > [2.6.6.7.2 **DelayQueue**](/conspect/02_06.md/#26672-delayqueue)  
+> > > [2.6.6.7.3 **LinkedBlockingQueue**](/conspect/02_06.md/#26673-linkedblockingqueue)  
+> > > [2.6.6.7.4 **PriorityBlockingQueue**](/conspect/02_06.md/#26674-priorityblockingqueue)  
+> > > [2.6.6.7.5 **SynchronousQueue**](/conspect/02_06.md/#26675-synchronousqueue)  
+> > > [2.6.6.7.6 **BlockingDeque**](/conspect/02_06.md/#26676-blockingdeque)  
+> > > > [2.6.6.7.6.1 **LinkedBlockingDeque**](/conspect/02_06.md/#266761-linkedblockingdeque)  
+> 
+> > > [2.6.6.7.7 **TransferQueue**](/conspect/02_06.md/#26677-transferqueue)  
+> > > > [2.6.6.7.7.1 **LinkedTransferQueue**](/conspect/02_06.md/#266771-linkedtransferqueue)  
+> 
+> [**2.6.7 Executor**](/conspect/02_06.md/#267-executor)  
+> > [_2.6.7.1 execute()_](/conspect/02_06.md/#2671-execute)  
+> 
+> > [_2.6.7.2 **ExecutorService**_](/conspect/02_06.md/#2672-executorservice)  
+> > > [2.6.7.2.1 shutdown()](/conspect/02_06.md/#26721-shutdown)  
+> > > [2.6.7.2.2 shutdownNow()](/conspect/02_06.md/#26722-shutdownnow)  
+> > > [2.6.7.2.3 isShutdown()](/conspect/02_06.md/#26723-isshutdown)  
+> > > [2.6.7.2.4 isTerminated()](/conspect/02_06.md/#26724-isterminated)  
+> > > [2.6.7.2.5 awaitTermination()](/conspect/02_06.md/#26725-awaittermination)  
+> > > [2.6.7.2.6 submit()](/conspect/02_06.md/#26726-submit)  
+> > > [2.6.7.2.7 invokeAll()](/conspect/02_06.md/#26727-invokeall)  
+> > > [2.6.7.2.8 invokeAny()](/conspect/02_06.md/#26728-invokeany)  
+> > > [2.6.7.2.9 close()](/conspect/02_06.md/#26729-close)  
+> 
+> > > [2.6.7.2.10 **ThreadPoolExecutor**](/conspect/02_06.md/#267210-threadpoolexecutor)  
+> 
+> > [_2.6.7.3 **Executors**_](/conspect/02_06.md/#2673-executors)  
+> 
+> [**2.6.8 Runnable**](/conspect/02_06.md/#268-runnable)  
+> 
+> [**2.6.9 Callable**](/conspect/02_06.md/#269-callable)  
+> 
+> [**2.6.10 Future**](/conspect/02_06.md/#2610-future)  
+> 
+> [**2.6.11 CompletableFuture**](/conspect/02_06.md/#2611-completablefuture)  
 -----------------------------------------------------------------------------------------------------------------------
 </details>
 
@@ -1247,62 +1296,4 @@
 
 -----------------------------------------------------------------------------------------------------------------------
 [**Перечень использованных определений**](/conspect/definitions.md/#перечень-использованных-определений)
------------------------------------------------------------------------------------------------------------------------
-
-## Полезные примеры:
-
------------------------------------------------------------------------------------------------------------------------
-1. [**_Comparator_**](/conspect/02_02.md/#22424-comparator)
-1. [**_Intellij IDEA_ горячие клавиши**](/conspect/06.md/#65-intellij-idea)
-1. [**_Lombok_**](/conspect/06.md/#672-lombok)
-1. [**_Mapstruct_**](/conspect/06.md/#671-mapstruct)
-1. [**_Scanner_**](/conspect/01_07.md/#17-класс-scanner)
-1. [**_StringBuilder_**](/conspect/01_06.md/#16-изменяемые-строки-stringbuilder)
-1. [**_switch_**](/conspect/01_02.md/#123-оператор-switch)
-1. [**_Utility_-класс / _private_-конструктор**](/conspect/01_09.md/#193-конструктор)
-1. [**Бины одинаковых типов**](/conspect/03_03.md/#334-конфигурация-бинов)
-1. [**Вставка элемента в середину _List_-а**](/conspect/02_04.md/#26211-add)
-1. [**Изменение коллекции при итерировании**](/conspect/02_02.md/#22423-iterator)
-1. [**Изменение размера картинки**](/conspect/example_01.md/#пример-1)
-1. [**Использование _Swagger UI_ в приложениях с включённой _CSRF_-защитой**](/conspect/06.md/#6117-совместимость-со-spring-security)
-1. [**Использование _Postman_ для приложений с включённой _CSRF_-защитой**](/conspect/06.md/#621-совместимость-со-spring-security)
-1. [**Итерирование по элементам _Map_**](/conspect/02_04.md/#2655-интерфейс-mapentry)
-1. [**Контейнер для хранения разных типов данных**](/conspect/02_02.md/#2231-дженерики-параметрический-полиморфизм)
-1. [**Многомерный массив**](/conspect/01_04.md/#1422-инициализация-массива)
-1. [**Написание методов со своими _SQL_-запросами к БД**](/conspect/example_04.md/#пример-2)
-1. [**Настройка базовой аутентификации в приложении**](/conspect/example_13.md/#пример-1)
-1. [**Настройка кэширования в приложении**](/conspect/03_02.md/#321-spring-boot-caching)
-1. [**Настройка связности таблиц _Hibernate_**](/conspect/example_07.md/#пример-1)
-1. [**Настройка _Telegram_-бота**](/conspect/example_12.md/#пример-1)
-1. [**Настройка сохранения логов в файл с помощью _Log4J2_**](/conspect/09.md/#915-log4j2)
-1. [**Настройка сохранения логов в файл с помощью _Logback_**](/conspect/09.md/#914-logback)
-1. [**Ошибка _503_ в _Swagger UI_ (не может прочитать схему)**](/conspect/06.md/#6111-подключение-swagger)
-1. [**Отправка запросов на сторонний ресурс с использованием _RestTemplate_**](/conspect/example_11.md/#пример-1)
-1. [**Перегрузка конструктора**](/conspect/01_09.md/#193-конструктор)
-1. [**Передача изображения из директории**](/conspect/example_01.md/#пример-2)
-1. [**Передача параметров метода в _HTTP_-запросе**](/conspect/03_03.md/#332-передача-параметров-метода-в-запросе)
-1. [**Подключение БД _PostgreSQL_**](/conspect/example_04.md/#пример-1)
-1. [**Подключение _Liquibase_**](/conspect/example_10.md/#пример-1)
-1. [**Подстановка значений в лог-сообщение**](/conspect/09.md/#913-slf4j)
-1. [**Получение изображения в директорию**](/conspect/example_01.md/#пример-1)
-1. [**Получение значения переменной окружения**](/conspect/09.md/#92-конфигурирование)
-1. [**Постраничный вывод данных из БД (Пагинация)**](/conspect/example_04.md/#пример-2)
-1. [**Превращение _List_ в _Map_ посредством _Stream_**](/conspect/02_05.md/#284-collectors)
-1. [**Примеры работы с файлами**](/conspect/example_08.md/#пример-1)
-1. [**Создание строки из массива байтов**](/conspect/01_05.md/#1542-массив-байтов)
-1. [**Создание исключения (_Exception_)**](/conspect/02_03.md/#253-написание-своих-исключений)
-1. [**Сортировка коллекции по длине строки**](/conspect/02_04.md/#264-очередь-queue)
-1. [**Способы инжекции зависимостей**](/conspect/03_03.md/#3312-сервис)
-1. [**Счётчик (_counter_) в классе**](/conspect/02_02.md/#222-наследование)
-1. [**Тернарный оператор**](/conspect/01_02.md/#124-тернарный-оператор)
-1. [**Тестирование _Spring Security_**](/conspect/example_03.md/#пример-1)
-1. [**Тестирование контроллера с помощью _TestRestTemplate_**](/conspect/example_09.md/#пример-1)
-1. [**Тестирование контроллера с помощью _WebMvcTest_**](/conspect/example_09.md/#пример-2)
-1. [**Тестирование контроллера с помощью _WebMvcTest_ с использованием тестового профиля**](/conspect/example_09.md/#пример-4)
-1. [**Тестирование содержимого _HTTP_-ответа _HashMap_**](/conspect/example_09.md/#пример-3)
-1. [**Тестирование приёма-передачи изображения (Опытный вариант)**](/conspect/example_09.md/#пример-3)
-1. [**Тестирование приёма-передачи изображения (Рекомендуемый вариант)**](/conspect/example_09.md/#пример-2)
-1. [**Устранение бесконечной рекурсии _JSON_**](/conspect/example_07.md/#пример-2)
-1. [**Фабричный метод создания бина**](/conspect/03_01.md/#313-dependency-injection)
-1. [**Циклические зависимости бинов (_BeanCurrentlyInCreationException_)**](/conspect/03_01.md/#313-dependency-injection)
 -----------------------------------------------------------------------------------------------------------------------
